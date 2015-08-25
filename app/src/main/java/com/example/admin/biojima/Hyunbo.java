@@ -13,10 +13,9 @@ public class Hyunbo {
     }
     public ArrayList<String> getTouristAttraction(Double x,Double y)
     {
-        //사용자의 현재위치를 Parameters로 1000m 근방의 여행지 정보를 반환한다.
+        //사용자의 현재위치를 Parameters로 50km 근방의 여행지 정보를 반환한다.
 
         ArrayList<String> attraction = new ArrayList<String>();
-
 
         //Add to code
 
