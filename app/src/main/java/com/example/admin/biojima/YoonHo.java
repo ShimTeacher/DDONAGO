@@ -6,6 +6,6 @@ package com.example.admin.biojima;
 public class YoonHo {
     public YoonHo()
     {
-        
+
     }
 }
