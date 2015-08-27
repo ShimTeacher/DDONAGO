@@ -5,14 +5,24 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.json.JSONException;
+
 
 public class MainActivity extends ActionBarActivity {
-
+    static Double X = 127.0409111; //경도
+    static Double Y = 37.65508056; //위도
+    static int radious = 3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Hyunbo hb = new Hyunbo();
+        try {
+            hb.setTouristAttraction(X,Y,radious);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 
