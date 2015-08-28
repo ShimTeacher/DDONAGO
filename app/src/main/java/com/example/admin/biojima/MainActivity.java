@@ -1,18 +1,9 @@
 package com.example.admin.biojima;
 
-import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-import android.widget.TabHost;
-
-import org.json.JSONException;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -23,7 +14,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ForecastFragment())
+                    .add(R.id.container, new AttractionFragment())
                     .commit();
         }
     }

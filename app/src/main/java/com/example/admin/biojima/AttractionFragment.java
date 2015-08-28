@@ -9,11 +9,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,7 +32,7 @@ import java.util.List;
 /**
  * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
  */
-public class ForecastFragment extends Fragment {
+public class AttractionFragment extends Fragment {
 
     //TestCode
     static Double X = 127.0409111; //경도
@@ -38,8 +42,41 @@ public class ForecastFragment extends Fragment {
 
     private ArrayAdapter<String> mForecastAdapter;
 private View rootView;
-    public ForecastFragment() {
+    public AttractionFragment() {
     }
+
+
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // if this is set true,
+        // Activity.onCreateOptionsMenu will call Fragment.onCreateOptionsMenu
+        // Activity.onOptionsItemSelected will call Fragment.onOptionsItemSelected
+        setHasOptionsMenu(true);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_refresh)
+        {
+            FetchAttractionTask fetchAttractionTask  = new FetchAttractionTask();
+            fetchAttractionTask.execute();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,13 +105,27 @@ private View rootView;
                         weekForecast);
 
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        tabSetting();
+        tabSetting();//Rootview가 설정이 된 후에 셋팅이되어야한다.
+
+
         // Get a reference to the ListView, and attach this adapter to it.
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(mForecastAdapter);
 
         return rootView;
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
     public void tabSetting() //메뉴 기본탭을 셋팅한다.
     {
@@ -98,9 +149,9 @@ private View rootView;
 
     }
 
-    public class FetchWeatherTask extends AsyncTask<Void, Void, Void> {
+    public class FetchAttractionTask extends AsyncTask<Void, Void, Void> {
 
-        private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
+        private final String LOG_TAG = FetchAttractionTask.class.getSimpleName();
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -116,7 +167,7 @@ private View rootView;
                 // Construct the URL for the OpenWeatherMap query
                 // Possible parameters are avaiable at OWM's forecast API page, at
                 // http://openweathermap.org/API#forecast
-                URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&mode=json&units=metric&cnt=7");
+                URL url = new URL("http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?ServiceKey=Si1LZhStHnfooZIH3OW%2BV5kMa9%2BoJy6u7wuOlqfeIXbSAAcBD%2FXOrOvJsKIRNlprnQVfK8%2B2Je%2BgMUXhcEznwg%3D%3D&mapX=127.0409111&mapY=37.65508056&radius=1000&pageNo=1&numOfRows=10&listYN=Y&arrange=A&MobileOS=AND&MobileApp=biojima&_type=json");
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
