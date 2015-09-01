@@ -36,17 +36,22 @@ public class Hyunbo extends Activity{
 
 
 
+
+
+
+
     public void setTouristAttraction(Double x, Double y,int radious) throws JSONException
     {
         final String RESPONSE = "response";
         final String BODY = "body";
         final String PAGE_NUM = "pageNo";
         final String NUM_OF_ROWS = "numOfRows";
-        final String OWM_MIN = "min";
+        final String TOTAL_COUNT = "totalCount";
         final String OWM_DESCRIPTION = "main";
 
         String numOfRows;
         String pageNo ;
+        String totalCount;
 
         //위치기반 기본주소 : http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?ServiceKey=인증키 &
         //사용자의 현재위치를 Parameters로 50km 근방의 여행지 정보를 할당한다.
@@ -57,6 +62,7 @@ public class Hyunbo extends Activity{
 
         pageNo =  bodyObject.getString(PAGE_NUM);
         numOfRows = bodyObject.getString(NUM_OF_ROWS);
+        totalCount = bodyObject.getString(TOTAL_COUNT);
 
 
 
