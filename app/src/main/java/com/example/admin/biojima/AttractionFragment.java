@@ -46,7 +46,7 @@ public class AttractionFragment extends Fragment {
     //TestCode
     static Double X = 127.0409111; //경도
     static Double Y = 37.65508056; //위도
-    static int radious = 3;
+
     //TestCode
 
     private ArrayAdapter<String> mForecastAdapter;
@@ -66,6 +66,7 @@ private View rootView;
         // Activity.onOptionsItemSelected will call Fragment.onOptionsItemSelected
         setHasOptionsMenu(true);
 
+
     }
 
     @Override
@@ -73,6 +74,7 @@ private View rootView;
         int id = item.getItemId();
         if(id == R.id.action_refresh)
         {
+            //
             FetchAttractionTask fetchAttractionTask  = new FetchAttractionTask();
             fetchAttractionTask.execute();
             return true;
@@ -150,13 +152,13 @@ private View rootView;
         //tabhost.getTabWidget().getChildAt(3).getLayoutParams().height=80;
 
     }
-
+    String totalCount;
     public class FetchAttractionTask extends AsyncTask<String, Void, String[]> {
 
         private final String LOG_TAG = FetchAttractionTask.class.getSimpleName();
 
         private String[] getAttractionDataFromJson(String forecastJsonStr)
-                throws JSONException {
+            throws JSONException {
 
             // These are the names of the JSON objects that need to be extracted.
             final String RESPONSE = "response";
@@ -167,24 +169,27 @@ private View rootView;
             final String ITEMS = "items";
             final String ITEM = "item";
 
-            String List[] ={};
+            String[] List = new String[100];
             String numOfRows;
-            String pageNo;
-            String totalCount;
+
             String mapx;
             String mapy;
 
 
-            try
-            {
+
                 JSONObject attractionJson = new JSONObject(forecastJsonStr);
                 JSONObject responseObject = attractionJson.getJSONObject(RESPONSE);
                 JSONObject bodyObject = responseObject.getJSONObject(BODY);
+            totalCount = bodyObject.getString(TOTAL_COUNT);
+            if(Integer.parseInt(totalCount)==0)
+            {
+                return null;
+            }
+
                 JSONObject itemsObject = bodyObject.getJSONObject(ITEMS);
                 JSONArray itemArray = itemsObject.getJSONArray(ITEM);
 
-                pageNo = bodyObject.getString(PAGE_NUM);
-                totalCount = bodyObject.getString(TOTAL_COUNT);
+
 
 
                 int val = 100;
@@ -203,12 +208,13 @@ private View rootView;
                     List[i] = PointObject;
                 }
 
-            }catch (Exception e)
-            {
-                List = new String[0];
-            }
+
+
             return List;
         }
+
+
+
 
 
         @Override
@@ -217,7 +223,7 @@ private View rootView;
             // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
-
+            final String myKey = "Si1LZhStHnfooZIH3OW%2BV5kMa9%2BoJy6u7wuOlqfeIXbSAAcBD%2FXOrOvJsKIRNlprnQVfK8%2B2Je%2BgMUXhcEznwg%3D%3D";
             // Will contain the raw JSON response as a string.
             String AttracionJsonStr = null;
 
@@ -225,7 +231,16 @@ private View rootView;
                 // Construct the URL for the OpenWeatherMap query
                 // Possible parameters are avaiable at OWM's forecast API page, at
                 // http://openweathermap.org/API#forecast
-                URL url = new URL("http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?ServiceKey=Si1LZhStHnfooZIH3OW%2BV5kMa9%2BoJy6u7wuOlqfeIXbSAAcBD%2FXOrOvJsKIRNlprnQVfK8%2B2Je%2BgMUXhcEznwg%3D%3D&contentTypeId=12&mapX=126.981106&mapY=37.568477&radius=1000&listYN=Y&MobileOS=ETC&MobileApp=TourAPI3.0_Guide&arrange=B&numOfRows=1000&pageNo=1&_type=json");
+
+                Double x = 127.0409111;
+                Double y = 37.65508056;
+                String radious = "3400";
+
+                URL url = new URL("http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?ServiceKey="
+                        +myKey+"&contentTypeId=12&mapX="
+                        +x.toString()+"&mapY="
+                        +y.toString()+"&radius="
+                        +radious+"&listYN=Y&MobileOS=ETC&MobileApp=TourAPI3.0_Guide&arrange=B&numOfRows=1000&pageNo=1&_type=json");
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -277,14 +292,23 @@ private View rootView;
             } try {
                 return getAttractionDataFromJson(AttracionJsonStr);
             } catch (JSONException e) {
+
+
                 Log.e(LOG_TAG, e.getMessage(), e);
+
                 e.printStackTrace();
+
             }
 
             // This will only happen if there was an error getting or parsing the forecast.
             return null;}
 
         protected void onPostExecute(String[] result) {
+
+            if(Integer.parseInt(totalCount)<2)
+            {
+                Toast.makeText(getActivity().getApplicationContext(),"관광지 정보가 없어요",Toast.LENGTH_LONG).show();
+            }
             if (result != null) {
                 mForecastAdapter.clear();
                 for(String AttractionStr : result) {
