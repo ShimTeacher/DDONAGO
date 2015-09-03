@@ -139,17 +139,17 @@ private View rootView;
         TabHost.TabSpec spec1 = tabhost.newTabSpec("Tab1").setContent(R.id.tab1).setIndicator(getString(R.string.tab1));
         TabHost.TabSpec spec2 = tabhost.newTabSpec("Tab2").setContent(R.id.tab2).setIndicator(getString(R.string.tab2));
         TabHost.TabSpec spec3 = tabhost.newTabSpec("Tab3").setContent(R.id.tab3).setIndicator(getString(R.string.tab3));
-        //TabHost.TabSpec spec4 = tabhost.newTabSpec("Tab3").setContent(R.id.tab4).setIndicator(getString(R.string.tab4));
+        TabHost.TabSpec spec4 = tabhost.newTabSpec("Tab3").setContent(R.id.tab4).setIndicator(getString(R.string.tab4));
 
         tabhost.addTab(spec1);
         tabhost.addTab(spec2);
         tabhost.addTab(spec3);
-        //tabhost.addTab(spec4);
+        tabhost.addTab(spec4);
 
         tabhost.getTabWidget().getChildAt(0).getLayoutParams().height=80;
         tabhost.getTabWidget().getChildAt(1).getLayoutParams().height=80;
         tabhost.getTabWidget().getChildAt(2).getLayoutParams().height=80;
-        //tabhost.getTabWidget().getChildAt(3).getLayoutParams().height=80;
+        tabhost.getTabWidget().getChildAt(3).getLayoutParams().height=80;
 
     }
     String totalCount;
