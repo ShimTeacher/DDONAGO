@@ -70,13 +70,17 @@ private View rootView;
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        FetchAttractionTask fetchAttractionTask  = new FetchAttractionTask();
+        fetchAttractionTask.execute();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id == R.id.action_refresh)
         {
-            //
-            FetchAttractionTask fetchAttractionTask  = new FetchAttractionTask();
-            fetchAttractionTask.execute();
             return true;
         }
 
@@ -93,27 +97,17 @@ private View rootView;
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // Create some dummy data for the ListView.  Here's a sample weekly forecast
-        String[] data = {
-                "Mon 6/23 - Sunny - 31/17",
-                "Tue 6/24 - Foggy - 21/8",
-                "Wed 6/25 - Cloudy - 22/17",
-                "Thurs 6/26 - Rainy - 18/11",
-                "Fri 6/27 - Foggy - 21/10",
-                "Sat 6/28 - TRAPPED IN WEATHERSTATION - 23/18",
-                "Sun 6/29 - Sunny - 20/7"
-        };
-        List<String> weekForecast = new ArrayList<String>(Arrays.asList(data));
 
-        // Now that we have some dummy forecast data, create an ArrayAdapter.
-        // The ArrayAdapter will take data from a source (like our dummy forecast) and
-        // use it to populate the ListView it's attached to.
+        String[] data = {};
+        List<String> Attractiondata = new ArrayList<String>(Arrays.asList(data));
+
+
         mForecastAdapter =
                 new ArrayAdapter<String>(
                         getActivity(), // The current context (this activity)
                         R.layout.list_item_forecast, // The name of the layout ID.
                         R.id.list_item_forecast_textview, // The ID of the textview to populate.
-                        weekForecast);
+                        Attractiondata);
 
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
         tabSetting();//Rootview가 설정이 된 후에 셋팅이되어야한다.
@@ -169,48 +163,51 @@ private View rootView;
             final String ITEMS = "items";
             final String ITEM = "item";
 
-            String[] List = new String[100];
+            String[] List = null;
             String numOfRows;
-
             String mapx;
             String mapy;
 
 
-
-                JSONObject attractionJson = new JSONObject(forecastJsonStr);
-                JSONObject responseObject = attractionJson.getJSONObject(RESPONSE);
-                JSONObject bodyObject = responseObject.getJSONObject(BODY);
+            JSONObject attractionJson = new JSONObject(forecastJsonStr);
+            JSONObject responseObject = attractionJson.getJSONObject(RESPONSE);
+            JSONObject bodyObject = responseObject.getJSONObject(BODY);
             totalCount = bodyObject.getString(TOTAL_COUNT);
-            if(Integer.parseInt(totalCount)==0)
-            {
+            JSONObject itemsObject = bodyObject.getJSONObject(ITEMS);
+            if (Integer.parseInt(totalCount) == 0) {
                 return null;
-            }
+            } else if (Integer.parseInt(totalCount) == 1)
+            {
+                JSONObject itemObject = itemsObject.getJSONObject(ITEM);
+                mapx = itemObject.getString("mapx");
+                mapy = itemObject.getString("mapy");
+                StringBuilder PointObject = new StringBuilder(mapx);
+                PointObject.append(", "+mapy);
+                List = new String[1];
+                List[0] = PointObject.toString();
 
-                JSONObject itemsObject = bodyObject.getJSONObject(ITEMS);
+                return List;
+            } else
+            {
                 JSONArray itemArray = itemsObject.getJSONArray(ITEM);
 
+                int val = Integer.parseInt(totalCount);
+                List = new String[val];
 
-
-
-                int val = 100;
-
-                if (Integer.parseInt(totalCount) < 100) {
-                    val = Integer.parseInt(totalCount);
-                    List = new String[val];
-                }
                 for (int i = 0; i < val; i++)
                 {
-
                     JSONObject AttracionObject = itemArray.getJSONObject(i);
                     mapx = AttracionObject.getString("mapx");
                     mapy = AttracionObject.getString("mapy");
-                    String PointObject = mapx + "," + mapy;
-                    List[i] = PointObject;
+                    StringBuilder PointObject = new StringBuilder(mapx);
+                    PointObject.append(", "+mapy);
+                    List[i] = PointObject.toString();
                 }
 
+                return List;
+            }
 
 
-            return List;
         }
 
 
@@ -234,7 +231,7 @@ private View rootView;
 
                 Double x = 127.0409111;
                 Double y = 37.65508056;
-                String radious = "3400";
+                String radious = "20000";
 
                 URL url = new URL("http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?ServiceKey="
                         +myKey+"&contentTypeId=12&mapX="
@@ -305,10 +302,13 @@ private View rootView;
 
         protected void onPostExecute(String[] result) {
 
-            if(Integer.parseInt(totalCount)<2)
+
+            if(Integer.parseInt(totalCount)==0)
             {
-                Toast.makeText(getActivity().getApplicationContext(),"관광지 정보가 없어요",Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(),"관광지 정보가 없습니다 ㅜㅜ",Toast.LENGTH_LONG).show();
             }
+            Toast.makeText(getActivity().getApplicationContext(),totalCount.toString()+"개의 관광지가 검색됨",Toast.LENGTH_LONG).show();
+
             if (result != null) {
                 mForecastAdapter.clear();
                 for(String AttractionStr : result) {
