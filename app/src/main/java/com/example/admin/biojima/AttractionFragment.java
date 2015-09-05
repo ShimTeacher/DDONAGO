@@ -120,7 +120,7 @@ private View rootView;
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findLocation();
+                getLastKnownLocation();
             }
         });
 
@@ -128,63 +128,30 @@ private View rootView;
         return rootView;
     }
 
-
-    private void findLocation(){
-        LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE); //매니저
-
-
-        long minTime = 10000; //10초간격업데이트 밀리세컨드
-        float minDistance = 0;   //움직엿을때업데이트 항상업데이트
-
-        MyLocationListener listener = new MyLocationListener();
-
-        manager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                minTime, minDistance, listener);  //위치요청 GPSPROVIDER는오차가크다
-        manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                minTime, minDistance, listener);
-        Location lastLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if(lastLocation != null)
-        {
-            Double latitude = lastLocation.getLatitude();
-            Double longitude = lastLocation.getLongitude();
-
-
-            Log.d("ffff", new Double(latitude).toString());
-            Log.d("ffff", new Double(longitude).toString());
-
-//            textview.setText("가장 최근 내 위치 : " +latitude + " , " + longitude );
-//            textview.invalidate();
+    LocationManager mLocationManager;
+    private Location getLastKnownLocation() {
+        mLocationManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+        List<String> providers = mLocationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
+            Location l = mLocationManager.getLastKnownLocation(provider);
+            if (l == null) {
+                continue;
+            }
+            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                // Found best last known location: %s", l);
+                bestLocation = l;
+            }
         }
+
+        Double latitude = bestLocation.getLatitude();
+        Double longitude = bestLocation.getLongitude();
+
+
+        Log.d("gg", new Double(latitude).toString());
+        Log.d("gg", new Double(longitude).toString());
+        return bestLocation;
     }
-
-    class MyLocationListener implements LocationListener {
-        @Override
-        public void onLocationChanged(Location location) {    //location manager가 이메소드를참고하고업데이트함
-            Double latitude = location.getLatitude();
-            Double longitude = location.getLongitude();
-
-//            textview.setText("내 위치 : " +latitude + " , " + longitude );
-//            textview.invalidate();
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-    }
-
-
-
 
 
 

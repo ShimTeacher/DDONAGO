@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 public class Duck extends ActionBarActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +58,7 @@ public class Duck extends ActionBarActivity {
         manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
                 minTime, minDistance, listener);
         Location lastLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
         if(lastLocation != null)
         {
             Double latitude = lastLocation.getLatitude();
