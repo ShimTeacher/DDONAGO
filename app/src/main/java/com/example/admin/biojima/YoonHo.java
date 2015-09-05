@@ -105,6 +105,10 @@ public class YoonHo {
             return "1700";
         }
 
+        if(CurTimeInt < 2300){
+            return "2000";
+        }
+
         return "2300";
     }
 
