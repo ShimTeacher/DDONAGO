@@ -70,8 +70,9 @@ public class AttractionFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        FetchAttractionTask fetchAttractionTask  = new FetchAttractionTask();
-        fetchAttractionTask.execute();
+        String[] a = getLastKnownLocation();
+        Hyunbo hyunbo = new Hyunbo(a);
+
     }
 
     @Override
@@ -95,33 +96,8 @@ public class AttractionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-        String[] data = {};
-        List<String> Attractiondata = new ArrayList<String>(Arrays.asList(data));
-
-
-        mForecastAdapter =
-                new ArrayAdapter<String>(
-                        getActivity(), // The current context (this activity)
-                        R.layout.list_item_forecast, // The name of the layout ID.
-                        R.id.list_item_forecast_textview, // The ID of the textview to populate.
-                        Attractiondata);
-
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
         tabSetting();//Rootview가 설정이 된 후에 셋팅이되어야한다.
-
-        textview = (TextView) rootView.findViewById(R.id.textView);
-        // Get a reference to the ListView, and attach this adapter to it.
-        ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
-        listView.setAdapter(mForecastAdapter);
-
-        Button btn = (Button)rootView.findViewById(R.id.button1);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
 
         return rootView;
@@ -131,7 +107,7 @@ public class AttractionFragment extends Fragment {
 
 
 
-    private Location getLastKnownLocation() {
+    public String[] getLastKnownLocation() {
         LocationManager mLocationManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
         List<String> providers = mLocationManager.getProviders(true);
         Location bestLocation = null;
@@ -145,11 +121,15 @@ public class AttractionFragment extends Fragment {
                 bestLocation = l;
             }
         }
-
         Double latitude = bestLocation.getLatitude();
         Double longitude = bestLocation.getLongitude();
 
-        return bestLocation;
+        String[] array = new String[2];
+        array[0] = latitude.toString();
+        array[1] = longitude.toString();
+
+
+        return array;
     }
 
 
@@ -175,178 +155,10 @@ public class AttractionFragment extends Fragment {
         tabhost.getTabWidget().getChildAt(3).getLayoutParams().height=80;
 
     }
-    String totalCount;
-    public class FetchAttractionTask extends AsyncTask<String, Void, String[]> {
-
-        private final String LOG_TAG = FetchAttractionTask.class.getSimpleName();
-
-        private String[] getAttractionDataFromJson(String forecastJsonStr)
-            throws JSONException {
-
-            // These are the names of the JSON objects that need to be extracted.
-            final String RESPONSE = "response";
-            final String BODY = "body";
-            final String PAGE_NUM = "pageNo";
-            final String NUM_OF_ROWS = "numOfRows";
-            final String TOTAL_COUNT = "totalCount";
-            final String ITEMS = "items";
-            final String ITEM = "item";
-
-            String[] List = null;
-            String numOfRows;
-            String mapx;
-            String mapy;
-
-
-            JSONObject attractionJson = new JSONObject(forecastJsonStr);
-            JSONObject responseObject = attractionJson.getJSONObject(RESPONSE);
-            JSONObject bodyObject = responseObject.getJSONObject(BODY);
-            totalCount = bodyObject.getString(TOTAL_COUNT);
-            JSONObject itemsObject = bodyObject.getJSONObject(ITEMS);
-            if (Integer.parseInt(totalCount) == 0) {
-                return null;
-            } else if (Integer.parseInt(totalCount) == 1)
-            {
-                JSONObject itemObject = itemsObject.getJSONObject(ITEM);
-                mapx = itemObject.getString("mapx");
-                mapy = itemObject.getString("mapy");
-                StringBuilder PointObject = new StringBuilder(mapx);
-                PointObject.append(", "+mapy);
-                List = new String[1];
-                List[0] = PointObject.toString();
-
-                return List;
-            } else
-            {
-                JSONArray itemArray = itemsObject.getJSONArray(ITEM);
-
-                int val = Integer.parseInt(totalCount);
-                List = new String[val];
-
-                for (int i = 0; i < val; i++)
-                {
-                    JSONObject AttracionObject = itemArray.getJSONObject(i);
-                    mapx = AttracionObject.getString("mapx");
-                    mapy = AttracionObject.getString("mapy");
-                    StringBuilder PointObject = new StringBuilder(mapx);
-                    PointObject.append(", "+mapy);
-                    List[i] = PointObject.toString();
-                }
-
-                return List;
-            }
-
-
-        }
 
 
 
 
-
-        @Override
-        protected String[] doInBackground(String... params) {
-            // These two need to be declared outside the try/catch
-            // so that they can be closed in the finally block.
-            HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
-            final String myKey = "Si1LZhStHnfooZIH3OW%2BV5kMa9%2BoJy6u7wuOlqfeIXbSAAcBD%2FXOrOvJsKIRNlprnQVfK8%2B2Je%2BgMUXhcEznwg%3D%3D";
-            // Will contain the raw JSON response as a string.
-            String AttracionJsonStr = null;
-
-            try {
-                // Construct the URL for the OpenWeatherMap query
-                // Possible parameters are avaiable at OWM's forecast API page, at
-                // http://openweathermap.org/API#forecast
-
-                Double x = 127.0409111;
-                Double y = 37.65508056;
-                String radious = "20000";
-
-                URL url = new URL("http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?ServiceKey="
-                        +myKey+"&contentTypeId=12&mapX="
-                        +x.toString()+"&mapY="
-                        +y.toString()+"&radius="
-                        +radious+"&listYN=Y&MobileOS=ETC&MobileApp=TourAPI3.0_Guide&arrange=B&numOfRows=1000&pageNo=1&_type=json");
-
-                // Create the request to OpenWeatherMap, and open the connection
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
-
-                // Read the input stream into a String
-                InputStream inputStream = urlConnection.getInputStream();
-                StringBuffer buffer = new StringBuffer();
-                if (inputStream == null) {
-                    // Nothing to do.
-                    return null;
-                }
-                reader = new BufferedReader(new InputStreamReader(inputStream));
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                    // But it does make debugging a *lot* easier if you print out the completed
-                    // buffer for debugging.
-                    buffer.append(line + "\n");
-                }
-
-                if (buffer.length() == 0) {
-                    // Stream was empty.  No point in parsing.
-                    return null;
-                }
-                AttracionJsonStr = buffer.toString();
-
-
-                //Log.v(LOG_TAG,"JSON-==-=-=--= "+AttracionJsonStr);
-
-            } catch (IOException e) {
-                Log.e(LOG_TAG, "Error ", e);
-                // If the code didn't successfully get the weather data, there's no point in attemping
-                // to parse it.
-                return null;
-            } finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (final IOException e) {
-                        Log.e(LOG_TAG, "Error closing stream", e);
-                    }
-                }
-            } try {
-                return getAttractionDataFromJson(AttracionJsonStr);
-            } catch (JSONException e) {
-
-
-                Log.e(LOG_TAG, e.getMessage(), e);
-
-                e.printStackTrace();
-
-            }
-
-            // This will only happen if there was an error getting or parsing the forecast.
-            return null;}
-
-        protected void onPostExecute(String[] result) {
-
-
-            if(Integer.parseInt(totalCount)==0)
-            {
-                Toast.makeText(getActivity().getApplicationContext(),"관광지 정보가 없습니다 ㅜㅜ",Toast.LENGTH_LONG).show();
-            }
-            Toast.makeText(getActivity().getApplicationContext(),totalCount.toString()+"개의 관광지가 검색됨",Toast.LENGTH_LONG).show();
-
-            if (result != null) {
-                mForecastAdapter.clear();
-                for(String AttractionStr : result) {
-                    mForecastAdapter.add(AttractionStr);
-                }
-                // New data is back from the server.  Hooray!
-            }
-        }
-    }
 
 
 }
