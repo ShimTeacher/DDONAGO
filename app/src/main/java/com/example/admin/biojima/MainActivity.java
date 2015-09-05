@@ -16,7 +16,6 @@ public class MainActivity extends ActionBarActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new AttractionFragment())
                     .commit();
-            YoonHo a = new YoonHo();
         }
     }
 
@@ -36,7 +35,6 @@ public class MainActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-
             return true;
         }
 

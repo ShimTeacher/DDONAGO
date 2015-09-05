@@ -3,15 +3,12 @@ package com.example.admin.biojima;
 /**
  * Created by adslbna2 on 15. 8. 28..
  */
-
-import android.content.SharedPreferences;
-import android.graphics.Point;
+import android.content.Context;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,8 +17,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -56,7 +55,7 @@ private View rootView;
 
 
 
-
+    TextView textview;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +65,13 @@ private View rootView;
         // Activity.onOptionsItemSelected will call Fragment.onOptionsItemSelected
         setHasOptionsMenu(true);
 
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        FetchAttractionTask fetchAttractionTask  = new FetchAttractionTask();
+        fetchAttractionTask.execute();
     }
 
     @Override
@@ -74,10 +79,7 @@ private View rootView;
         int id = item.getItemId();
         if(id == R.id.action_refresh)
         {
-            //
-            FetchAttractionTask fetchAttractionTask  = new FetchAttractionTask();
-            fetchAttractionTask.execute();
-            return true;
+          return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -93,38 +95,63 @@ private View rootView;
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // Create some dummy data for the ListView.  Here's a sample weekly forecast
-        String[] data = {
-                "Mon 6/23 - Sunny - 31/17",
-                "Tue 6/24 - Foggy - 21/8",
-                "Wed 6/25 - Cloudy - 22/17",
-                "Thurs 6/26 - Rainy - 18/11",
-                "Fri 6/27 - Foggy - 21/10",
-                "Sat 6/28 - TRAPPED IN WEATHERSTATION - 23/18",
-                "Sun 6/29 - Sunny - 20/7"
-        };
-        List<String> weekForecast = new ArrayList<String>(Arrays.asList(data));
 
-        // Now that we have some dummy forecast data, create an ArrayAdapter.
-        // The ArrayAdapter will take data from a source (like our dummy forecast) and
-        // use it to populate the ListView it's attached to.
+        String[] data = {};
+        List<String> Attractiondata = new ArrayList<String>(Arrays.asList(data));
+
+
         mForecastAdapter =
                 new ArrayAdapter<String>(
                         getActivity(), // The current context (this activity)
                         R.layout.list_item_forecast, // The name of the layout ID.
                         R.id.list_item_forecast_textview, // The ID of the textview to populate.
-                        weekForecast);
+                        Attractiondata);
 
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
         tabSetting();//Rootview가 설정이 된 후에 셋팅이되어야한다.
 
-
+        textview = (TextView) rootView.findViewById(R.id.textView);
         // Get a reference to the ListView, and attach this adapter to it.
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(mForecastAdapter);
 
+        Button btn = (Button)rootView.findViewById(R.id.button1);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLastKnownLocation();
+            }
+        });
+
+
         return rootView;
     }
+
+    LocationManager mLocationManager;
+    private Location getLastKnownLocation() {
+        mLocationManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+        List<String> providers = mLocationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
+            Location l = mLocationManager.getLastKnownLocation(provider);
+            if (l == null) {
+                continue;
+            }
+            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                // Found best last known location: %s", l);
+                bestLocation = l;
+            }
+        }
+
+        Double latitude = bestLocation.getLatitude();
+        Double longitude = bestLocation.getLongitude();
+
+
+        Log.d("gg", new Double(latitude).toString());
+        Log.d("gg", new Double(longitude).toString());
+        return bestLocation;
+    }
+
 
 
 
@@ -139,17 +166,17 @@ private View rootView;
         TabHost.TabSpec spec1 = tabhost.newTabSpec("Tab1").setContent(R.id.tab1).setIndicator(getString(R.string.tab1));
         TabHost.TabSpec spec2 = tabhost.newTabSpec("Tab2").setContent(R.id.tab2).setIndicator(getString(R.string.tab2));
         TabHost.TabSpec spec3 = tabhost.newTabSpec("Tab3").setContent(R.id.tab3).setIndicator(getString(R.string.tab3));
-        //TabHost.TabSpec spec4 = tabhost.newTabSpec("Tab3").setContent(R.id.tab4).setIndicator(getString(R.string.tab4));
+        TabHost.TabSpec spec4 = tabhost.newTabSpec("Tab3").setContent(R.id.tab4).setIndicator(getString(R.string.tab4));
 
         tabhost.addTab(spec1);
         tabhost.addTab(spec2);
         tabhost.addTab(spec3);
-        //tabhost.addTab(spec4);
+        tabhost.addTab(spec4);
 
         tabhost.getTabWidget().getChildAt(0).getLayoutParams().height=80;
         tabhost.getTabWidget().getChildAt(1).getLayoutParams().height=80;
         tabhost.getTabWidget().getChildAt(2).getLayoutParams().height=80;
-        //tabhost.getTabWidget().getChildAt(3).getLayoutParams().height=80;
+        tabhost.getTabWidget().getChildAt(3).getLayoutParams().height=80;
 
     }
     String totalCount;
@@ -169,48 +196,51 @@ private View rootView;
             final String ITEMS = "items";
             final String ITEM = "item";
 
-            String[] List = new String[100];
+            String[] List = null;
             String numOfRows;
-
             String mapx;
             String mapy;
 
 
-
-                JSONObject attractionJson = new JSONObject(forecastJsonStr);
-                JSONObject responseObject = attractionJson.getJSONObject(RESPONSE);
-                JSONObject bodyObject = responseObject.getJSONObject(BODY);
+            JSONObject attractionJson = new JSONObject(forecastJsonStr);
+            JSONObject responseObject = attractionJson.getJSONObject(RESPONSE);
+            JSONObject bodyObject = responseObject.getJSONObject(BODY);
             totalCount = bodyObject.getString(TOTAL_COUNT);
-            if(Integer.parseInt(totalCount)==0)
-            {
+            JSONObject itemsObject = bodyObject.getJSONObject(ITEMS);
+            if (Integer.parseInt(totalCount) == 0) {
                 return null;
-            }
+            } else if (Integer.parseInt(totalCount) == 1)
+            {
+                JSONObject itemObject = itemsObject.getJSONObject(ITEM);
+                mapx = itemObject.getString("mapx");
+                mapy = itemObject.getString("mapy");
+                StringBuilder PointObject = new StringBuilder(mapx);
+                PointObject.append(", "+mapy);
+                List = new String[1];
+                List[0] = PointObject.toString();
 
-                JSONObject itemsObject = bodyObject.getJSONObject(ITEMS);
+                return List;
+            } else
+            {
                 JSONArray itemArray = itemsObject.getJSONArray(ITEM);
 
+                int val = Integer.parseInt(totalCount);
+                List = new String[val];
 
-
-
-                int val = 100;
-
-                if (Integer.parseInt(totalCount) < 100) {
-                    val = Integer.parseInt(totalCount);
-                    List = new String[val];
-                }
                 for (int i = 0; i < val; i++)
                 {
-
                     JSONObject AttracionObject = itemArray.getJSONObject(i);
                     mapx = AttracionObject.getString("mapx");
                     mapy = AttracionObject.getString("mapy");
-                    String PointObject = mapx + "," + mapy;
-                    List[i] = PointObject;
+                    StringBuilder PointObject = new StringBuilder(mapx);
+                    PointObject.append(", "+mapy);
+                    List[i] = PointObject.toString();
                 }
 
+                return List;
+            }
 
 
-            return List;
         }
 
 
@@ -234,7 +264,7 @@ private View rootView;
 
                 Double x = 127.0409111;
                 Double y = 37.65508056;
-                String radious = "3400";
+                String radious = "20000";
 
                 URL url = new URL("http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?ServiceKey="
                         +myKey+"&contentTypeId=12&mapX="
@@ -305,10 +335,13 @@ private View rootView;
 
         protected void onPostExecute(String[] result) {
 
-            if(Integer.parseInt(totalCount)<2)
+
+            if(Integer.parseInt(totalCount)==0)
             {
-                Toast.makeText(getActivity().getApplicationContext(),"관광지 정보가 없어요",Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(),"관광지 정보가 없습니다 ㅜㅜ",Toast.LENGTH_LONG).show();
             }
+            Toast.makeText(getActivity().getApplicationContext(),totalCount.toString()+"개의 관광지가 검색됨",Toast.LENGTH_LONG).show();
+
             if (result != null) {
                 mForecastAdapter.clear();
                 for(String AttractionStr : result) {

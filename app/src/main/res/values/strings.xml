@@ -8,4 +8,5 @@
     <string name = "tab2"> 검색 </string>
     <string name = "tab3"> 최근기록 </string>
     <string name = "tab4"> 설정 </string>
+    <string name="title_activity_duck">Duck</string>
 </resources>
