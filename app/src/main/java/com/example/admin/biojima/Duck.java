@@ -1,35 +1,49 @@
 package com.example.admin.biojima;
 
-/**
- * Created by Cp on 2015-08-26.
- */
-
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
-//import android.support.v7.app.ActionBarActivity;
+public class Duck extends ActionBarActivity {
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_duck);
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_duck, menu);
+        return true;
+    }
 
-public class DeokHyeon extends ActionBarActivity {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
-    TextView textview;
-    Button button;
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
 
+            findLocation();
 
+            return true;
+        }
 
+        return super.onOptionsItemSelected(item);
+    }
 
-    public void onButton1Clicked(View v)
-    {
+    private void findLocation(){
         LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE); //매니저
 
 
@@ -49,22 +63,22 @@ public class DeokHyeon extends ActionBarActivity {
             Double longitude = lastLocation.getLongitude();
 
 
-            textview.setText("가장 최근 내 위치 : " +latitude + " , " + longitude );
-            textview.invalidate();
+            Log.d("ffff", new Double(latitude).toString());
+            Log.d("ffff",new Double(longitude).toString());
+
+//            textview.setText("가장 최근 내 위치 : " +latitude + " , " + longitude );
+//            textview.invalidate();
         }
-
-
-
     }
 
-    class MyLocationListener implements LocationListener{
+    class MyLocationListener implements LocationListener {
         @Override
         public void onLocationChanged(Location location) {    //location manager가 이메소드를참고하고업데이트함
             Double latitude = location.getLatitude();
             Double longitude = location.getLongitude();
 
-            textview.setText("내 위치 : " +latitude + " , " + longitude );
-            textview.invalidate();
+//            textview.setText("내 위치 : " +latitude + " , " + longitude );
+//            textview.invalidate();
         }
 
         @Override
@@ -81,27 +95,5 @@ public class DeokHyeon extends ActionBarActivity {
         public void onProviderDisabled(String provider) {
 
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }
