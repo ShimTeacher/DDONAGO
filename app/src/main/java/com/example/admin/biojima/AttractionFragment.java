@@ -4,14 +4,9 @@ package com.example.admin.biojima;
  * Created by adslbna2 on 15. 8. 28..
  */
 
-import android.content.SharedPreferences;
-import android.graphics.Point;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -56,7 +52,7 @@ private View rootView;
 
 
 
-
+    TextView textview;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +61,6 @@ private View rootView;
         // Activity.onCreateOptionsMenu will call Fragment.onCreateOptionsMenu
         // Activity.onOptionsItemSelected will call Fragment.onOptionsItemSelected
         setHasOptionsMenu(true);
-
 
     }
 
@@ -93,6 +88,7 @@ private View rootView;
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
         // Create some dummy data for the ListView.  Here's a sample weekly forecast
         String[] data = {
                 "Mon 6/23 - Sunny - 31/17",
@@ -118,13 +114,19 @@ private View rootView;
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
         tabSetting();//Rootview가 설정이 된 후에 셋팅이되어야한다.
 
-
+        textview = (TextView) rootView.findViewById(R.id.textView);
         // Get a reference to the ListView, and attach this adapter to it.
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(mForecastAdapter);
 
         return rootView;
     }
+
+
+
+
+
+
 
 
 
