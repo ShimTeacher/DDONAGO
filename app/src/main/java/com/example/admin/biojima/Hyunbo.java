@@ -1,6 +1,10 @@
 package com.example.admin.biojima;
 
 import android.app.Activity;
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationManager;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -11,11 +15,12 @@ import org.json.JSONObject;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by adslbna2 on 15. 8. 24..
  */
-public class Hyunbo extends Activity{
+public class Hyunbo {
 
 
 

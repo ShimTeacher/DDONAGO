@@ -49,7 +49,7 @@ public class AttractionFragment extends Fragment {
     //TestCode
 
     private ArrayAdapter<String> mForecastAdapter;
-private View rootView;
+    private View rootView;
     public AttractionFragment() {
     }
 
@@ -119,7 +119,7 @@ private View rootView;
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getLastKnownLocation();
+
             }
         });
 
@@ -127,9 +127,12 @@ private View rootView;
         return rootView;
     }
 
-    LocationManager mLocationManager;
+
+
+
+
     private Location getLastKnownLocation() {
-        mLocationManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+        LocationManager mLocationManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
         List<String> providers = mLocationManager.getProviders(true);
         Location bestLocation = null;
         for (String provider : providers) {
@@ -146,15 +149,8 @@ private View rootView;
         Double latitude = bestLocation.getLatitude();
         Double longitude = bestLocation.getLongitude();
 
-
-        Log.d("gg", new Double(latitude).toString());
-        Log.d("gg", new Double(longitude).toString());
         return bestLocation;
     }
-
-
-
-
 
 
 
