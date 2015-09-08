@@ -37,28 +37,6 @@
                     android:orientation="vertical">
 
 
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="내위치확인하기"
-                        android:id="@+id/button1"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="45dp"
-                        android:onClick="onButton1Clicked"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="New Text"
-                        android:id="@+id/textView"
-                        android:layout_below="@+id/testview"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="64dp"
-                        />
-
-
 
                 </LinearLayout>
 
