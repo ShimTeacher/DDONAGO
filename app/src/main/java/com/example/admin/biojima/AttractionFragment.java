@@ -3,13 +3,14 @@ package com.example.admin.biojima;
 /**
  * Created by adslbna2 on 15. 8. 28..
  */
+
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,29 +19,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
  */
 public class AttractionFragment extends Fragment {
+
+
+
+    EditText editText;
+    Geocoder coder;
+    TextView textView;
+    Button button;
+
 
     //TestCode
     static Double X = 127.0409111; //경도
@@ -65,13 +63,15 @@ public class AttractionFragment extends Fragment {
         // Activity.onOptionsItemSelected will call Fragment.onOptionsItemSelected
         setHasOptionsMenu(true);
 
+
+
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        String[] a = getLastKnownLocation();
-        Hyunbo hyunbo = new Hyunbo(a);
+
 
     }
 
@@ -98,6 +98,45 @@ public class AttractionFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
         tabSetting();//Rootview가 설정이 된 후에 셋팅이되어야한다.
+
+
+
+
+        editText = (EditText) rootView.findViewById(R.id.editText);
+        textView = (TextView) rootView.findViewById(R.id.textView);
+        button = (Button)rootView.findViewById(R.id.button5);
+
+        coder = new Geocoder(getActivity(), Locale.KOREAN); //주소를이용해서찾아준다
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String address = editText.getText().toString(); //주소받아옴
+                //Toast toastView = Toast.makeText(getApplicationContext(), "Hello world", Toast.LENGTH_LONG);
+                try {
+                    List<Address> addressList = coder.getFromLocationName(address, 3); //name을통해인식 동일한이름으로 최대 3개까지 반환하겠다
+                    if (addressList != null) {
+                        for (int i = 0; i < addressList.size(); i++) {
+                            Address curAddress = addressList.get(i);
+                            StringBuffer buffer = new StringBuffer();
+                            for (int k = 0; k <= curAddress.getMaxAddressLineIndex(); k++) {
+                                buffer.append(curAddress.getAddressLine(k));
+                            }
+
+                            Hyunbo.lat=new Double(curAddress.getLatitude()).toString();
+                            Hyunbo.lon=new Double(curAddress.getLongitude()).toString();
+                            buffer.append("\n\tlatitude: " + curAddress.getLatitude());
+                            buffer.append("\n\tlongitude: " + curAddress.getLongitude());
+
+                            textView.append("\nAddress #" + i + " : " + buffer.toString());
+                            String[] list = getLastKnownLocation();
+                            Hyunbo hyunbo = new Hyunbo(list);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
 
         return rootView;
@@ -130,6 +169,9 @@ public class AttractionFragment extends Fragment {
 
 
         return array;
+
+
+
     }
 
 
@@ -156,6 +198,33 @@ public class AttractionFragment extends Fragment {
 
     }
 
+
+
+
+    public void onButton1Clicked(View v){
+        String address = editText.getText().toString(); //주소받아옴
+        //Toast toastView = Toast.makeText(getApplicationContext(), "Hello world", Toast.LENGTH_LONG);
+        try {
+            List<Address> addressList= coder.getFromLocationName(address, 3); //name을통해인식 동일한이름으로 최대 3개까지 반환하겠다
+            if(addressList != null)
+            {
+                for(int i=0; i< addressList.size(); i++){
+                    Address curAddress = addressList.get(i);
+                    StringBuffer buffer = new StringBuffer();
+                    for(int k=0; k<= curAddress.getMaxAddressLineIndex(); k++){
+                        buffer.append(curAddress.getAddressLine(k));
+                    }
+                    buffer.append("\n\tlatitude: " + curAddress.getLatitude());
+                    buffer.append("\n\tlongitude: " + curAddress.getLongitude());
+
+                    textView.append("\nAddress #"+i+" : "+buffer.toString());
+                }
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
 
 
 

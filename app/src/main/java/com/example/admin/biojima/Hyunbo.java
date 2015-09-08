@@ -29,6 +29,10 @@ import java.util.List;
  * Created by adslbna2 on 15. 8. 24..
  */
 public class Hyunbo {
+
+    static String lat ;
+    static String lon ;
+
     Hyunbo()
     {
 
@@ -43,7 +47,7 @@ public class Hyunbo {
         fetchAttractionTask.execute(str);
 
     }
-        public class FetchAttractionTask extends AsyncTask<String, Void, String[]> {
+        public class FetchAttractionTask extends AsyncTask<String[], Void, String[]> {
             String totalCount;
             private final String LOG_TAG = FetchAttractionTask.class.getSimpleName();
 
@@ -113,7 +117,7 @@ public class Hyunbo {
 
 
             @Override
-            protected String[] doInBackground(String... params) {
+            protected String[] doInBackground(String[]... params) {
                 // These two need to be declared outside the try/catch
                 // so that they can be closed in the finally block.
                 HttpURLConnection urlConnection = null;
@@ -130,15 +134,15 @@ public class Hyunbo {
                     String x;
                     String y;
 
-                        x = params[1];
-                        y = params[0];
+                        x = params[0][1];
+                        y = params[0][0];
 
                     String radious = "10000";
 
                     URL url = new URL("http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?ServiceKey="
                             +myKey+"&contentTypeId=12&mapX="
-                            +x+"&mapY="
-                            +y+"&radius="
+                            +lon+"&mapY="
+                            +lat+"&radius="
                             +radious+"&listYN=Y&MobileOS=ETC&MobileApp=TourAPI3.0_Guide&arrange=B&numOfRows=1000&pageNo=1&_type=json");
 
                     // Create the request to OpenWeatherMap, and open the connection
