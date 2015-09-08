@@ -33,17 +33,19 @@ public class YoonHo {
     static final int AFTERNOON = 1;
     static final int NIGHT= 2 ;
     static final int MID_NIGHT = 3;
+    String[] args;
 
-    public YoonHo(){
+    public YoonHo(String[] args1){
+
+        args = args1;
         updateWeather();
+
     }
 
     public void updateWeather(){
-        String[] a = new String[2];
-        a[0] = "61,129";
-        a[1] = "89,91";
+
         FetchWeatherTask weatherTask = new FetchWeatherTask();
-        weatherTask.execute(a);
+        weatherTask.execute(args);
     }
 
     private boolean isMorning(String time){
@@ -411,6 +413,7 @@ public class YoonHo {
                     Log.d("ffff", a[0]);
                     Log.d("ffff", a[1]);
                     Log.d("ffff", a[2]);
+                    Log.d("ffff","-----------");
                 }
             }catch(JSONException e){
                 Log.d("ffff","JSONEception");

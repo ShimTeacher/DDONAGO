@@ -10,7 +10,7 @@ public class Change {
     private static double         slat1, slat2, alon, alat, xn, yn, ra, theta;
 
 
-    static int changeLonLat(double lon, double lat){
+    static String changeLonLat(double lon, double lat){
 
         PI = Math.asin(1.0)*2.0;
         DEGRAD = PI/180.0;
@@ -42,10 +42,10 @@ public class Change {
         int x = (int)(((float)(ra*Math.sin(theta)) + map.xo) + 1.5);
         int y = (int)(((float)(ro - ra*Math.cos(theta)) + map.yo) + 1.5);
 
-        System.out.println(x);
-        System.out.println(y);
+        String a;
+        a = new Integer(x).toString() + "," + new Integer(y).toString();
 
-        return 0;
+        return a;
     }
 }
 

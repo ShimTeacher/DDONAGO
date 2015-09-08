@@ -1,15 +1,7 @@
 package com.example.admin.biojima;
 
-import android.app.Activity;
-import android.content.Context;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-import android.widget.TabHost;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,9 +13,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by adslbna2 on 15. 8. 24..
@@ -102,7 +91,7 @@ public class Hyunbo {
                         mapx = AttracionObject.getString("mapx");
                         mapy = AttracionObject.getString("mapy");
                         StringBuilder PointObject = new StringBuilder(mapx);
-                        PointObject.append(", "+mapy);
+                        PointObject.append(","+mapy);
                         List[i] = PointObject.toString();
                     }
 
@@ -208,21 +197,32 @@ public class Hyunbo {
 
             @Override
             protected void onPostExecute(String[] strings) {
-                super.onPostExecute(strings);
+                String[] AttrStr = new String[strings.length];
+                int i = 0;
 
+                for(String str:strings){
+                    Double lon = new Double(str.split(",")[0]);
+                    Double lat = new Double(str.split(",")[1]);
 
-
-                if(Integer.parseInt(totalCount)==0)
-                {
-                    Log.v("ffff","그리고 아무것도 없었다.");
+                    AttrStr[i] = Change.changeLonLat(lon,lat);
+                    i++;
                 }
 
-                else
-                {
-                    for(String str: strings)
-                        Log.v("ffff",str);
-                    Log.v("fffff",totalCount+"개의 관광지가 검색됨");
-                }
+
+                YoonHo a = new YoonHo(AttrStr);
+
+
+//                if(Integer.parseInt(totalCount)==0)
+//                {
+//                    Log.v("ffff","그리고 아무것도 없었다.");
+//                }
+//
+//                else
+//                {
+//                    for(String str: strings)
+//                        Log.v("ffff",str);
+//                    Log.v("fffff",totalCount+"개의 관광지가 검색됨");
+//                }
 
 
 
