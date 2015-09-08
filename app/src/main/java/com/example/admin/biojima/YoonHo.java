@@ -408,7 +408,6 @@ public class YoonHo {
             try{
                 for(int i=0;i<WeatherDataList.length;i++) {
                     String[] a = getRainproDataFromJson(WeatherDataList[i]);
-                  //  Log.d("ffff",new Integer(WeatherDataList.length).toString());
                     Log.d("ffff", a[0]);
                     Log.d("ffff", a[1]);
                     Log.d("ffff", a[2]);
