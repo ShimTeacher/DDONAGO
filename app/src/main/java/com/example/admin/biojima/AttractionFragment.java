@@ -71,8 +71,7 @@ public class AttractionFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        String[] a = getLastKnownLocation();
-        Hyunbo hyunbo = new Hyunbo(a);
+
 
     }
 
@@ -114,22 +113,26 @@ public class AttractionFragment extends Fragment {
                 String address = editText.getText().toString(); //주소받아옴
                 //Toast toastView = Toast.makeText(getApplicationContext(), "Hello world", Toast.LENGTH_LONG);
                 try {
-                    List<Address> addressList= coder.getFromLocationName(address, 3); //name을통해인식 동일한이름으로 최대 3개까지 반환하겠다
-                    if(addressList != null)
-                    {
-                        for(int i=0; i< addressList.size(); i++){
+                    List<Address> addressList = coder.getFromLocationName(address, 3); //name을통해인식 동일한이름으로 최대 3개까지 반환하겠다
+                    if (addressList != null) {
+                        for (int i = 0; i < addressList.size(); i++) {
                             Address curAddress = addressList.get(i);
                             StringBuffer buffer = new StringBuffer();
-                            for(int k=0; k<= curAddress.getMaxAddressLineIndex(); k++){
+                            for (int k = 0; k <= curAddress.getMaxAddressLineIndex(); k++) {
                                 buffer.append(curAddress.getAddressLine(k));
                             }
+
+                            Hyunbo.lat=new Double(curAddress.getLatitude()).toString();
+                            Hyunbo.lon=new Double(curAddress.getLongitude()).toString();
                             buffer.append("\n\tlatitude: " + curAddress.getLatitude());
                             buffer.append("\n\tlongitude: " + curAddress.getLongitude());
 
-                            textView.append("\nAddress #"+i+" : "+buffer.toString());
+                            textView.append("\nAddress #" + i + " : " + buffer.toString());
+                            String[] list = getLastKnownLocation();
+                            Hyunbo hyunbo = new Hyunbo(list);
                         }
                     }
-                } catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
