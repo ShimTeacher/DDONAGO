@@ -13,6 +13,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * Created by adslbna2 on 15. 8. 24..
@@ -37,6 +45,10 @@ public class Hyunbo {
 
     }
         public class FetchAttractionTask extends AsyncTask<String[], Void, String[]> {
+
+            HashMap<String , String[]> map = new HashMap<String , String[]>();
+
+
             String totalCount;
             private final String LOG_TAG = FetchAttractionTask.class.getSimpleName();
 
@@ -51,12 +63,14 @@ public class Hyunbo {
                 final String TOTAL_COUNT = "totalCount";
                 final String ITEMS = "items";
                 final String ITEM = "item";
-
+                final String ADDR = "addr1";
+                ArrayList<String> arrayList = new ArrayList<String>();
+                Boolean[] checked = null;
                 String[] List = null;
                 String numOfRows;
                 String mapx;
                 String mapy;
-
+                String addr;
 
                 JSONObject attractionJson = new JSONObject(forecastJsonStr);
                 JSONObject responseObject = attractionJson.getJSONObject(RESPONSE);
@@ -67,40 +81,66 @@ public class Hyunbo {
                     return null;
                 } else if (Integer.parseInt(totalCount) == 1)
                 {
+                    String[] test;
                     JSONObject itemsObject = bodyObject.getJSONObject(ITEMS);
                     JSONObject itemObject = itemsObject.getJSONObject(ITEM);
                     mapx = itemObject.getString("mapx");
                     mapy = itemObject.getString("mapy");
+                    addr = itemObject.getString(ADDR);
+                    String[] locationSet = {mapx,mapy};
+                    test= addr.split(" ");
+
+                    map.put(test[1],locationSet);
+
                     StringBuilder PointObject = new StringBuilder(mapx);
                     PointObject.append(", "+mapy);
                     List = new String[1];
                     List[0] = PointObject.toString();
+
 
                     return List;
                 } else
                 {
                     JSONObject itemsObject = bodyObject.getJSONObject(ITEMS);
                     JSONArray itemArray = itemsObject.getJSONArray(ITEM);
-
                     int val = Integer.parseInt(totalCount);
                     List = new String[val];
+                    String[] test;
+                    for (int i = 0; i < val; i++) {
 
-                    for (int i = 0; i < val; i++)
-                    {
                         JSONObject AttracionObject = itemArray.getJSONObject(i);
                         mapx = AttracionObject.getString("mapx");
                         mapy = AttracionObject.getString("mapy");
-                        StringBuilder PointObject = new StringBuilder(mapx);
-                        PointObject.append(","+mapy);
-                        List[i] = PointObject.toString();
+                        addr = AttracionObject.getString(ADDR);
+                        String[] locationSet = {mapx, mapy};// mapx = 127~~~~~~~~~ , mapy = 37~~~~~~~~~~~~~~
+                        test = addr.split(" ");
+
+                        if (test.length > 1) {
+                            map.put(test[1], locationSet);
+
+                        }
+//                        StringBuilder PointObject = new StringBuilder(mapx);
+//                        PointObject.append("," + mapy);
+//                        List[i] = PointObject.toString();
                     }
+
+                    Set<Entry<String, String[]>> set = map.entrySet();
+                    Iterator<Entry<String, String[]>> it = set.iterator();
+                    int i = 0;
+                    while (it.hasNext()) {
+                        Map.Entry<String, String[]> k = (Map.Entry<String, String[]>)it.next();
+                        List[i] = k.getValue()[0]+","+k.getValue()[1];
+                        Log.v("TEST",List[i]);
+                        i++;
+                    }
+
+
 
                     return List;
                 }
 
 
             }
-
 
 
 
@@ -126,12 +166,12 @@ public class Hyunbo {
                         x = params[0][1];
                         y = params[0][0];
 
-                    String radious = "10000";
+                    String radious = "20000";
 
                     URL url = new URL("http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?ServiceKey="
                             +myKey+"&contentTypeId=12&mapX="
-                            +lon+"&mapY="
-                            +lat+"&radius="
+                            +x+"&mapY="
+                            +y+"&radius="
                             +radious+"&listYN=Y&MobileOS=ETC&MobileApp=TourAPI3.0_Guide&arrange=B&numOfRows=1000&pageNo=1&_type=json");
 
                     // Create the request to OpenWeatherMap, and open the connection
@@ -197,21 +237,16 @@ public class Hyunbo {
 
             @Override
             protected void onPostExecute(String[] strings) {
-                String[] AttrStr = new String[strings.length];
-                int i = 0;
 
-                for(String str:strings){
-                    Double lon = new Double(str.split(",")[0]);
-                    Double lat = new Double(str.split(",")[1]);
 
-                    AttrStr[i] = Change.changeLonLat(lon,lat);
-                    i++;
+
+                for(String str :strings)
+                {
+                    Log.v("gggg",str);
                 }
-
-
-                YoonHo a = new YoonHo(AttrStr);
-
-
+//
+//
+//
 //                if(Integer.parseInt(totalCount)==0)
 //                {
 //                    Log.v("ffff","그리고 아무것도 없었다.");
@@ -223,7 +258,7 @@ public class Hyunbo {
 //                        Log.v("ffff",str);
 //                    Log.v("fffff",totalCount+"개의 관광지가 검색됨");
 //                }
-
+//
 
 
             }

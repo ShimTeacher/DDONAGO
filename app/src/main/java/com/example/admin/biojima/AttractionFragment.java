@@ -72,6 +72,9 @@ public class AttractionFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        String[] a = getLastKnownLocation();
+        Hyunbo hyunbo = new Hyunbo(a);
+
 
     }
 
