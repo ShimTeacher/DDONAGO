@@ -66,6 +66,7 @@ public class Hyunbo {
                 final String ADDR = "addr1";
                 ArrayList<String> arrayList = new ArrayList<String>();
                 Boolean[] checked = null;
+                String[] TempList = null;
                 String[] List = null;
                 String numOfRows;
                 String mapx;
@@ -89,14 +90,22 @@ public class Hyunbo {
                     addr = itemObject.getString(ADDR);
                     String[] locationSet = {mapx,mapy};
                     test= addr.split(" ");
+                    if (test.length > 1) {
+                        map.put(test[1], locationSet);
 
-                    map.put(test[1],locationSet);
+                    }
 
-                    StringBuilder PointObject = new StringBuilder(mapx);
-                    PointObject.append(", "+mapy);
-                    List = new String[1];
-                    List[0] = PointObject.toString();
+                    Set<Entry<String, String[]>> set = map.entrySet();
+                    Iterator<Entry<String, String[]>> it = set.iterator();
+                    List = new String[set.size()];
+                    int i = 0;
+                    while (it.hasNext()) {
+                        Map.Entry<String, String[]> k = (Map.Entry<String, String[]>)it.next();
+                        List[i] = k.getValue()[0]+","+k.getValue()[1];
+                        //Log.v("TEST",TempList[i]);
+                        i++;
 
+                    }
 
                     return List;
                 } else
@@ -104,7 +113,6 @@ public class Hyunbo {
                     JSONObject itemsObject = bodyObject.getJSONObject(ITEMS);
                     JSONArray itemArray = itemsObject.getJSONArray(ITEM);
                     int val = Integer.parseInt(totalCount);
-                    List = new String[val];
                     String[] test;
                     for (int i = 0; i < val; i++) {
 
@@ -119,23 +127,18 @@ public class Hyunbo {
                             map.put(test[1], locationSet);
 
                         }
-//                        StringBuilder PointObject = new StringBuilder(mapx);
-//                        PointObject.append("," + mapy);
-//                        List[i] = PointObject.toString();
                     }
 
                     Set<Entry<String, String[]>> set = map.entrySet();
                     Iterator<Entry<String, String[]>> it = set.iterator();
+                    List = new String[set.size()];
                     int i = 0;
                     while (it.hasNext()) {
                         Map.Entry<String, String[]> k = (Map.Entry<String, String[]>)it.next();
                         List[i] = k.getValue()[0]+","+k.getValue()[1];
-                        Log.v("TEST",List[i]);
+                        //Log.v("TEST",TempList[i]);
                         i++;
                     }
-
-
-
                     return List;
                 }
 
@@ -240,13 +243,10 @@ public class Hyunbo {
 
 
 
-                for(String str :strings)
+               for(String str :strings)
                 {
                     Log.v("gggg",str);
                 }
-//
-//
-//
 //                if(Integer.parseInt(totalCount)==0)
 //                {
 //                    Log.v("ffff","그리고 아무것도 없었다.");
