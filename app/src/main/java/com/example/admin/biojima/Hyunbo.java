@@ -238,13 +238,20 @@ public class Hyunbo {
 
             @Override
             protected void onPostExecute(String[] strings) {
+                String[] AttrStr = new String[strings.length];
+                int i = 0;
 
+                for(String str:strings){
+                    Double lon = new Double(str.split(",")[0]);
+                    Double lat = new Double(str.split(",")[1]);
 
-
-               for(String str :strings)
-                {
-                    Log.v("gggg",str);
+                    AttrStr[i] = Change.changeLonLat(lon,lat);
+                    i++;
                 }
+
+
+                YoonHo a = new YoonHo(AttrStr);
+
 //                if(Integer.parseInt(totalCount)==0)
 //                {
 //                    Log.v("ffff","그리고 아무것도 없었다.");
