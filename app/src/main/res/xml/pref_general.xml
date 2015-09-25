@@ -1,0 +1,33 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <EditTextPreference
+        android:title="@string/pref_location_label"
+        android:key="@string/pref_location_key"
+        android:defaultValue="@string/pref_location_default"
+        android:inputType="text"
+        android:singleLine="true" />
+
+    <ListPreference
+        android:title="@string/date_Selection_label"
+        android:key="@string/date_Selection_key"
+        android:defaultValue="@string/date_Selection_tomorrow"
+        android:entryValues="@array/date_Selection_values"
+        android:entries="@array/date_Selection_options" />
+
+    <ListPreference
+        android:title="@string/time_Selection_label"
+        android:key="@string/time_Selection_key"
+        android:defaultValue="@string/time_Selection_12_18"
+        android:entryValues="@array/time_Selection_values"
+        android:entries="@array/time_Selection_options" />
+
+
+    <ListPreference
+        android:title="@string/search_criteria_label"
+        android:key="@string/search_criteria_key"
+        android:defaultValue="@string/search_criteria_attraction"
+        android:entryValues="@array/search_criteria_values"
+        android:entries="@array/search_criteria_options" />
+
+</PreferenceScreen>

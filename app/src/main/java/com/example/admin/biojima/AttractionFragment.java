@@ -5,6 +5,7 @@ package com.example.admin.biojima;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -72,7 +73,9 @@ public class AttractionFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        String[] a = getLastKnownLocation();
+        String[] a = new String[3];
+        a[0] = "33.27635833";
+           a[1] =    "126.7220889";
         Hyunbo hyunbo = new Hyunbo(a);
 
 
@@ -83,6 +86,7 @@ public class AttractionFragment extends Fragment {
         int id = item.getItemId();
         if(id == R.id.action_refresh)
         {
+
           return true;
         }
 

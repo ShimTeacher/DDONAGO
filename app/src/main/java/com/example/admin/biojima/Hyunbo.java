@@ -46,7 +46,6 @@ public class Hyunbo {
 
             HashMap<String , String[]> map = new HashMap<String , String[]>();
 
-
             String totalCount;
             private final String LOG_TAG = FetchAttractionTask.class.getSimpleName();
 
@@ -62,11 +61,10 @@ public class Hyunbo {
                 final String ITEMS = "items";
                 final String ITEM = "item";
                 final String ADDR = "addr1";
+
                 ArrayList<String> arrayList = new ArrayList<String>();
                 Boolean[] checked = null;
-                String[] TempList = null;
                 String[] List = null;
-                String numOfRows;
                 String mapx;
                 String mapy;
                 String addr;
@@ -252,18 +250,31 @@ public class Hyunbo {
 
                 YoonHo a = new YoonHo(AttrStr);
 
-//                if(Integer.parseInt(totalCount)==0)
-//                {
-//                    Log.v("ffff","그리고 아무것도 없었다.");
-//                }
-//
-//                else
-//                {
-//                    for(String str: strings)
-//                        Log.v("ffff",str);
-//                    Log.v("fffff",totalCount+"개의 관광지가 검색됨");
-//                }
-//
+
+
+
+                // 윤호한테 넘겨온 값에 대해서 지역별로 Sorting 해야 함.
+                // [3, 16, 40, 2, 1];
+                // -> [노원구, 도봉구, 동대문구, 강북구, 성북구]
+                //  버튼이 눌리면 이 정보로 다시 쿼리를 날려 정보를 가져와야 한다.
+                //
+                //
+                //
+                //
+
+
+                if(Integer.parseInt(totalCount)==0)
+                {
+                    Log.v("ffff","그리고 아무것도 없었다.");
+                }
+
+                else
+                {
+                    for(String str: strings)
+                        Log.v("관광지 정보",str);
+                    Log.v("관광지 정보",totalCount+"개의 관광지가 검색됨");
+                }
+
 
 
             }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+
+    <string-array name="date_Selection_options">
+        <item>@string/date_Selection_label_today</item>
+        <item>@string/date_Selection_label_tomorrow</item>
+        <item>@string/date_Selection_label_afterTomorrow</item>
+    </string-array>
+    <string-array name="date_Selection_values">
+        <item>@string/date_Selection_today</item>
+        <item>@string/date_Selection_tomorrow</item>
+        <item>@string/date_Selection_afterTomorrow</item>
+    </string-array>
+
+    <string-array name="time_Selection_options">
+        <item>@string/time_Selection_label_00_06</item>
+        <item>@string/time_Selection_label_06_12</item>
+        <item>@string/time_Selection_label_12_18</item>
+        <item>@string/time_Selection_label_18_24</item>
+    </string-array>
+    <string-array name="time_Selection_values">
+        <item>@string/time_Selection_00_06</item>
+        <item>@string/time_Selection_06_12</item>
+        <item>@string/time_Selection_12_18</item>
+        <item>@string/time_Selection_18_24</item>
+    </string-array>
+
+    <string-array name="search_criteria_options">
+        <item>@string/date_Selection_label_today</item>
+        <item>@string/date_Selection_label_tomorrow</item>
+        <item>@string/date_Selection_label_afterTomorrow</item>
+    </string-array>
+    <string-array name="search_criteria_values">
+        <item>@string/search_criteria_label_attraction</item>
+        <item>@string/search_criteria_label_cultural_facilities</item>
+        <item>@string/search_criteria_label_festival</item>
+        <item>@string/search_criteria_label_leisure_sports</item>
+    </string-array>
+
+
+</resources>
