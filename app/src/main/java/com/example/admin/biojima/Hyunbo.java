@@ -35,13 +35,13 @@ public class Hyunbo {
         fetchAttractionTask.execute();
 
     }
-    Hyunbo(String[] str)
+    Hyunbo(String[] str) //str 위도경도
     {
-
         FetchAttractionTask fetchAttractionTask = new FetchAttractionTask();
         fetchAttractionTask.execute(str);
-
     }
+
+
         public class FetchAttractionTask extends AsyncTask<String[], Void, String[]> {
 
             HashMap<String , String[]> map = new HashMap<String , String[]>();
@@ -161,14 +161,18 @@ public class Hyunbo {
                     // http://openweathermap.org/API#forecast
                     String x;
                     String y;
+                    String id = null;
 
-                        x = params[0][1];
-                        y = params[0][0];
 
-                    String radious = "20000";
+                    x = params[0][1];
+                    y = params[0][0];
+                    String radious = params[0][2];
+                    id = params[0][3];
+
+
 
                     URL url = new URL("http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?ServiceKey="
-                            +myKey+"&contentTypeId=12&mapX="
+                            +myKey+"&contentTypeId="+ id +"&mapX="
                             +x+"&mapY="
                             +y+"&radius="
                             +radious+"&listYN=Y&MobileOS=ETC&MobileApp=TourAPI3.0_Guide&arrange=B&numOfRows=1000&pageNo=1&_type=json");
@@ -236,19 +240,35 @@ public class Hyunbo {
 
             @Override
             protected void onPostExecute(String[] strings) {
-                String[] AttrStr = new String[strings.length];
-                int i = 0;
 
-                for(String str:strings){
-                    Double lon = new Double(str.split(",")[0]);
-                    Double lat = new Double(str.split(",")[1]);
+                if(Integer.parseInt(totalCount)==0)
+                {
+                    Log.v("ffff","그리고 아무것도 없었다.");
+                }
 
-                    AttrStr[i] = Change.changeLonLat(lon,lat);
-                    i++;
+                else
+                {
+                    String[] AttrStr = new String[strings.length];
+                    int i = 0;
+
+                    for(String str: strings)
+                        Log.v("관광지 정보",str);
+                    Log.v("관광지 정보",totalCount+"개의 관광지가 검색됨");
+
+                    for(String str:strings){
+                        Double lon = new Double(str.split(",")[0]);
+                        Double lat = new Double(str.split(",")[1]);
+
+                        AttrStr[i] = Change.changeLonLat(lon,lat);
+                        i++;
+                    }
+
+                    YoonHo a = new YoonHo(AttrStr);
                 }
 
 
-                YoonHo a = new YoonHo(AttrStr);
+
+
 
 
 
@@ -263,17 +283,6 @@ public class Hyunbo {
                 //
 
 
-                if(Integer.parseInt(totalCount)==0)
-                {
-                    Log.v("ffff","그리고 아무것도 없었다.");
-                }
-
-                else
-                {
-                    for(String str: strings)
-                        Log.v("관광지 정보",str);
-                    Log.v("관광지 정보",totalCount+"개의 관광지가 검색됨");
-                }
 
 
 
