@@ -1,6 +1,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
 
+    <SlidePreference/>
+
     <EditTextPreference
         android:title="@string/pref_location_label"
         android:key="@string/pref_location_key"
