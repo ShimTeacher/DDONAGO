@@ -13,13 +13,13 @@
 
 
     <!-- Label for the location preference [CHAR LIMIT=30] -->
-    <string name="pref_location_label">Location</string>
+    <string name="pref_location_label">반경</string>
 
     <!-- Key name for storing location in SharedPreferences [CHAR LIMIT=NONE] -->
-    <string name="pref_location_key" translatable="false">location</string>
+    <string name="pref_location_key" translatable="false">meter</string>
 
     <!-- Default postal code for location preference [CHAR LIMIT=NONE] -->
-    <string name="pref_location_default" translatable="false">94043</string>
+    <string name="pref_location_default" translatable="false">10000</string>
 
     <string name = "date_Selection_label"> 날짜 선택 </string>
     <string name = "date_Selection_label_today"> 오늘 </string>
@@ -42,7 +42,7 @@
     <string name = "time_Selection_18_24" translatable="false"> 1824 </string>
 
     <string name = "search_method_label"> 검색 방법 </string>
-    <string name = "search_method_label_myLocation"> 내 위치 </string>
+    <string name = "search_method_labe_myLocation"> 내 위치 </string>
     <string name = "search_method_label_region"> 지역 기반 </string>
 
     <string name = "search_criteria_label"> 검색 기준 </string>
@@ -50,10 +50,10 @@
     <string name = "search_criteria_label_cultural_facilities"> 문화시설 </string>
     <string name = "search_criteria_label_festival"> 축제공연행사 </string>
     <string name = "search_criteria_label_leisure_sports"> 레포츠 </string>
-    <string name = "search_criteria_key" translatable="false" > attraction </string>
-    <string name = "search_criteria_attraction" translatable="false">  cultural_facilities </string>
-    <string name = "search_criteria_cultural_facilities" translatable="false" > cultural </string>
-    <string name = "search_criteria_festival" translatable="false" > festival </string>
-    <string name = "search_criteria_leisure_sports" translatable="false" > leisure_sports </string>
+    <string name = "search_criteria_key" translatable="false" > criteria </string>
+    <string name = "search_criteria_attraction" translatable="false"> 12 </string>
+    <string name = "search_criteria_cultural_facilities" translatable="false" > 14 </string>
+    <string name = "search_criteria_festival" translatable="false" > 15 </string>
+    <string name = "search_criteria_leisure_sports" translatable="false" > 28 </string>
 
 </resources>

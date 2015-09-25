@@ -46,8 +46,8 @@ public class SettingsActivity extends PreferenceActivity
         // updated when the preference changes.
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_location_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.date_Selection_key)));
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.search_criteria_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.time_Selection_key)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.search_criteria_key)));
     }
 
     /**

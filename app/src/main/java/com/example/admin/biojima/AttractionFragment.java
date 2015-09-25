@@ -6,11 +6,13 @@ package com.example.admin.biojima;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,7 +46,8 @@ public class AttractionFragment extends Fragment {
     //TestCode
     static Double X = 127.0409111; //경도
     static Double Y = 37.65508056; //위도
-
+    String[] location = new String[2];
+    String[] settings= new String [10];
     //TestCode
 
     private ArrayAdapter<String> mForecastAdapter;
@@ -73,13 +76,34 @@ public class AttractionFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        String[] a = new String[3];
-        a[0] = "33.27635833";
-           a[1] =    "126.7220889";
-        Hyunbo hyunbo = new Hyunbo(a);
+       update();
+
+
 
 
     }
+
+    private void update() {
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = prefs.getString(getString(R.string.pref_location_key),
+                getString(R.string.pref_location_default));
+
+        String site = prefs.getString(getString(R.string.search_criteria_key),
+                       getString(R.string.pref_location_default));
+
+
+        settings[0] = "37.65508056";
+        settings[1] = "127.0409111";
+        settings[2] = location;
+        settings[3] = site;
+
+
+        Hyunbo hyunbo = new Hyunbo(settings);
+    }
+
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
