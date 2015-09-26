@@ -33,7 +33,13 @@ public class YoonHo {
     static final int AFTERNOON = 1;
     static final int NIGHT= 2 ;
     static final int MID_NIGHT = 3;
+
+    static int ChooseTime;
     String[] args;
+
+    static{
+        ChooseTime = 2;
+    }
 
     public YoonHo(String[] args1){
 
@@ -80,7 +86,7 @@ public class YoonHo {
         Integer CurTimeInt = new Integer(CurrentTime);
 
         if(CurTimeInt < 200){
-            return "0000";
+            return "-1";
         }
 
         if(CurTimeInt < 500){
@@ -135,7 +141,11 @@ public class YoonHo {
         JSONArray itemListData = itemsData.getJSONArray(WD_ITEM);
 
         //choice time of example
-        final int CHOOSE_TIME = MID_NIGHT;
+        final int CHOOSE_TIME;
+        if(ChooseTime == 0){CHOOSE_TIME = MORNING;}
+        else if(ChooseTime == 1){CHOOSE_TIME = AFTERNOON;}
+        else if(ChooseTime == 2){CHOOSE_TIME = NIGHT;}
+        else{CHOOSE_TIME = MID_NIGHT;}
 
         //Date calculate
         String baseDate = itemListData.getJSONObject(0).getString(WD_BASEDATE);
@@ -158,7 +168,6 @@ public class YoonHo {
 
         //Data's cnt
         double todayCnt = 0,tomorrowCnt = 0,afterTomorrowCnt = 0;
-
 
 
         for(int i = 0;i < itemListData.length(); i++){
@@ -318,6 +327,12 @@ public class YoonHo {
             //Announce Time
             String CurrentTime = announceTime(Hour);
 
+            //if current time 00 ~ 02
+            if(CurrentTime.equals("-1")){
+                cal.add(Calendar.DATE,-1);
+                Today = fm.format(cal.getTime());
+            }
+
             //Return Type is json
             String JsonType = "json";
 
@@ -410,6 +425,7 @@ public class YoonHo {
             try{
                 for(int i=0;i<WeatherDataList.length;i++) {
                     String[] a = getRainproDataFromJson(WeatherDataList[i]);
+                    Log.d("ffff",new Integer(ChooseTime).toString());
                     Log.d("ffff", a[0]);
                     Log.d("ffff", a[1]);
                     Log.d("ffff", a[2]);
