@@ -28,7 +28,7 @@ public class Hyunbo {
     static String lat ;
     static String lon ;
     String[] sigunguList = null;
-    String radious;
+
     Hyunbo()
     {
 
@@ -196,15 +196,13 @@ public class Hyunbo {
                     String x;
                     String y;
                     String id = null;
-
+                    String radious;
                     x = params[0][1];
                     y = params[0][0];
 
                     radious = params[0][2];
 
-                    if(radious.equals("0")){
-                        radious="10000";
-                    }id = params[0][3];
+                    id = params[0][3];
 
 
 
@@ -278,7 +276,7 @@ public class Hyunbo {
 
                 if(Integer.parseInt(totalCount)==0)
                 {
-                    Log.v("ffff","그리고 아무것도 없었다.");
+                    Log.v("ffff"," total count = 0 관광지 정보가 없음");
                 }
                 else
                 {

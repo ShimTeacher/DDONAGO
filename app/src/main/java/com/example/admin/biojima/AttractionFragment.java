@@ -82,18 +82,16 @@ public class AttractionFragment extends Fragment {
     private void update(String lat,String lon) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String location = prefs.getString(getString(R.string.pref_location_key),
-                getString(R.string.pref_location_default));
 
         String site = prefs.getString(getString(R.string.search_criteria_key),
-                       getString(R.string.pref_location_default));
-        int value = prefs.getInt(PREFERENCE_KEY, 0);
+                       getString(R.string.search_criteria_attraction));
+        int value = prefs.getInt(PREFERENCE_KEY, 10000);
 
         String ChooseTime = prefs.getString(getString(R.string.time_Selection_key),
-                getString(R.string.pref_location_default));
+                getString(R.string.time_Selection_12_18));
 
         String ChooseDate = prefs.getString(getString(R.string.date_Selection_key),
-                getString(R.string.pref_location_default));
+                getString(R.string.date_Selection_tomorrow));
 
         settings[0] = lat;
         settings[1] = lon;
