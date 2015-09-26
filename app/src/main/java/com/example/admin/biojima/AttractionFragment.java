@@ -22,13 +22,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
@@ -40,7 +40,7 @@ public class AttractionFragment extends Fragment {
     EditText editText;
     Geocoder coder;
     TextView textView;
-    Button button;
+    ImageButton button;
 
     ImageButton settingButton;
 
@@ -77,11 +77,9 @@ public class AttractionFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-         update();
-
     }
 
-    private void update() {
+    private void update(String lat,String lon) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String location = prefs.getString(getString(R.string.pref_location_key),
@@ -91,11 +89,20 @@ public class AttractionFragment extends Fragment {
                        getString(R.string.pref_location_default));
         int value = prefs.getInt(PREFERENCE_KEY, 0);
 
-        Log.v("1a2a3a", value+"<- good");
-        settings[0] = "37.65508056";
-        settings[1] = "127.0409111";
+        String ChooseTime = prefs.getString(getString(R.string.time_Selection_key),
+                getString(R.string.pref_location_default));
+
+        String ChooseDate = prefs.getString(getString(R.string.date_Selection_key),
+                getString(R.string.pref_location_default));
+
+        settings[0] = lat;
+        settings[1] = lon;
         settings[2] = new Integer(value).toString();
         settings[3] = site;
+
+
+        YoonHo.ChooseTime = new Integer(ChooseTime);
+
 
         Hyunbo hyunbo = new Hyunbo(settings);
     }
@@ -133,41 +140,46 @@ public class AttractionFragment extends Fragment {
             }
         });
 
-//        editText = (EditText) rootView.findViewById(R.id.editText);
-//        textView = (TextView) rootView.findViewById(R.id.textView);
-//        button = (Button)rootView.findViewById(R.id.button5);
-//
-//        coder = new Geocoder(getActivity(), Locale.KOREAN); //주소를이용해서찾아준다
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String address = editText.getText().toString(); //주소받아옴
-//                //Toast toastView = Toast.makeText(getApplicationContext(), "Hello world", Toast.LENGTH_LONG);
-//                try {
-//                    List<Address> addressList = coder.getFromLocationName(address, 3); //name을통해인식 동일한이름으로 최대 3개까지 반환하겠다
-//                    if (addressList != null) {
-//                        for (int i = 0; i < addressList.size(); i++) {
-//                            Address curAddress = addressList.get(i);
-//                            StringBuffer buffer = new StringBuffer();
-//                            for (int k = 0; k <= curAddress.getMaxAddressLineIndex(); k++) {
-//                                buffer.append(curAddress.getAddressLine(k));
-//                            }
-//
-//                            Hyunbo.lat=new Double(curAddress.getLatitude()).toString();
-//                            Hyunbo.lon=new Double(curAddress.getLongitude()).toString();
-//                            buffer.append("\n\tlatitude: " + curAddress.getLatitude());
-//                            buffer.append("\n\tlongitude: " + curAddress.getLongitude());
-//
-//                            textView.append("\nAddress #" + i + " : " + buffer.toString());
-//                            String[] list = getLastKnownLocation();
-//                            Hyunbo hyunbo = new Hyunbo(list);
-//                        }
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
+        editText = (EditText) rootView.findViewById(R.id.editText);
+        //textView = (TextView) rootView.findViewById(R.id.textView);
+        button = (ImageButton)rootView.findViewById(R.id.findButton);
+
+        coder = new Geocoder(getActivity(), Locale.KOREAN); //주소를이용해서찾아준다
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String address = editText.getText().toString(); //주소받아옴
+                //Toast toastView = Toast.makeText(getApplicationContext(), "Hello world", Toast.LENGTH_LONG);
+                try {
+                    List<Address> addressList = coder.getFromLocationName(address, 3); //name을통해인식 동일한이름으로 최대 3개까지 반환하겠다
+                    if (addressList != null) {
+                        for (int i = 0; i < addressList.size(); i++) {
+                            Address curAddress = addressList.get(i);
+                            StringBuffer buffer = new StringBuffer();
+                            for (int k = 0; k <= curAddress.getMaxAddressLineIndex(); k++) {
+                                buffer.append(curAddress.getAddressLine(k));
+                            }
+
+//                            Hyunbo.lat = new Double(curAddress.getLatitude()).toString();
+//                            Hyunbo.lon = new Double(curAddress.getLongitude()).toString();
+                            buffer.append("\n\tlatitude: " + curAddress.getLatitude());
+                            buffer.append("\n\tlongitude: " + curAddress.getLongitude());
+
+                            // textView.append("\nAddress #" + i + " : " + buffer.toString());
+                            Log.d("gggg", "\nAddress #" + i + " : " + buffer.toString());
+                            String[] list = getLastKnownLocation();
+                            Log.d("gggg",list[0]);
+                            Log.d("gggg", list[1]);
+
+                            update(list[0],list[1]);
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.d("gggg", "error");
+                    e.printStackTrace();
+                }
+            }
+        });
 
 
         return rootView;
@@ -198,11 +210,7 @@ public class AttractionFragment extends Fragment {
         array[0] = latitude.toString();
         array[1] = longitude.toString();
 
-
         return array;
-
-
-
     }
 
 

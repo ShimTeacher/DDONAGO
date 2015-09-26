@@ -28,6 +28,7 @@ public class Hyunbo {
     static String lat ;
     static String lon ;
     String[] sigunguList = null;
+    String radious;
     Hyunbo()
     {
 
@@ -186,7 +187,7 @@ public class Hyunbo {
                 final String myKey = "Si1LZhStHnfooZIH3OW%2BV5kMa9%2BoJy6u7wuOlqfeIXbSAAcBD%2FXOrOvJsKIRNlprnQVfK8%2B2Je%2BgMUXhcEznwg%3D%3D";
                 // Will contain the raw JSON response as a string.
                 String AttracionJsonStr = null;
-                String radious;
+
 
                 try {
                     // Construct the URL for the OpenWeatherMap query
@@ -196,12 +197,14 @@ public class Hyunbo {
                     String y;
                     String id = null;
 
-
                     x = params[0][1];
                     y = params[0][0];
 
                     radious = params[0][2];
-                    id = params[0][3];
+
+                    if(radious.equals("0")){
+                        radious="10000";
+                    }id = params[0][3];
 
 
 
@@ -261,11 +264,9 @@ public class Hyunbo {
                     return getAttractionDataFromJson(AttracionJsonStr);
                 } catch (JSONException e) {
 
-
                     Log.e(LOG_TAG, e.getMessage(), e);
 
                     e.printStackTrace();
-
 
                 }
 
@@ -279,12 +280,12 @@ public class Hyunbo {
                 {
                     Log.v("ffff","그리고 아무것도 없었다.");
                 }
-
                 else
                 {
                     try {
                         String[] AttrStr = new String[strings.length];
                         int i = 0;
+
                         Log.v("관광지 정보", totalCount + "개의 관광지가 검색됨");
                         for (String str : strings)
                             Log.v("관광지 정보", str);

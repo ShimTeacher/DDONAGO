@@ -25,7 +25,7 @@
     <string name = "date_Selection_label_today"> 오늘 </string>
     <string name = "date_Selection_label_tomorrow"> 내일 </string>
     <string name = "date_Selection_label_afterTomorrow"> 모레 </string>
-    <string name = "date_Selection_key" translatable="false" > date </string>
+    <string name = "date_Selection_key" translatable="false" > ChooseDate </string>
     <string name = "date_Selection_today" translatable="false">  today </string>
     <string name = "date_Selection_tomorrow" translatable="false" > tomorrow </string>
     <string name = "date_Selection_afterTomorrow" translatable="false" > afterTomorrow </string>
@@ -35,11 +35,11 @@
     <string name = "time_Selection_label_06_12"> 6시 - 12시 </string>
     <string name = "time_Selection_label_12_18"> 12시 - 18시 </string>
     <string name = "time_Selection_label_18_24"> 18시 - 24시 </string>
-    <string name = "time_Selection_key" translatable="false" > 시간 선택 </string>
-    <string name = "time_Selection_00_06" translatable="false"> 0006 </string>
-    <string name = "time_Selection_06_12" translatable="false"> 0612 </string>
-    <string name = "time_Selection_12_18" translatable="false"> 1218 </string>
-    <string name = "time_Selection_18_24" translatable="false"> 1824 </string>
+    <string name = "time_Selection_key" translatable="false" > ChooseTime </string>
+    <string name = "time_Selection_00_06" translatable="false"> 0 </string>
+    <string name = "time_Selection_06_12" translatable="false"> 1 </string>
+    <string name = "time_Selection_12_18" translatable="false"> 2 </string>
+    <string name = "time_Selection_18_24" translatable="false"> 3 </string>
 
     <string name = "search_method_label"> 검색 방법 </string>
     <string name = "search_method_labe_myLocation"> 내 위치 </string>
