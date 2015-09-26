@@ -1,12 +1,8 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:example="http://schemas.android.com/tools">
 
 
-    <EditTextPreference
-        android:title="@string/pref_location_label"
-        android:key="@string/pref_location_key"
-        android:defaultValue="@string/pref_location_default"
-        android:inputType="text"
-        android:singleLine="true" />
+
 
     <ListPreference
         android:title="@string/date_Selection_label"
@@ -21,6 +17,7 @@
         android:defaultValue="@string/time_Selection_12_18"
         android:entryValues="@array/time_Selection_values"
         android:entries="@array/time_Selection_options" />
+
 
 
     <ListPreference

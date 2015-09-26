@@ -2,6 +2,7 @@ package com.example.admin.biojima;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -18,6 +19,7 @@ import android.preference.RingtonePreference;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
+import android.widget.Toast;
 
 
 import java.util.List;
@@ -34,17 +36,20 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends PreferenceActivity
-        implements Preference.OnPreferenceChangeListener {
-
+implements Preference.OnPreferenceChangeListener, SharedPreferences.OnSharedPreferenceChangeListener {
+    private static final String PREFERENCE_KEY = "seekBarPreference";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Add 'general' preferences, defined in the XML file
         addPreferencesFromResource(R.xml.pref_general);
+        addPreferencesFromResource(R.xml.preferences);
 
+        // Register for changes (for example only)
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
         // For all preferences, attach an OnPreferenceChangeListener so the UI summary can be
         // updated when the preference changes.
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_location_key)));
+        //bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_location_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.date_Selection_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.time_Selection_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.search_criteria_key)));
@@ -67,6 +72,8 @@ public class SettingsActivity extends PreferenceActivity
                         .getString(preference.getKey(), ""));
     }
 
+
+
     @Override
     public boolean onPreferenceChange(Preference preference, Object value) {
         String stringValue = value.toString();
@@ -86,4 +93,19 @@ public class SettingsActivity extends PreferenceActivity
         return true;
     }
 
+
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(PREFERENCE_KEY)) {
+            // Notify that value was really changed
+            int value = sharedPreferences.getInt(PREFERENCE_KEY, 0);
+            //Toast.makeText(this, getString(R.string.summary, value), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        // Unregister from changes
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        super.onDestroy();
+    }
 }

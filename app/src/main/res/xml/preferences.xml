@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:example="http://schemas.android.com/apk/res/com.example.admin.biojima">
+
+    <com.example.admin.biojima.SeekBarPreference
+        android:key="seekBarPreference"
+        android:title="반경"
+        android:dialogTitle="Meter"
+        android:summary="@string/summary"
+        android:persistent="true"
+        android:defaultValue="10000"
+        example:minValue="1000"
+        example:maxValue="20000" />
+
+
+</PreferenceScreen>

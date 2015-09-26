@@ -36,7 +36,7 @@ import java.util.Locale;
 public class AttractionFragment extends Fragment {
 
 
-
+    private static final String PREFERENCE_KEY = "seekBarPreference";
     EditText editText;
     Geocoder coder;
     TextView textView;
@@ -77,12 +77,9 @@ public class AttractionFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-       update();
-
     }
 
-    private void update() {
+    private void update(String lat,String lon) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String location = prefs.getString(getString(R.string.pref_location_key),
@@ -90,6 +87,7 @@ public class AttractionFragment extends Fragment {
 
         String site = prefs.getString(getString(R.string.search_criteria_key),
                        getString(R.string.pref_location_default));
+        int value = prefs.getInt(PREFERENCE_KEY, 0);
 
         String ChooseTime = prefs.getString(getString(R.string.time_Selection_key),
                 getString(R.string.pref_location_default));
@@ -97,12 +95,13 @@ public class AttractionFragment extends Fragment {
         String ChooseDate = prefs.getString(getString(R.string.date_Selection_key),
                 getString(R.string.pref_location_default));
 
-        settings[0] = "37.65508056";
-        settings[1] = "127.0409111";
-        settings[2] = location;
+        settings[0] = lat;
+        settings[1] = lon;
+        settings[2] = new Integer(value).toString();
         settings[3] = site;
 
         YoonHo.ChooseTime = new Integer(ChooseTime);
+
 
         Hyunbo hyunbo = new Hyunbo(settings);
     }
@@ -173,7 +172,8 @@ public class AttractionFragment extends Fragment {
                             String[] list = getLastKnownLocation();
                             Log.d("gggg",list[0]);
                             Log.d("gggg", list[1]);
-                            Hyunbo hyunbo = new Hyunbo(list);
+
+                            update(list[0],list[1]);
                         }
                     }
                 } catch (Exception e) {
