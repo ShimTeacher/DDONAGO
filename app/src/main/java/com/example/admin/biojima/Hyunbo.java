@@ -27,7 +27,7 @@ public class Hyunbo {
 
     static String lat ;
     static String lon ;
-
+    String[] sigunguList = null;
     Hyunbo()
     {
 
@@ -45,6 +45,7 @@ public class Hyunbo {
         public class FetchAttractionTask extends AsyncTask<String[], Void, String[]> {
 
             HashMap<String , String[]> map = new HashMap<String , String[]>();
+            HashMap<String , String[]> map2 = new HashMap<String , String[]>();
 
             String totalCount;
             private final String LOG_TAG = FetchAttractionTask.class.getSimpleName();
@@ -61,13 +62,18 @@ public class Hyunbo {
                 final String ITEMS = "items";
                 final String ITEM = "item";
                 final String ADDR = "addr1";
+                final String AREACODE = "areacode";
+                final String SIGUNGUCODE = "sigungucode";
 
                 ArrayList<String> arrayList = new ArrayList<String>();
                 Boolean[] checked = null;
                 String[] List = null;
+
                 String mapx;
                 String mapy;
                 String addr;
+                String areacode;
+                String sigungucode;
 
                 JSONObject attractionJson = new JSONObject(forecastJsonStr);
                 JSONObject responseObject = attractionJson.getJSONObject(RESPONSE);
@@ -81,27 +87,45 @@ public class Hyunbo {
                     String[] test;
                     JSONObject itemsObject = bodyObject.getJSONObject(ITEMS);
                     JSONObject itemObject = itemsObject.getJSONObject(ITEM);
-                    mapx = itemObject.getString("mapx");
-                    mapy = itemObject.getString("mapy");
-                    addr = itemObject.getString(ADDR);
-                    String[] locationSet = {mapx,mapy};
-                    test= addr.split(" ");
-                    if (test.length > 1) {
-                        map.put(test[1], locationSet);
+                    try {
+                        mapx = itemObject.getString("mapx");
+                        mapy = itemObject.getString("mapy");
+                        addr = itemObject.getString(ADDR);
+                        areacode = itemObject.getString(AREACODE);
+                        sigungucode = itemObject.getString(SIGUNGUCODE);
+                        String[] locationSet = {mapx,mapy};
+                        String[] sigunCode = {areacode, sigungucode};
+
+                        test= addr.split(" ");
+                        if (test.length > 1) {
+                            map.put(test[1], locationSet);
+                            map2.put(test[1], sigunCode);
+
+                        }
+
+
+                        Set<Entry<String, String[]>> set = map.entrySet();
+                        Set<Entry<String, String[]>> set2 = map2.entrySet();
+                        Iterator<Entry<String, String[]>> it = set.iterator();
+                        Iterator<Entry<String, String[]>> it2 = set2.iterator();
+                        List = new String[set.size()];
+                        sigunguList= new String[set2.size()];
+
+                        int i = 0;
+                        while (it.hasNext()) {
+                            Map.Entry<String, String[]> k = (Map.Entry<String, String[]>)it.next();
+                            Map.Entry<String, String[]> k2 = (Map.Entry<String, String[]>)it2.next();
+                            List[i] = k.getValue()[0]+","+k.getValue()[1];
+                            sigunguList[i] = k2.getValue()[0]+","+k2.getValue()[1];
+                            i++;
+                        }
 
                     }
-
-                    Set<Entry<String, String[]>> set = map.entrySet();
-                    Iterator<Entry<String, String[]>> it = set.iterator();
-                    List = new String[set.size()];
-                    int i = 0;
-                    while (it.hasNext()) {
-                        Map.Entry<String, String[]> k = (Map.Entry<String, String[]>)it.next();
-                        List[i] = k.getValue()[0]+","+k.getValue()[1];
-                        //Log.v("TEST",TempList[i]);
-                        i++;
-
+                    catch (JSONException e)
+                    {
+                        Log.v("JSON!!!","관광지가 1개인데 ...?");
                     }
+
 
                     return List;
                 } else
@@ -113,36 +137,45 @@ public class Hyunbo {
                     for (int i = 0; i < val; i++) {
 
                         JSONObject AttracionObject = itemArray.getJSONObject(i);
-                        mapx = AttracionObject.getString("mapx");
-                        mapy = AttracionObject.getString("mapy");
-                        addr = AttracionObject.getString(ADDR);
+                        try{
+                            mapx = AttracionObject.getString("mapx");
+                            mapy = AttracionObject.getString("mapy");
+                            addr = AttracionObject.getString(ADDR);
+                            areacode = AttracionObject.getString(AREACODE);
+                            sigungucode = AttracionObject.getString(SIGUNGUCODE);
+                        }
+                        catch (JSONException e)
+                        {
+                            break;
+                        }
+
                         String[] locationSet = {mapx, mapy};// mapx = 127~~~~~~~~~ , mapy = 37~~~~~~~~~~~~~~
+                        String[] sigunCode = {areacode, sigungucode};
                         test = addr.split(" ");
 
                         if (test.length > 1) {
                             map.put(test[1], locationSet);
-
+                            map2.put(test[1], sigunCode);
                         }
                     }
 
                     Set<Entry<String, String[]>> set = map.entrySet();
+                    Set<Entry<String, String[]>> set2 = map2.entrySet();
                     Iterator<Entry<String, String[]>> it = set.iterator();
+                    Iterator<Entry<String, String[]>> it2 = set2.iterator();
                     List = new String[set.size()];
+                    sigunguList = new String[set2.size()];
                     int i = 0;
                     while (it.hasNext()) {
                         Map.Entry<String, String[]> k = (Map.Entry<String, String[]>)it.next();
+                        Map.Entry<String, String[]> k2 = (Map.Entry<String, String[]>)it2.next();
                         List[i] = k.getValue()[0]+","+k.getValue()[1];
-                        //Log.v("TEST",TempList[i]);
+                        sigunguList[i] = k2.getValue()[0]+","+k2.getValue()[1];
                         i++;
                     }
                     return List;
                 }
-
-
             }
-
-
-
 
             @Override
             protected String[] doInBackground(String[]... params) {
@@ -248,48 +281,27 @@ public class Hyunbo {
 
                 else
                 {
-                    String[] AttrStr = new String[strings.length];
-                    int i = 0;
+                    try {
+                        String[] AttrStr = new String[strings.length];
+                        int i = 0;
+                        Log.v("관광지 정보", totalCount + "개의 관광지가 검색됨");
+                        for (String str : strings)
+                            Log.v("관광지 정보", str);
 
-                    for(String str: strings)
-                        Log.v("관광지 정보",str);
-                    Log.v("관광지 정보",totalCount+"개의 관광지가 검색됨");
+                        for (String str : strings) {
+                            Double lon = new Double(str.split(",")[0]);
+                            Double lat = new Double(str.split(",")[1]);
 
-                    for(String str:strings){
-                        Double lon = new Double(str.split(",")[0]);
-                        Double lat = new Double(str.split(",")[1]);
-
-                        AttrStr[i] = Change.changeLonLat(lon,lat);
-                        i++;
+                            AttrStr[i] = Change.changeLonLat(lon, lat);
+                            i++;
+                        }
+                        YoonHo a = new YoonHo(AttrStr);
                     }
-
-                    YoonHo a = new YoonHo(AttrStr);
+                    catch (Exception e)
+                    {
+                        Log.v("에러러러러", totalCount + "개의 관광지가 검색됨");
+                    }
                 }
-
-
-
-
-
-
-
-
-                // 윤호한테 넘겨온 값에 대해서 지역별로 Sorting 해야 함.
-                // [3, 16, 40, 2, 1];
-                // -> [노원구, 도봉구, 동대문구, 강북구, 성북구]
-                //  버튼이 눌리면 이 정보로 다시 쿼리를 날려 정보를 가져와야 한다.
-                //
-                //
-                //
-                //
-
-
-
-
-
             }
         }
-
-
-
-
 }

@@ -14,6 +14,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,7 +36,7 @@ import java.util.List;
 public class AttractionFragment extends Fragment {
 
 
-
+    private static final String PREFERENCE_KEY = "seekBarPreference";
     EditText editText;
     Geocoder coder;
     TextView textView;
@@ -76,11 +77,7 @@ public class AttractionFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-       update();
-
-
-
+         update();
 
     }
 
@@ -92,12 +89,14 @@ public class AttractionFragment extends Fragment {
 
         String site = prefs.getString(getString(R.string.search_criteria_key),
                        getString(R.string.pref_location_default));
+        int value = prefs.getInt(PREFERENCE_KEY, 0);
 
-
+        Log.v("1a2a3a", value+"<- good");
         settings[0] = "37.65508056";
         settings[1] = "127.0409111";
-        settings[2] = location;
+        settings[2] = new Integer(value).toString();
         settings[3] = site;
+
 
 
         Hyunbo hyunbo = new Hyunbo(settings);
