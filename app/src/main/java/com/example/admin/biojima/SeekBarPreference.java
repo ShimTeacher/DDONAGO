@@ -23,8 +23,8 @@ public final class SeekBarPreference extends DialogPreference implements SeekBar
     private static final String ATTR_MAX_VALUE = "maxValue";
 
     // Default values for defaults
-    private static final int DEFAULT_CURRENT_VALUE = 5000;
-    private static final int DEFAULT_MIN_VALUE = 1000;
+    private static final int DEFAULT_CURRENT_VALUE = 10000;
+    private static final int DEFAULT_MIN_VALUE = 5000;
     private static final int DEFAULT_MAX_VALUE = 20000;
 
     // Real defaults

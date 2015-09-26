@@ -295,7 +295,7 @@ public class Hyunbo {
                             AttrStr[i] = Change.changeLonLat(lon, lat);
                             i++;
                         }
-                        YoonHo a = new YoonHo(AttrStr);
+                        //YoonHo a = new YoonHo(AttrStr);
                     }
                     catch (Exception e)
                     {

@@ -59,5 +59,6 @@
     <string name="summary">Current answer is: %1$d</string>
     <color name="white_color">#000</color>
     <color name="gray_color">#000</color>
+    <string name="title_activity_result">ResultActivity</string>
 
 </resources>
