@@ -186,7 +186,7 @@ public class Hyunbo {
                 final String myKey = "Si1LZhStHnfooZIH3OW%2BV5kMa9%2BoJy6u7wuOlqfeIXbSAAcBD%2FXOrOvJsKIRNlprnQVfK8%2B2Je%2BgMUXhcEznwg%3D%3D";
                 // Will contain the raw JSON response as a string.
                 String AttracionJsonStr = null;
-
+                String radious;
 
                 try {
                     // Construct the URL for the OpenWeatherMap query
@@ -199,7 +199,8 @@ public class Hyunbo {
 
                     x = params[0][1];
                     y = params[0][0];
-                    String radious = params[0][2];
+
+                    radious = params[0][2];
                     id = params[0][3];
 
 

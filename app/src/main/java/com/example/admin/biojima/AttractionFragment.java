@@ -97,20 +97,14 @@ public class AttractionFragment extends Fragment {
         settings[2] = new Integer(value).toString();
         settings[3] = site;
 
-
-
         Hyunbo hyunbo = new Hyunbo(settings);
     }
-
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id == R.id.action_refresh)
         {
-
           return true;
         }
 
