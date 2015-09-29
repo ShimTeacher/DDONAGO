@@ -7,7 +7,7 @@
         <item name="android:colorBackground">#ffffff</item>
         <item name="android:colorForeground">#aaaaaa</item>
 
-        <item name="android:textColorPrimary">#ff0000</item>
+        <item name="android:textColorPrimary">#000000</item>
         <item name="android:textColorSecondary">#000000</item>
         <item name="android:textColorTertiary">#00ff00</item>
         <item name="android:textColorPrimaryDisableOnly">#888888</item>

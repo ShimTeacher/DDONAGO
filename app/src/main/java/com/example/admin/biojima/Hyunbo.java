@@ -28,6 +28,7 @@ public class Hyunbo {
     static String lat ;
     static String lon ;
     String[] sigunguList = null;
+
     Hyunbo()
     {
 
@@ -195,11 +196,12 @@ public class Hyunbo {
                     String x;
                     String y;
                     String id = null;
-
-
+                    String radious;
                     x = params[0][1];
                     y = params[0][0];
-                    String radious = params[0][2];
+
+                    radious = params[0][2];
+
                     id = params[0][3];
 
 
@@ -260,11 +262,9 @@ public class Hyunbo {
                     return getAttractionDataFromJson(AttracionJsonStr);
                 } catch (JSONException e) {
 
-
                     Log.e(LOG_TAG, e.getMessage(), e);
 
                     e.printStackTrace();
-
 
                 }
 
@@ -276,14 +276,14 @@ public class Hyunbo {
 
                 if(Integer.parseInt(totalCount)==0)
                 {
-                    Log.v("ffff","그리고 아무것도 없었다.");
+                    Log.v("ffff"," total count = 0 관광지 정보가 없음");
                 }
-
                 else
                 {
                     try {
                         String[] AttrStr = new String[strings.length];
                         int i = 0;
+
                         Log.v("관광지 정보", totalCount + "개의 관광지가 검색됨");
                         for (String str : strings)
                             Log.v("관광지 정보", str);
@@ -295,7 +295,7 @@ public class Hyunbo {
                             AttrStr[i] = Change.changeLonLat(lon, lat);
                             i++;
                         }
-                        YoonHo a = new YoonHo(AttrStr);
+                        //YoonHo a = new YoonHo(AttrStr);
                     }
                     catch (Exception e)
                     {

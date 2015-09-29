@@ -10,7 +10,7 @@
         android:summary="@string/summary"
         android:persistent="true"
         android:defaultValue="10000"
-        example:minValue="1000"
+        example:minValue="5000"
         example:maxValue="20000" />
 
 

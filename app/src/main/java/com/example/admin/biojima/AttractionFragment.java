@@ -11,10 +11,10 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,7 +40,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
@@ -94,32 +93,28 @@ public class AttractionFragment extends Fragment {
     private void update(String lat,String lon) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String location = prefs.getString(getString(R.string.pref_location_key),
-                getString(R.string.pref_location_default));
 
         String site = prefs.getString(getString(R.string.search_criteria_key),
-                       getString(R.string.pref_location_default));
-        int value = prefs.getInt(PREFERENCE_KEY, 0);
+                       getString(R.string.search_criteria_attraction));
+        int value = prefs.getInt(PREFERENCE_KEY, 10000);
 
         String ChooseTime = prefs.getString(getString(R.string.time_Selection_key),
-                getString(R.string.pref_location_default));
+                getString(R.string.time_Selection_12_18));
 
         String ChooseDate = prefs.getString(getString(R.string.date_Selection_key),
-                getString(R.string.pref_location_default));
+                getString(R.string.date_Selection_tomorrow));
 
         settings[0] = lat;
         settings[1] = lon;
         settings[2] = new Integer(value).toString();
         settings[3] = site;
 
+
         YoonHo.ChooseTime = new Integer(ChooseTime);
 
 
         Hyunbo hyunbo = new Hyunbo(settings);
     }
-
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -158,18 +153,19 @@ public class AttractionFragment extends Fragment {
         //textView = (TextView) rootView.findViewById(R.id.textView);
         button = (ImageButton)rootView.findViewById(R.id.findButton);
 
-        coder = new Geocoder(getActivity(), Locale.KOREAN); //주소를이용해서찾아준다
+        //coder = new Geocoder(getActivity(), Locale.KOREAN); //주소를이용해서찾아준다
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+
                 String address = editText.getText().toString(); //주소받아옴
 
-                Double[] Source = getLatLng(getLocationFormGoogle(address));
 
-                Log.d("gggg",new Double(Source[0]).toString());
-                Log.d("gggg", new Double(Source[1]).toString());
-
-                //Toast toastView = Toast.makeText(getApplicationContext(), "Hello world", Toast.LENGTH_LONG);
+                FindLocationTask findLocationTask = new FindLocationTask();
+                findLocationTask.execute(address);
+//                //Toast toastView = Toast.makeText(getApplicationContext(), "Hello world", Toast.LENGTH_LONG);
 //                try {
 //                    List<Address> addressList = coder.getFromLocationName(address, 3); //name을통해인식 동일한이름으로 최대 3개까지 반환하겠다
 //                    if (addressList != null) {
@@ -194,13 +190,11 @@ public class AttractionFragment extends Fragment {
 //                            update(list[0],list[1]);
 //                        }
 //                    }
-//                } catch (IllegalArgumentException e) {
-//                    Log.d("gggg", "argumentError");
-//                    e.printStackTrace();
-//                } catch(IOException e){
-//                    Log.d("gggg","ioExecpion");
-//                }
 
+//                } catch (Exception e) {
+//                    Log.d("gggg", "error");
+//                    e.printStackTrace();
+//                }
 
             }
         });
@@ -327,6 +321,83 @@ public class AttractionFragment extends Fragment {
     }
 
 
+    public class FindLocationTask extends AsyncTask<String, Void, Void>
+    {
+        public JSONObject getLocationFormGoogle(String placesName) {
+
+            HttpGet httpGet = new HttpGet("http://maps.google.com/maps/api/geocode/json?address=" +placesName+"&ka&sensor=false");
+            HttpClient client = new DefaultHttpClient();
+            HttpResponse response;
+            StringBuilder stringBuilder = new StringBuilder();
+
+            try {
+                response = client.execute(httpGet);
+                HttpEntity entity = response.getEntity();
+                InputStream stream = entity.getContent();
+                int b;
+                while ((b = stream.read()) != -1) {
+                    stringBuilder.append((char) b);
+                }
+            } catch (ClientProtocolException e) {
+            } catch (IOException e) {
+            }
+
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject = new JSONObject(stringBuilder.toString());
+            } catch (JSONException e) {
+
+                e.printStackTrace();
+            }
+
+            return jsonObject;
+        }
+
+        public Double[] getLatLng(JSONObject jsonObject) {
+
+            Double[] a = new Double[2];
+
+            Double lon = new Double(0);
+            Double lat = new Double(1);
+
+            try {
+
+                lon = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
+                        .getJSONObject("geometry").getJSONObject("location")
+                        .getDouble("lng");
+
+                lat = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
+                        .getJSONObject("geometry").getJSONObject("location")
+                        .getDouble("lat");
+
+            } catch (JSONException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            a[0] = lat;
+            a[1] = lon;
+
+            return a;
+
+        }
+
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+            final int LAT = 0;
+            final int LNG = 1;
+            JSONObject jsonObject = getLocationFormGoogle(params[0]);
+            Double[] latlng = getLatLng(jsonObject);
+
+
+            update(latlng[LAT].toString(),latlng[LNG].toString());
+
+            return null;
+        }
+
+    }
 
 
 
