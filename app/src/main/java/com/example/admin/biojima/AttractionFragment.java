@@ -140,13 +140,14 @@ public class AttractionFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-
-
                 String address = editText.getText().toString(); //주소받아옴
-
 
                 FindLocationTask findLocationTask = new FindLocationTask();
                 findLocationTask.execute(address);
+
+                Intent intent = new Intent(getActivity(), ResultActivity.class);
+                startActivity(intent);
+
 //                //Toast toastView = Toast.makeText(getApplicationContext(), "Hello world", Toast.LENGTH_LONG);
 //                try {
 //                    List<Address> addressList = coder.getFromLocationName(address, 3); //name을통해인식 동일한이름으로 최대 3개까지 반환하겠다

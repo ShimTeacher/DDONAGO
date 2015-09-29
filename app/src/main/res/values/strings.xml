@@ -60,5 +60,6 @@
     <color name="white_color">#000</color>
     <color name="gray_color">#000</color>
     <string name="title_activity_result">ResultActivity</string>
+    <string name="title_activity_search_result">SearchResultActivity</string>
 
 </resources>

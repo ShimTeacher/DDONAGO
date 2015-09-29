@@ -1,5 +1,6 @@
 package com.example.admin.biojima;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -237,7 +238,6 @@ public class Hyunbo {
                             Log.v("check", sigunguList[j].toString()+"//"+  strings[j].toString());
                         }
 
-
                         /****************** test code ******************/
                         /****************** test code ******************/
                         /****************** test code ******************/
@@ -255,12 +255,21 @@ public class Hyunbo {
                         /* 윤호 코드 생성자 삽입 부분 */
 
 
-
                     }
                     catch (Exception e)
                     {
                         Log.v(LOG_TAG, "ERROR??");
                     }
+
+
+                    if (strings != null) {
+                        ResultActivity.mlistAdapter.clear();
+                        for(String a : sigunguList) {
+                            ResultActivity.mlistAdapter.add(a);
+                        }
+                        // New data is back from the server.  Hooray!
+                    }
+
                 }
             }
         }
