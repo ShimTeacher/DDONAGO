@@ -25,50 +25,39 @@ import java.util.Set;
  */
 public class Hyunbo {
 
-    static String lat ;
-    static String lon ;
-    String[] sigunguList = null;
-
-    Hyunbo()
-    {
-
-        FetchAttractionTask fetchAttractionTask = new FetchAttractionTask();
-        fetchAttractionTask.execute();
-
-    }
     Hyunbo(String[] str) //str 위도경도
     {
         FetchAttractionTask fetchAttractionTask = new FetchAttractionTask();
         fetchAttractionTask.execute(str);
     }
 
+       public class FetchAttractionTask extends AsyncTask<String[], Void, String[]> {
 
-        public class FetchAttractionTask extends AsyncTask<String[], Void, String[]> {
+           private final String LOG_TAG = FetchAttractionTask.class.getSimpleName();
 
-            HashMap<String , String[]> map = new HashMap<String , String[]>();
-            HashMap<String , String[]> map2 = new HashMap<String , String[]>();
+           static final String RESPONSE = "response";
+           static final String BODY = "body";
+           static final String TOTAL_COUNT = "totalCount";
+           static final String ITEMS = "items";
+           static final String ITEM = "item";
+           static final String ADDR = "addr1";
+           static final String AREACODE = "areacode";
+           static final String SIGUNGUCODE = "sigungucode";
+           static final String MAPX = "mapx";
+           static final String MAPY = "mapy";
+           static final String TITLE = "title";
 
-            String totalCount;
-            private final String LOG_TAG = FetchAttractionTask.class.getSimpleName();
+           String radious =null;
+           String totalCount = null;
+           String[] sigunguList = null;
+           HashMap<String , String[]> map = new HashMap<String , String[]>();
+           HashMap<String , String[]> map2 = new HashMap<String , String[]>();
+
 
             private String[] getAttractionDataFromJson(String forecastJsonStr)
                     throws JSONException {
 
-                // These are the names of the JSON objects that need to be extracted.
-                final String RESPONSE = "response";
-                final String BODY = "body";
-                final String PAGE_NUM = "pageNo";
-                final String NUM_OF_ROWS = "numOfRows";
-                final String TOTAL_COUNT = "totalCount";
-                final String ITEMS = "items";
-                final String ITEM = "item";
-                final String ADDR = "addr1";
-                final String AREACODE = "areacode";
-                final String SIGUNGUCODE = "sigungucode";
-
-                ArrayList<String> arrayList = new ArrayList<String>();
-                Boolean[] checked = null;
-                String[] List = null;
+                String[] List = null; // 최종적으로 윤호에게 넘기게 될 데이터가 들어갈 String배열
 
                 String mapx;
                 String mapy;
@@ -82,76 +71,33 @@ public class Hyunbo {
                 totalCount = bodyObject.getString(TOTAL_COUNT);
 
                 if (Integer.parseInt(totalCount) == 0) {
+                    Log.v(LOG_TAG,"관광지 정보가 0개 입니다. JSON 쿼리를 다시 확인.");
                     return null;
-                } else if (Integer.parseInt(totalCount) == 1)
-                {
-                    String[] test;
-                    JSONObject itemsObject = bodyObject.getJSONObject(ITEMS);
-                    JSONObject itemObject = itemsObject.getJSONObject(ITEM);
-                    try {
-                        mapx = itemObject.getString("mapx");
-                        mapy = itemObject.getString("mapy");
-                        addr = itemObject.getString(ADDR);
-                        areacode = itemObject.getString(AREACODE);
-                        sigungucode = itemObject.getString(SIGUNGUCODE);
-                        String[] locationSet = {mapx,mapy};
-                        String[] sigunCode = {areacode, sigungucode};
-
-                        test= addr.split(" ");
-                        if (test.length > 1) {
-                            map.put(test[1], locationSet);
-                            map2.put(test[1], sigunCode);
-
-                        }
-
-
-                        Set<Entry<String, String[]>> set = map.entrySet();
-                        Set<Entry<String, String[]>> set2 = map2.entrySet();
-                        Iterator<Entry<String, String[]>> it = set.iterator();
-                        Iterator<Entry<String, String[]>> it2 = set2.iterator();
-                        List = new String[set.size()];
-                        sigunguList= new String[set2.size()];
-
-                        int i = 0;
-                        while (it.hasNext()) {
-                            Map.Entry<String, String[]> k = (Map.Entry<String, String[]>)it.next();
-                            Map.Entry<String, String[]> k2 = (Map.Entry<String, String[]>)it2.next();
-                            List[i] = k.getValue()[0]+","+k.getValue()[1];
-                            sigunguList[i] = k2.getValue()[0]+","+k2.getValue()[1];
-                            i++;
-                        }
-
-                    }
-                    catch (JSONException e)
-                    {
-                        Log.v("JSON!!!","관광지가 1개인데 ...?");
-                    }
-
-
-                    return List;
                 } else
                 {
                     JSONObject itemsObject = bodyObject.getJSONObject(ITEMS);
                     JSONArray itemArray = itemsObject.getJSONArray(ITEM);
                     int val = Integer.parseInt(totalCount);
                     String[] test;
+                    String title;
                     for (int i = 0; i < val; i++) {
-
                         JSONObject AttracionObject = itemArray.getJSONObject(i);
                         try{
-                            mapx = AttracionObject.getString("mapx");
-                            mapy = AttracionObject.getString("mapy");
+                            mapx = AttracionObject.getString(MAPX);
+                            mapy = AttracionObject.getString(MAPY);
                             addr = AttracionObject.getString(ADDR);
+                            title = AttracionObject.getString(TITLE);
                             areacode = AttracionObject.getString(AREACODE);
                             sigungucode = AttracionObject.getString(SIGUNGUCODE);
                         }
                         catch (JSONException e)
                         {
+                            Log.v(LOG_TAG,"json exception");
                             break;
                         }
 
                         String[] locationSet = {mapx, mapy};// mapx = 127~~~~~~~~~ , mapy = 37~~~~~~~~~~~~~~
-                        String[] sigunCode = {areacode, sigungucode};
+                        String[] sigunCode = {areacode, sigungucode, title};
                         test = addr.split(" ");
 
                         if (test.length > 1) {
@@ -171,7 +117,7 @@ public class Hyunbo {
                         Map.Entry<String, String[]> k = (Map.Entry<String, String[]>)it.next();
                         Map.Entry<String, String[]> k2 = (Map.Entry<String, String[]>)it2.next();
                         List[i] = k.getValue()[0]+","+k.getValue()[1];
-                        sigunguList[i] = k2.getValue()[0]+","+k2.getValue()[1];
+                        sigunguList[i] = k2.getValue()[0]+","+k2.getValue()[1]+ "," + k2.getValue()[2];
                         i++;
                     }
                     return List;
@@ -188,23 +134,16 @@ public class Hyunbo {
                 // Will contain the raw JSON response as a string.
                 String AttracionJsonStr = null;
 
-
                 try {
-                    // Construct the URL for the OpenWeatherMap query
-                    // Possible parameters are avaiable at OWM's forecast API page, at
-                    // http://openweathermap.org/API#forecast
-                    String x;
-                    String y;
+
+                    String x= null;;
+                    String y= null;;
                     String id = null;
-                    String radious;
+
                     x = params[0][1];
                     y = params[0][0];
-
                     radious = params[0][2];
-
                     id = params[0][3];
-
-
 
                     URL url = new URL("http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?ServiceKey="
                             +myKey+"&contentTypeId="+ id +"&mapX="
@@ -212,12 +151,10 @@ public class Hyunbo {
                             +y+"&radius="
                             +radious+"&listYN=Y&MobileOS=ETC&MobileApp=TourAPI3.0_Guide&arrange=B&numOfRows=1000&pageNo=1&_type=json");
 
-                    // Create the request to OpenWeatherMap, and open the connection
                     urlConnection = (HttpURLConnection) url.openConnection();
                     urlConnection.setRequestMethod("GET");
                     urlConnection.connect();
 
-                    // Read the input stream into a String
                     InputStream inputStream = urlConnection.getInputStream();
                     StringBuffer buffer = new StringBuffer();
                     if (inputStream == null) {
@@ -238,14 +175,9 @@ public class Hyunbo {
                         return null;
                     }
                     AttracionJsonStr = buffer.toString();
-
-
-                    //Log.v(LOG_TAG,"JSON-==-=-=--= "+AttracionJsonStr);
-
                 } catch (IOException e) {
                     Log.e(LOG_TAG, "Error ", e);
-                    // If the code didn't successfully get the weather data, there's no point in attemping
-                    // to parse it.
+
                     return null;
                 } finally {
                     if (urlConnection != null) {
@@ -268,7 +200,6 @@ public class Hyunbo {
 
                 }
 
-                // This will only happen if there was an error getting or parsing the forecast.
                 return null;}
 
             @Override
@@ -276,30 +207,57 @@ public class Hyunbo {
 
                 if(Integer.parseInt(totalCount)==0)
                 {
-                    Log.v("ffff"," total count = 0 관광지 정보가 없음");
+                    Log.v("checkValue"," total count = 0 정보가 없음");
                 }
                 else
                 {
                     try {
+
                         String[] AttrStr = new String[strings.length];
                         int i = 0;
-
-                        Log.v("관광지 정보", totalCount + "개의 관광지가 검색됨");
-                        for (String str : strings)
-                            Log.v("관광지 정보", str);
-
                         for (String str : strings) {
                             Double lon = new Double(str.split(",")[0]);
                             Double lat = new Double(str.split(",")[1]);
-
                             AttrStr[i] = Change.changeLonLat(lon, lat);
                             i++;
                         }
+
+
+                        /****************** test code ******************/
+                        /****************** test code ******************/
+                        /****************** test code ******************/
+
+
+                        Log.v("checkValue", totalCount + "개의 정보가 검색됨");
+                        Log.v("checkValue", radious +"m 반경에서 중복 지역을 제외한 "+strings.length+ "개의 지역만 검색");
+                        for (int j = 0; j < 10; j++)
+                        {
+                            Log.v("check", sigunguList[j].toString()+"//"+  strings[j].toString());
+                        }
+
+
+                        /****************** test code ******************/
+                        /****************** test code ******************/
+                        /****************** test code ******************/
+
+                        /* 윤호 코드 생성자 삽입 부분 */
+                        /* 윤호 코드 생성자 삽입 부분 */
+                        /* 윤호 코드 생성자 삽입 부분 */
+                        /* 윤호 코드 생성자 삽입 부분 */
+
                         //YoonHo a = new YoonHo(AttrStr);
+
+                        /* 윤호 코드 생성자 삽입 부분 */
+                        /* 윤호 코드 생성자 삽입 부분 */
+                        /* 윤호 코드 생성자 삽입 부분 */
+                        /* 윤호 코드 생성자 삽입 부분 */
+
+
+
                     }
                     catch (Exception e)
                     {
-                        Log.v("에러러러러", totalCount + "개의 관광지가 검색됨");
+                        Log.v(LOG_TAG, "ERROR");
                     }
                 }
             }

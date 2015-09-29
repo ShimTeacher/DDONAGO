@@ -48,20 +48,17 @@ import java.util.Locale;
  */
 public class AttractionFragment extends Fragment {
 
-
     private static final String PREFERENCE_KEY = "seekBarPreference";
     EditText editText;
     Geocoder coder;
     TextView textView;
     ImageButton button;
-
     ImageButton settingButton;
-
+    TextView textview;
 
     //TestCode
     static Double X = 127.0409111; //경도
     static Double Y = 37.65508056; //위도
-    String[] location = new String[2];
     String[] settings= new String [10];
     //TestCode
 
@@ -69,22 +66,10 @@ public class AttractionFragment extends Fragment {
     private View rootView;
     public AttractionFragment() {
     }
-
-
-
-    TextView textview;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // if this is set true,
-        // Activity.onCreateOptionsMenu will call Fragment.onCreateOptionsMenu
-        // Activity.onOptionsItemSelected will call Fragment.onOptionsItemSelected
         setHasOptionsMenu(true);
-
-
-
-
     }
 
     @Override
@@ -95,14 +80,11 @@ public class AttractionFragment extends Fragment {
     private void update(String lat,String lon) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
         String site = prefs.getString(getString(R.string.search_criteria_key),
                        getString(R.string.search_criteria_attraction));
         int value = prefs.getInt(PREFERENCE_KEY, 10000);
-
         String ChooseTime = prefs.getString(getString(R.string.time_Selection_key),
                 getString(R.string.time_Selection_12_18));
-
         String ChooseDate = prefs.getString(getString(R.string.date_Selection_key),
                 getString(R.string.date_Selection_tomorrow));
 
@@ -111,11 +93,9 @@ public class AttractionFragment extends Fragment {
         settings[2] = new Integer(value).toString();
         settings[3] = site;
 
-
         YoonHo.ChooseTime = new Integer(ChooseTime);
 
-
-        Hyunbo hyunbo = new Hyunbo(settings);
+        new Hyunbo(settings);
     }
 
     @Override
@@ -230,35 +210,6 @@ public class AttractionFragment extends Fragment {
         return array;
     }
 
-
-
-
-    public void onButton1Clicked(View v){
-        String address = editText.getText().toString(); //주소받아옴
-        //Toast toastView = Toast.makeText(getApplicationContext(), "Hello world", Toast.LENGTH_LONG);
-        try {
-            List<Address> addressList= coder.getFromLocationName(address, 3); //name을통해인식 동일한이름으로 최대 3개까지 반환하겠다
-            if(addressList != null)
-            {
-                for(int i=0; i< addressList.size(); i++){
-                    Address curAddress = addressList.get(i);
-                    StringBuffer buffer = new StringBuffer();
-                    for(int k=0; k<= curAddress.getMaxAddressLineIndex(); k++){
-                        buffer.append(curAddress.getAddressLine(k));
-                    }
-                    buffer.append("\n\tlatitude: " + curAddress.getLatitude());
-                    buffer.append("\n\tlongitude: " + curAddress.getLongitude());
-
-                    textView.append("\nAddress #"+i+" : "+buffer.toString());
-                }
-            }
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-
-    }
-
-
     public class FindLocationTask extends AsyncTask<String, Void, Void>
     {
         public JSONObject getLocationFormGoogle(String placesName) {
@@ -328,7 +279,6 @@ public class AttractionFragment extends Fragment {
             final int LNG = 1;
             JSONObject jsonObject = getLocationFormGoogle(params[0]);
             Double[] latlng = getLatLng(jsonObject);
-
 
             update(latlng[LAT].toString(),latlng[LNG].toString());
 
