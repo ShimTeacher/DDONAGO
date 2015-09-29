@@ -27,6 +27,18 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 
@@ -151,41 +163,112 @@ public class AttractionFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String address = editText.getText().toString(); //주소받아옴
+
+                Double[] Source = getLatLng(getLocationFormGoogle(address));
+
+                Log.d("gggg",new Double(Source[0]).toString());
+                Log.d("gggg", new Double(Source[1]).toString());
+
                 //Toast toastView = Toast.makeText(getApplicationContext(), "Hello world", Toast.LENGTH_LONG);
-                try {
-                    List<Address> addressList = coder.getFromLocationName(address, 3); //name을통해인식 동일한이름으로 최대 3개까지 반환하겠다
-                    if (addressList != null) {
-                        for (int i = 0; i < addressList.size(); i++) {
-                            Address curAddress = addressList.get(i);
-                            StringBuffer buffer = new StringBuffer();
-                            for (int k = 0; k <= curAddress.getMaxAddressLineIndex(); k++) {
-                                buffer.append(curAddress.getAddressLine(k));
-                            }
+//                try {
+//                    List<Address> addressList = coder.getFromLocationName(address, 3); //name을통해인식 동일한이름으로 최대 3개까지 반환하겠다
+//                    if (addressList != null) {
+//                        for (int i = 0; i < addressList.size(); i++) {
+//                            Address curAddress = addressList.get(i);
+//                            StringBuffer buffer = new StringBuffer();
+//                            for (int k = 0; k <= curAddress.getMaxAddressLineIndex(); k++) {
+//                                buffer.append(curAddress.getAddressLine(k));
+//                            }
+//
+////                            Hyunbo.lat = new Double(curAddress.getLatitude()).toString();
+////                            Hyunbo.lon = new Double(curAddress.getLongitude()).toString();
+//                            buffer.append("\n\tlatitude: " + curAddress.getLatitude());
+//                            buffer.append("\n\tlongitude: " + curAddress.getLongitude());
+//
+//                            // textView.append("\nAddress #" + i + " : " + buffer.toString());
+//                            Log.d("gggg", "\nAddress #" + i + " : " + buffer.toString());
+//                            String[] list = getLastKnownLocation();
+//                            Log.d("gggg",list[0]);
+//                            Log.d("gggg", list[1]);
+//
+//                            update(list[0],list[1]);
+//                        }
+//                    }
+//                } catch (IllegalArgumentException e) {
+//                    Log.d("gggg", "argumentError");
+//                    e.printStackTrace();
+//                } catch(IOException e){
+//                    Log.d("gggg","ioExecpion");
+//                }
 
-//                            Hyunbo.lat = new Double(curAddress.getLatitude()).toString();
-//                            Hyunbo.lon = new Double(curAddress.getLongitude()).toString();
-                            buffer.append("\n\tlatitude: " + curAddress.getLatitude());
-                            buffer.append("\n\tlongitude: " + curAddress.getLongitude());
 
-                            // textView.append("\nAddress #" + i + " : " + buffer.toString());
-                            Log.d("gggg", "\nAddress #" + i + " : " + buffer.toString());
-                            String[] list = getLastKnownLocation();
-                            Log.d("gggg",list[0]);
-                            Log.d("gggg", list[1]);
-
-                            update(list[0],list[1]);
-                        }
-                    }
-                } catch (Exception e) {
-                    Log.d("gggg", "error");
-                    e.printStackTrace();
-                }
             }
         });
-
-
         return rootView;
     }
+
+    public  JSONObject getLocationFormGoogle(String placesName) {
+
+        HttpGet httpGet = new HttpGet("http://maps.google.com/maps/api/geocode/json?address=" +placesName+"&ka&sensor=false");
+        HttpClient client = new DefaultHttpClient();
+        HttpResponse response;
+        StringBuilder stringBuilder = new StringBuilder();
+
+        try {
+            response = client.execute(httpGet);
+            HttpEntity entity = response.getEntity();
+            InputStream stream = entity.getContent();
+            int b;
+            while ((b = stream.read()) != -1) {
+                stringBuilder.append((char) b);
+            }
+        } catch (ClientProtocolException e) {
+        } catch (IOException e) {
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject = new JSONObject(stringBuilder.toString());
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+        }
+
+        return jsonObject;
+    }
+
+    public Double[] getLatLng(JSONObject jsonObject) {
+
+        Double[] a = new Double[2];
+
+        Double lon = new Double(0);
+        Double lat = new Double(1);
+
+        try {
+
+            lon = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
+                    .getJSONObject("geometry").getJSONObject("location")
+                    .getDouble("lng");
+
+            lat = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
+                    .getJSONObject("geometry").getJSONObject("location")
+                    .getDouble("lat");
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        a[0] = lat;
+        a[1] = lon;
+
+        return a;
+
+    }
+
+
+
+
 
 
 
