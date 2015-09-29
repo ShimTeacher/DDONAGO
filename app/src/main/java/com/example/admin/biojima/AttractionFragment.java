@@ -7,7 +7,6 @@ package com.example.admin.biojima;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
@@ -126,6 +125,9 @@ public class AttractionFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
+                getActivity().overridePendingTransition(R.xml.anim100to0, R.xml.anim0to_100);
+
+
             }
         });
 
@@ -275,13 +277,17 @@ public class AttractionFragment extends Fragment {
     public class FindLocationTask extends AsyncTask<String, Void, Void>
     {
         public JSONObject getLocationFormGoogle(String placesName) {
+            StringBuilder stringBuilder=null;
+            try {
+                    if(placesName.contains(" "))
+                         placesName = placesName.replace(" ","%20");
 
             HttpGet httpGet = new HttpGet("http://maps.google.com/maps/api/geocode/json?address=" +placesName+"&ka&sensor=false");
             HttpClient client = new DefaultHttpClient();
             HttpResponse response;
-            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder = new StringBuilder();
 
-            try {
+
                 response = client.execute(httpGet);
                 HttpEntity entity = response.getEntity();
                 InputStream stream = entity.getContent();

@@ -25,6 +25,8 @@ import java.util.Set;
  */
 public class Hyunbo {
 
+    static String[] sigunguList = null;
+
     Hyunbo(String[] str) //str 위도경도
     {
         FetchAttractionTask fetchAttractionTask = new FetchAttractionTask();
@@ -49,7 +51,7 @@ public class Hyunbo {
 
            String radious =null;
            String totalCount = null;
-           String[] sigunguList = null;
+
            HashMap<String , String[]> map = new HashMap<String , String[]>();
            HashMap<String , String[]> map2 = new HashMap<String , String[]>();
 
@@ -230,7 +232,7 @@ public class Hyunbo {
 
                         Log.v("checkValue", totalCount + "개의 정보가 검색됨");
                         Log.v("checkValue", radious +"m 반경에서 중복 지역을 제외한 "+strings.length+ "개의 지역만 검색");
-                        for (int j = 0; j < 10; j++)
+                        for (int j = 0; j < sigunguList.length; j++)
                         {
                             Log.v("check", sigunguList[j].toString()+"//"+  strings[j].toString());
                         }
@@ -257,7 +259,7 @@ public class Hyunbo {
                     }
                     catch (Exception e)
                     {
-                        Log.v(LOG_TAG, "ERROR");
+                        Log.v(LOG_TAG, "ERROR??");
                     }
                 }
             }
