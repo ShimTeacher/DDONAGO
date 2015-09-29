@@ -15,7 +15,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,7 +40,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
@@ -144,6 +142,7 @@ public class AttractionFragment extends Fragment {
 
                 String address = editText.getText().toString(); //주소받아옴
 
+
                 FindLocationTask findLocationTask = new FindLocationTask();
                 findLocationTask.execute(address);
 //                //Toast toastView = Toast.makeText(getApplicationContext(), "Hello world", Toast.LENGTH_LONG);
@@ -171,16 +170,79 @@ public class AttractionFragment extends Fragment {
 //                            update(list[0],list[1]);
 //                        }
 //                    }
+
 //                } catch (Exception e) {
 //                    Log.d("gggg", "error");
 //                    e.printStackTrace();
 //                }
+
             }
         });
-
-
         return rootView;
     }
+
+    public  JSONObject getLocationFormGoogle(String placesName) {
+
+        HttpGet httpGet = new HttpGet("http://maps.google.com/maps/api/geocode/json?address=" +placesName+"&ka&sensor=false");
+        HttpClient client = new DefaultHttpClient();
+        HttpResponse response;
+        StringBuilder stringBuilder = new StringBuilder();
+
+        try {
+            response = client.execute(httpGet);
+            HttpEntity entity = response.getEntity();
+            InputStream stream = entity.getContent();
+            int b;
+            while ((b = stream.read()) != -1) {
+                stringBuilder.append((char) b);
+            }
+        } catch (ClientProtocolException e) {
+        } catch (IOException e) {
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject = new JSONObject(stringBuilder.toString());
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+        }
+
+        return jsonObject;
+    }
+
+    public Double[] getLatLng(JSONObject jsonObject) {
+
+        Double[] a = new Double[2];
+
+        Double lon = new Double(0);
+        Double lat = new Double(1);
+
+        try {
+
+            lon = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
+                    .getJSONObject("geometry").getJSONObject("location")
+                    .getDouble("lng");
+
+            lat = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
+                    .getJSONObject("geometry").getJSONObject("location")
+                    .getDouble("lat");
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        a[0] = lat;
+        a[1] = lon;
+
+        return a;
+
+    }
+
+
+
+
 
 
 
