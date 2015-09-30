@@ -6,6 +6,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.view.View;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -36,6 +37,8 @@ implements Preference.OnPreferenceChangeListener, SharedPreferences.OnSharedPref
         bindPreferenceSummaryToValue(findPreference(getString(R.string.date_Selection_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.time_Selection_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.search_criteria_key)));
+
+
     }
 
     /**

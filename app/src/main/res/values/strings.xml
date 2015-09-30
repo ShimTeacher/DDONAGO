@@ -62,4 +62,10 @@
     <string name="title_activity_result">ResultActivity</string>
     <string name="title_activity_search_result">SearchResultActivity</string>
 
+
+    <color name="dark_blue">#180065</color>
+    <color name="light_blue">#334ee9ff</color>
+    <color name="medium_green">#3d853e</color>
+    <color name="light_green">#3c2ae668</color>
+
 </resources>

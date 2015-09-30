@@ -9,7 +9,9 @@
         android:key="@string/date_Selection_key"
         android:defaultValue="@string/date_Selection_tomorrow"
         android:entryValues="@array/date_Selection_values"
-        android:entries="@array/date_Selection_options" />
+        android:entries="@array/date_Selection_options"
+
+        />
 
     <ListPreference
         android:title="@string/time_Selection_label"

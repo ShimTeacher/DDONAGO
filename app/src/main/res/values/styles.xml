@@ -6,13 +6,56 @@
         <!-- Override properties according to your need -->
         <item name="android:colorBackground">#ffffff</item>
         <item name="android:colorForeground">#aaaaaa</item>
-
-        <item name="android:textColorPrimary">#000000</item>
-        <item name="android:textColorSecondary">#000000</item>
+        <item name="android:textColorPrimary">#ff000000</item>
+        <item name="android:textColorSecondary">#fff6fdff</item>
         <item name="android:textColorTertiary">#00ff00</item>
         <item name="android:textColorPrimaryDisableOnly">#888888</item>
         <item name="android:textColorHint">#778899</item>
 
+
     </style>
+
+    <style name="PreferencesTheme">
+        <item name="android:background">#fff6fdff</item>
+        <item name="android:textColor">#ff000000</item>
+        <item name="android:textColorPrimary">#ff000000</item>
+        <item name="android:textColorSecondary">#ff000000</item>
+        <item name="android:textColorTertiary">#ff000000</item>
+        <item name="android:textColorPrimaryDisableOnly">#888888</item>
+        <item name="android:textColorHint">#778899</item>
+
+
+    </style>
+
+    <style name="AppThemes" parent="Theme.AppCompat.Light">
+        <item name="android:textColor">#ff000000</item>
+        <item name="android:textColorPrimary">#ff000000</item>
+        <item name="android:textColorSecondary">#ff909495</item>
+        <item name="android:textColorTertiary">#ff000000</item>
+        <item name="android:textColorHint">#778899</item>
+        <item name="android:textColorPrimaryDisableOnly">#888888</item>
+
+        <!-- Apply default style for dialogs -->
+        <item name="android:dialogTheme">@style/AppDialogTheme</item>
+        <!-- Apply default style for alert dialogs -->
+
+    </style>
+
+    <!-- Define your custom dialog theme here extending from base -->
+    <style name="AppDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <!-- Define color properties as desired -->
+
+        <item name="colorPrimary">@color/dark_blue</item>
+        <item name="colorPrimaryDark">#000</item>
+        <item name="android:textColorHighlight">@color/light_blue</item>
+        <item name="colorAccent">@color/dark_blue</item>
+        <item name="colorControlNormal">@color/dark_blue</item>
+        <!-- Define window properties as desired -->
+    </style>
+
+    <!-- Define your custom alert theme here extending from base -->
+
+
+
 
 </resources>
