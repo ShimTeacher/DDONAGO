@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -131,9 +132,12 @@ public class AttractionFragment extends Fragment {
             }
         });
 
+
+
         editText = (EditText) rootView.findViewById(R.id.editText);
         //textView = (TextView) rootView.findViewById(R.id.textView);
         button = (ImageButton)rootView.findViewById(R.id.findButton);
+
 
         //coder = new Geocoder(getActivity(), Locale.KOREAN); //주소를이용해서찾아준다
         button.setOnClickListener(new View.OnClickListener() {
@@ -181,6 +185,18 @@ public class AttractionFragment extends Fragment {
 
             }
         });
+
+        final ImageView Image = (ImageView)rootView.findViewById(R.id.walkerImage);
+        Image.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                Image.setImageResource(R.drawable.mywalker2);
+
+                return true;
+            }
+        });
+
         return rootView;
     }
 
