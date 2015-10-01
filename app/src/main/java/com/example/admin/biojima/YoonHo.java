@@ -422,6 +422,9 @@ public class YoonHo {
 
         @Override
         protected void onPostExecute(String[] WeatherDataList){
+
+
+
             try{
                 for(int i=0;i<WeatherDataList.length;i++) {
                     String[] a = getRainproDataFromJson(WeatherDataList[i]);
@@ -436,6 +439,8 @@ public class YoonHo {
             }catch(ParseException e){
                 Log.d("ffff","ParseExecption");
             }
+
+
         }
     }
 }
