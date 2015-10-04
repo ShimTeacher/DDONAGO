@@ -830,7 +830,7 @@ public class YoonHo {
                 }
 
                 for(int i=0;i<5;i++){
-                    Log.d("Temp",new Double(TempDataArr[i]).toString());
+                    Log.d("Temp",new Double(TempDataArr[rank[i]]).toString());
                 }
 
             }catch(JSONException e){
