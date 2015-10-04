@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -46,9 +47,11 @@ public class ResultActivity extends FragmentActivity {
     static ArrayAdapter mlistAdapter;
     String[] settings = new String[10];
     private static final String PREFERENCE_KEY = "seekBarPreference";
-    FindLocationTask findLocationTask = new FindLocationTask();
+    FindLocationTaskFromGoogle findLocationTask = new FindLocationTaskFromGoogle();
+    static String editTexts = null;
+    {
 
-
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,18 +61,20 @@ public class ResultActivity extends FragmentActivity {
                     .add(R.id.container, new ResultFragment())
                     .commit();
         }
+
+        Intent intent = this.getIntent();
+
+        if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
+            editTexts= intent.getStringExtra(Intent.EXTRA_TEXT);
+//            Log.v("Test",editText);
+        }
+        findLocationTask.execute(editTexts);
     }
 
     @Override
     protected void onStart() {
 
-        Intent intent = this.getIntent();
-        String editText="광운대학교";
-        if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-            editText= intent.getStringExtra(Intent.EXTRA_TEXT);
-//            Log.v("Test",editText);
-        }
-        findLocationTask.execute(editText);
+
         super.onStart();
     }
 
@@ -87,7 +92,6 @@ public class ResultActivity extends FragmentActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
 
             return true;
@@ -99,12 +103,8 @@ public class ResultActivity extends FragmentActivity {
 
     public static class ResultFragment extends Fragment {
 
-        EditText editText;
-
         public ResultFragment() {
         }
-
-
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -120,14 +120,23 @@ public class ResultActivity extends FragmentActivity {
 
             ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
             listView.setAdapter(mlistAdapter);
-
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    String forecast = (String)parent.getAdapter().getItem(position);
+                    //Toast.makeText(getActivity(),forecast,Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getActivity(), DetailActivity.class)
+                            .putExtra(Intent.EXTRA_SHORTCUT_NAME, forecast);
+                    startActivity(intent);
+                }
+            });
 
                 return rootView;
             }
         }
 
 
-        public class FindLocationTask extends AsyncTask<String, Void, Void> {
+        public class FindLocationTaskFromGoogle extends AsyncTask<String, Void, Void> {
 
             @Override
             protected void onPreExecute() {
@@ -158,7 +167,6 @@ public class ResultActivity extends FragmentActivity {
 
             new Hyunbo(settings);
         }
-
 
             public JSONObject getLocationFormGoogle(String placesName) {
                 StringBuilder stringBuilder = null;

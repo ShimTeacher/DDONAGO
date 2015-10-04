@@ -219,7 +219,6 @@ public class Hyunbo {
             @Override
             protected void onPostExecute(String[] strings) {
 
-
                 if(Integer.parseInt(totalCount)==0)
                 {
                     Log.v("checkValue"," total count = 0 정보가 없음");
@@ -245,10 +244,10 @@ public class Hyunbo {
 
                         Log.v("checkValue", totalCount + "개의 정보가 검색됨");
                         Log.v("checkValue", radious +"m 반경에서 중복 지역을 제외한 "+strings.length+ "개의 지역만 검색");
+
                         for (int j = 0; j < sigunguList.length; j++)
-                        {
                             Log.v("check", sigunguList[j].toString()+"//"+  strings[j].toString());
-                        }
+
 
                         /****************** test code ******************/
                         /****************** test code ******************/
@@ -266,7 +265,6 @@ public class Hyunbo {
                         /* 윤호 코드 생성자 삽입 부분 */
                         /* 윤호 코드 생성자 삽입 부분 */
 
-
                     }
                     catch (Exception e)
                     {
@@ -280,15 +278,10 @@ public class Hyunbo {
                             ResultActivity.mlistAdapter.add(a);
                         }
 
-                        // New data is back from the server.  Hooray!
                     }
 
-
                     ResultActivity.progressDialog.dismiss();
-
                 }
-
-
             }
         }
 }
