@@ -1,6 +1,7 @@
 package com.example.admin.biojima;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
@@ -20,7 +21,7 @@ public class MainActivity extends FragmentActivity {
                     .add(R.id.container, new AttractionFragment())
                     .commit();
         }
-
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     @Override
