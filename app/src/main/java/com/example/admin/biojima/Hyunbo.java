@@ -27,6 +27,7 @@ import java.util.Set;
 public class Hyunbo {
 
     static String[] sigunguList = null;
+    static String[] sigunguName = null;
 
     Hyunbo(String[] str) //str 위도경도
     {
@@ -65,7 +66,6 @@ public class Hyunbo {
            HashMap<String , String[]> map = new HashMap<String , String[]>();
            HashMap<String , String[]> map2 = new HashMap<String , String[]>();
 
-
             private String[] getAttractionDataFromJson(String forecastJsonStr)
                     throws JSONException {
 
@@ -98,23 +98,24 @@ public class Hyunbo {
                             mapx = AttracionObject.getString(MAPX);
                             mapy = AttracionObject.getString(MAPY);
                             addr = AttracionObject.getString(ADDR);
-                            title = AttracionObject.getString(TITLE);
+//                            title = AttracionObject.getString(TITLE);
                             areacode = AttracionObject.getString(AREACODE);
                             sigungucode = AttracionObject.getString(SIGUNGUCODE);
                         }
                         catch (JSONException e)
                         {
-                            Log.v(LOG_TAG,"json exception");
+                            Log.v(LOG_TAG,"지역 정보 없음 예) 검색 - 서울 도봉구 // 결과 서울");
                             break;
                         }
 
                         String[] locationSet = {mapx, mapy};// mapx = 127~~~~~~~~~ , mapy = 37~~~~~~~~~~~~~~
-                        String[] sigunCode = {areacode, sigungucode, title};
+                        String[] sigunCode = {areacode, sigungucode};
                         test = addr.split(" ");
-
+Log.v("CHECK", addr);
                         if (test.length > 1) {
                             map.put(test[1], locationSet);
                             map2.put(test[1], sigunCode);
+
                         }
                     }
 
@@ -124,12 +125,14 @@ public class Hyunbo {
                     Iterator<Entry<String, String[]>> it2 = set2.iterator();
                     List = new String[set.size()];
                     sigunguList = new String[set2.size()];
+                    sigunguName = new String[set2.size()];
                     int i = 0;
                     while (it.hasNext()) {
                         Map.Entry<String, String[]> k = (Map.Entry<String, String[]>)it.next();
                         Map.Entry<String, String[]> k2 = (Map.Entry<String, String[]>)it2.next();
                         List[i] = k.getValue()[0]+","+k.getValue()[1];
-                        sigunguList[i] = k2.getValue()[0]+","+k2.getValue()[1]+ "," + k2.getValue()[2];
+                        sigunguName[i] = k2.getKey();
+                        sigunguList[i] = k2.getValue()[0]+","+k2.getValue()[1];
                         i++;
                     }
                     return List;
@@ -148,8 +151,8 @@ public class Hyunbo {
 
                 try {
 
-                    String x= null;;
-                    String y= null;;
+                    String x= null;
+                    String y= null;
                     String id = null;
 
                     x = params[0][1];
@@ -209,7 +212,6 @@ public class Hyunbo {
                     Log.e(LOG_TAG, e.getMessage(), e);
 
                     e.printStackTrace();
-
                 }
 
                 return null;}
@@ -270,18 +272,9 @@ public class Hyunbo {
                     }
 
 
-                    if (strings != null) {
-                        ResultActivity.mlistAdapter.clear();
-                        for(String a : sigunguList) {
-                            ResultActivity.mlistAdapter.add(a);
-                        }
 
-                    }
 
-<<<<<<< HEAD
-                    ResultActivity.progressDialog.dismiss();
-=======
->>>>>>> 6937b7715de27bb3b2bf9f9c7ee1ec6404c429ec
+
                 }
             }
         }

@@ -16,6 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -37,13 +38,13 @@ public class YoonHo {
     //사용자가 지정한 시간과 날짜
     static int ChooseTime;
     static String ChooseDate;
-
+    int[] Finalrank ;
     String[] args;
 
     //시간과 날짜 디폴트값
     static{
         ChooseTime = 2;
-        ChooseDate = "today";
+        ChooseDate = "tomorrow";
     }
 
     public YoonHo(String[] args1){
@@ -783,14 +784,15 @@ public class YoonHo {
         @Override
         protected void onPostExecute(String[] WeatherDataList){
 
-<<<<<<< HEAD
-=======
+
             double[] PopDataArr = new double[WeatherDataList.length];
             double[] TempDataArr = new double[WeatherDataList.length];
 
+            double[] PopDataCopyArr = new double[WeatherDataList.length];
+            double[] TempDataCopyArr = new double[WeatherDataList.length];
 
 
->>>>>>> 6937b7715de27bb3b2bf9f9c7ee1ec6404c429ec
+
             try{
                 for(int i=0;i<WeatherDataList.length;i++) {
                     String[] a = getRainproDataFromJson(WeatherDataList[i]);
@@ -818,22 +820,27 @@ public class YoonHo {
                     }
                 }
 
+                for(int i=0;i<WeatherDataList.length;i++){
+                    PopDataCopyArr[i] = PopDataArr[i];
+                    TempDataCopyArr[i] = TempDataArr[i];
+                }
+
 //                for(int i=0;i<WeatherDataList.length;i++){
 //                    Log.d("testData",new Double(DataArr[i]).toString());
 //                }
 
-                int[] rank = FinalSort(YoonHoPopSort(PopDataArr), YoonHoTempSort(TempDataArr));
+                Finalrank = FinalSort(YoonHoPopSort(PopDataCopyArr), YoonHoTempSort(TempDataCopyArr));
 
                 for(int i=0;i<5;i++){
-                    Log.d("rank",new Integer(rank[i]).toString());
+                    Log.d("rank",new Integer(Finalrank[i]).toString());
                 }
 
                 for(int i=0;i<5;i++){
-                    Log.d("Pop",new Double(PopDataArr[i]).toString());
+                    Log.d("Pop",new Double(PopDataCopyArr[i]).toString());
                 }
 
                 for(int i=0;i<5;i++){
-                    Log.d("Temp",new Double(TempDataArr[i]).toString());
+                    Log.d("Temp",new Double(TempDataCopyArr[Finalrank[i]]).toString());
                 }
 
             }catch(JSONException e){
@@ -841,12 +848,28 @@ public class YoonHo {
             }catch(ParseException e){
                 Log.d("ffff","ParseExecption");
             }
-<<<<<<< HEAD
-=======
 
+
+            if (WeatherDataList != null) {
+                ResultActivity.mlistAdapter.clear();
+
+
+                ArrayList<String> arrayList = new ArrayList<String>();
+                for(int i = 0; i<5; i++)
+                {
+//                    arrayList.add(Hyunbo.sigunguName[Finalrank[i]] +" "+ PopDataArr[i] + " " + TempDataArr[i]);
+                    arrayList.add(Hyunbo.sigunguName[Finalrank[i]] +" "+ PopDataCopyArr[i] + " " + TempDataArr[Finalrank[i]]);
+                    PopDataArr = new double[WeatherDataList.length];
+
+                }
+
+                for(String a : arrayList) {
+                    ResultActivity.mlistAdapter.add(a);
+                }
+
+            }
             ResultActivity.progressDialog.dismiss();
 
->>>>>>> 6937b7715de27bb3b2bf9f9c7ee1ec6404c429ec
         }
     }
 }

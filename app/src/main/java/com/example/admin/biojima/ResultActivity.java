@@ -135,7 +135,6 @@ public class ResultActivity extends FragmentActivity {
             }
         }
 
-
         public class FindLocationTaskFromGoogle extends AsyncTask<String, Void, Void> {
 
             @Override
@@ -164,6 +163,7 @@ public class ResultActivity extends FragmentActivity {
             settings[3] = site;
 
             YoonHo.ChooseTime = new Integer(ChooseTime);
+            YoonHo.ChooseDate = ChooseDate;
 
             new Hyunbo(settings);
         }
@@ -190,7 +190,6 @@ public class ResultActivity extends FragmentActivity {
                 } catch (ClientProtocolException e) {
                 } catch (IOException e) {
                 }
-
                 JSONObject jsonObject = new JSONObject();
                 try {
                     jsonObject = new JSONObject(stringBuilder.toString());
@@ -205,12 +204,10 @@ public class ResultActivity extends FragmentActivity {
             public Double[] getLatLng(JSONObject jsonObject) {
 
                 Double[] a = new Double[2];
-
                 Double lon = new Double(0);
                 Double lat = new Double(1);
 
                 try {
-
                     lon = ((JSONArray) jsonObject.get("results")).getJSONObject(0)
                             .getJSONObject("geometry").getJSONObject("location")
                             .getDouble("lng");
