@@ -27,6 +27,7 @@ import java.util.Set;
 public class Hyunbo {
 
     static String[] sigunguList = null;
+    static String[] sigunguName = null;
 
     Hyunbo(String[] str) //str 위도경도
     {
@@ -65,7 +66,6 @@ public class Hyunbo {
            HashMap<String , String[]> map = new HashMap<String , String[]>();
            HashMap<String , String[]> map2 = new HashMap<String , String[]>();
 
-
             private String[] getAttractionDataFromJson(String forecastJsonStr)
                     throws JSONException {
 
@@ -98,23 +98,24 @@ public class Hyunbo {
                             mapx = AttracionObject.getString(MAPX);
                             mapy = AttracionObject.getString(MAPY);
                             addr = AttracionObject.getString(ADDR);
-                            title = AttracionObject.getString(TITLE);
+//                            title = AttracionObject.getString(TITLE);
                             areacode = AttracionObject.getString(AREACODE);
                             sigungucode = AttracionObject.getString(SIGUNGUCODE);
                         }
                         catch (JSONException e)
                         {
-                            Log.v(LOG_TAG,"json exception");
+                            Log.v(LOG_TAG,"지역 정보 없음 예) 검색 - 서울 도봉구 // 결과 서울");
                             break;
                         }
 
                         String[] locationSet = {mapx, mapy};// mapx = 127~~~~~~~~~ , mapy = 37~~~~~~~~~~~~~~
-                        String[] sigunCode = {areacode, sigungucode, title};
+                        String[] sigunCode = {areacode, sigungucode};
                         test = addr.split(" ");
-
+Log.v("CHECK", addr);
                         if (test.length > 1) {
                             map.put(test[1], locationSet);
                             map2.put(test[1], sigunCode);
+
                         }
                     }
 
@@ -124,12 +125,14 @@ public class Hyunbo {
                     Iterator<Entry<String, String[]>> it2 = set2.iterator();
                     List = new String[set.size()];
                     sigunguList = new String[set2.size()];
+                    sigunguName = new String[set2.size()];
                     int i = 0;
                     while (it.hasNext()) {
                         Map.Entry<String, String[]> k = (Map.Entry<String, String[]>)it.next();
                         Map.Entry<String, String[]> k2 = (Map.Entry<String, String[]>)it2.next();
                         List[i] = k.getValue()[0]+","+k.getValue()[1];
-                        sigunguList[i] = k2.getValue()[0]+","+k2.getValue()[1]+ "," + k2.getValue()[2];
+                        sigunguName[i] = k2.getKey();
+                        sigunguList[i] = k2.getValue()[0]+","+k2.getValue()[1];
                         i++;
                     }
                     return List;
@@ -148,8 +151,8 @@ public class Hyunbo {
 
                 try {
 
-                    String x= null;;
-                    String y= null;;
+                    String x= null;
+                    String y= null;
                     String id = null;
 
                     x = params[0][1];
@@ -209,14 +212,12 @@ public class Hyunbo {
                     Log.e(LOG_TAG, e.getMessage(), e);
 
                     e.printStackTrace();
-
                 }
 
                 return null;}
 
             @Override
             protected void onPostExecute(String[] strings) {
-
 
                 if(Integer.parseInt(totalCount)==0)
                 {
@@ -243,10 +244,10 @@ public class Hyunbo {
 
                         Log.v("checkValue", totalCount + "개의 정보가 검색됨");
                         Log.v("checkValue", radious +"m 반경에서 중복 지역을 제외한 "+strings.length+ "개의 지역만 검색");
+
                         for (int j = 0; j < sigunguList.length; j++)
-                        {
                             Log.v("check", sigunguList[j].toString()+"//"+  strings[j].toString());
-                        }
+
 
                         /****************** test code ******************/
                         /****************** test code ******************/
@@ -264,7 +265,6 @@ public class Hyunbo {
                         /* 윤호 코드 생성자 삽입 부분 */
                         /* 윤호 코드 생성자 삽입 부분 */
 
-
                     }
                     catch (Exception e)
                     {
@@ -272,18 +272,10 @@ public class Hyunbo {
                     }
 
 
-                    if (strings != null) {
-                        ResultActivity.mlistAdapter.clear();
-                        for(String a : sigunguList) {
-                            ResultActivity.mlistAdapter.add(a);
-                        }
 
-                        // New data is back from the server.  Hooray!
-                    }
+
 
                 }
-
-
             }
         }
 }

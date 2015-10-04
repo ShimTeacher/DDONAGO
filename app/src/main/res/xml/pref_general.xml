@@ -5,7 +5,7 @@
     <ListPreference
         android:title="@string/date_Selection_label"
         android:key="@string/date_Selection_key"
-        android:defaultValue="@string/date_Selection_today"
+        android:defaultValue="@string/date_Selection_tomorrow"
         android:entryValues="@array/date_Selection_values"
         android:entries="@array/date_Selection_options"
         />

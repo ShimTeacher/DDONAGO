@@ -16,6 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -37,13 +38,13 @@ public class YoonHo {
     //사용자가 지정한 시간과 날짜
     static int ChooseTime;
     static String ChooseDate;
-
+    int[] Finalrank ;
     String[] args;
 
     //시간과 날짜 디폴트값
     static{
         ChooseTime = 2;
-        ChooseDate = "today";
+        ChooseDate = "tomorrow";
     }
 
     public YoonHo(String[] args1){
@@ -63,22 +64,24 @@ public class YoonHo {
     //강수확률 정렬 함수
     public int[] YoonHoPopSort(double[] arr){
         int[] rank = new int[arr.length];
+        double[] copyarr = new double[arr.length];
         int[] sortData = new int[arr.length];
         int[] RealRankData = new int[arr.length];
         for (int i=0;i<arr.length;i++){
             rank[i] = i;
             sortData[i] = 1;
+            copyarr[i] = arr[i];
         }
 
 
 
-        for(int i=0; i<arr.length - 1; i++){
+        for(int i=0; i<copyarr.length - 1; i++){
 
-            for(int k = arr.length - 1;k>i;k--){
-                if(arr[k] < arr[k-1]){
-                    double swap = arr[k-1];
-                    arr[k-1] = arr[k];
-                    arr[k] = swap;
+            for(int k = copyarr.length - 1;k>i;k--){
+                if(copyarr[k] < copyarr[k-1]){
+                    double swap = copyarr[k-1];
+                    copyarr[k-1] = copyarr[k];
+                    copyarr[k] = swap;
 
                     int rankSwap = rank[k-1];
                     rank[k-1] = rank[k];
@@ -87,8 +90,8 @@ public class YoonHo {
             }
         }
 
-        for(int i = 0;i<arr.length - 1;i++){
-            if(arr[i] < arr[i+1]){
+        for(int i = 0;i<copyarr.length - 1;i++){
+            if(copyarr[i] < copyarr[i+1]){
                 sortData[i+1] = sortData[i] + 1;
             }
             else{
@@ -96,7 +99,7 @@ public class YoonHo {
             }
         }
 
-        for(int i=0;i<arr.length;i++){
+        for(int i=0;i<copyarr.length;i++){
             RealRankData[rank[i]] = sortData[i];
         }
 
@@ -783,9 +786,9 @@ public class YoonHo {
         @Override
         protected void onPostExecute(String[] WeatherDataList){
 
+
             double[] PopDataArr = new double[WeatherDataList.length];
             double[] TempDataArr = new double[WeatherDataList.length];
-
 
 
             try{
@@ -819,10 +822,10 @@ public class YoonHo {
 //                    Log.d("testData",new Double(DataArr[i]).toString());
 //                }
 
-                int[] rank = FinalSort(YoonHoPopSort(PopDataArr), YoonHoTempSort(TempDataArr));
+                Finalrank = FinalSort(YoonHoPopSort(PopDataArr), YoonHoTempSort(TempDataArr));
 
                 for(int i=0;i<5;i++){
-                    Log.d("rank",new Integer(rank[i]).toString());
+                    Log.d("rank",new Integer(Finalrank[i]).toString());
                 }
 
                 for(int i=0;i<5;i++){
@@ -830,7 +833,8 @@ public class YoonHo {
                 }
 
                 for(int i=0;i<5;i++){
-                    Log.d("Temp",new Double(TempDataArr[rank[i]]).toString());
+
+                    Log.d("Temp",new Double(TempDataArr[Finalrank[i]]).toString());
                 }
 
             }catch(JSONException e){
@@ -839,6 +843,25 @@ public class YoonHo {
                 Log.d("ffff","ParseExecption");
             }
 
+
+            if (WeatherDataList != null) {
+                ResultActivity.mlistAdapter.clear();
+
+
+                ArrayList<String> arrayList = new ArrayList<String>();
+                for(int i = 0; i<5; i++)
+                {
+//                    arrayList.add(Hyunbo.sigunguName[Finalrank[i]] +" "+ PopDataArr[i] + " " + TempDataArr[i]);
+                    arrayList.add(Hyunbo.sigunguName[Finalrank[i]] +" "+ PopDataArr[i] + " " + TempDataArr[Finalrank[i]]);
+                    PopDataArr = new double[WeatherDataList.length];
+
+                }
+
+                for(String a : arrayList) {
+                    ResultActivity.mlistAdapter.add(a);
+                }
+
+            }
             ResultActivity.progressDialog.dismiss();
 
         }
