@@ -11,7 +11,6 @@ import android.content.SharedPreferences;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -72,6 +71,29 @@ public class AttractionFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    private void update(String lat,String lon) {
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String site = prefs.getString(getString(R.string.search_criteria_key),
+                       getString(R.string.search_criteria_attraction));
+        int value = prefs.getInt(PREFERENCE_KEY, 10000);
+        String ChooseTime = prefs.getString(getString(R.string.time_Selection_key),
+                getString(R.string.time_Selection_12_18));
+        String ChooseDate = prefs.getString(getString(R.string.date_Selection_key),
+                getString(R.string.date_Selection_tomorrow));
+
+        settings[0] = lat;
+        settings[1] = lon;
+        settings[2] = new Integer(value).toString();
+        settings[3] = site;
+
+        //사용자가 지정한 시간과 날짜를 셋팅해준다.
+        YoonHo.ChooseTime = new Integer(ChooseTime);
+        YoonHo.ChooseDate = ChooseDate;
+
+        new Hyunbo(settings);
     }
 
     @Override

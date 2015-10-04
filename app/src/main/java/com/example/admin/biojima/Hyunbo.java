@@ -1,8 +1,7 @@
 package com.example.admin.biojima;
 
+
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -16,7 +15,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -258,7 +256,7 @@ public class Hyunbo {
                         /* 윤호 코드 생성자 삽입 부분 */
                         /* 윤호 코드 생성자 삽입 부분 */
 
-                      //  YoonHo a = new YoonHo(AttrStr);
+                        YoonHo a = new YoonHo(AttrStr);
 
                         /* 윤호 코드 생성자 삽입 부분 */
                         /* 윤호 코드 생성자 삽입 부분 */
@@ -280,7 +278,10 @@ public class Hyunbo {
 
                     }
 
+<<<<<<< HEAD
                     ResultActivity.progressDialog.dismiss();
+=======
+>>>>>>> 6937b7715de27bb3b2bf9f9c7ee1ec6404c429ec
                 }
             }
         }
