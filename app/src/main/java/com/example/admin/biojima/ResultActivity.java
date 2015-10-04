@@ -1,6 +1,12 @@
 package com.example.admin.biojima;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
@@ -12,17 +18,36 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 
+
 public class ResultActivity extends FragmentActivity {
-    static ArrayAdapter<String> mlistAdapter;
+    static ProgressDialog progressDialog;
+    static ArrayAdapter mlistAdapter;
+    String[] settings = new String[10];
+    private static final String PREFERENCE_KEY = "seekBarPreference";
+    FindLocationTask findLocationTask = new FindLocationTask();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +60,18 @@ public class ResultActivity extends FragmentActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+
+        Intent intent = this.getIntent();
+        String editText="광운대학교";
+        if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
+            editText= intent.getStringExtra(Intent.EXTRA_TEXT);
+//            Log.v("Test",editText);
+        }
+        findLocationTask.execute(editText);
+        super.onStart();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -52,6 +89,7 @@ public class ResultActivity extends FragmentActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
             return true;
         }
 
@@ -61,9 +99,12 @@ public class ResultActivity extends FragmentActivity {
 
     public static class ResultFragment extends Fragment {
 
+        EditText editText;
 
         public ResultFragment() {
         }
+
+
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,10 +122,125 @@ public class ResultActivity extends FragmentActivity {
             listView.setAdapter(mlistAdapter);
 
 
-            return rootView;
+                return rootView;
+            }
         }
+
+
+        public class FindLocationTask extends AsyncTask<String, Void, Void> {
+
+            @Override
+            protected void onPreExecute() {
+                progressDialog = new ProgressDialog(ResultActivity.this);
+                progressDialog.setMessage("쪼매만 기다려 주쇼잉?");
+                progressDialog.show();
+                super.onPreExecute();
+            }
+
+
+        private void update(String lat,String lon) {
+
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            String site = prefs.getString(getString(R.string.search_criteria_key),
+                    getString(R.string.search_criteria_attraction));
+            int value = prefs.getInt(PREFERENCE_KEY, 10000);
+            String ChooseTime = prefs.getString(getString(R.string.time_Selection_key),
+                    getString(R.string.time_Selection_12_18));
+            String ChooseDate = prefs.getString(getString(R.string.date_Selection_key),
+                    getString(R.string.date_Selection_today));
+
+            settings[0] = lat;
+            settings[1] = lon;
+            settings[2] = new Integer(value).toString();
+            settings[3] = site;
+
+            YoonHo.ChooseTime = new Integer(ChooseTime);
+
+            new Hyunbo(settings);
+        }
+
+
+            public JSONObject getLocationFormGoogle(String placesName) {
+                StringBuilder stringBuilder = null;
+                try {
+                    if (placesName.contains(" "))
+                        placesName = placesName.replace(" ", "%20");
+
+                    HttpGet httpGet = new HttpGet("http://maps.google.com/maps/api/geocode/json?address=" + placesName + "&ka&sensor=false");
+                    HttpClient client = new DefaultHttpClient();
+                    HttpResponse response;
+                    stringBuilder = new StringBuilder();
+
+
+                    response = client.execute(httpGet);
+                    HttpEntity entity = response.getEntity();
+                    InputStream stream = entity.getContent();
+                    int b;
+                    while ((b = stream.read()) != -1) {
+                        stringBuilder.append((char) b);
+                    }
+                } catch (ClientProtocolException e) {
+                } catch (IOException e) {
+                }
+
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject = new JSONObject(stringBuilder.toString());
+                } catch (JSONException e) {
+
+                    e.printStackTrace();
+                }
+
+                return jsonObject;
+            }
+
+            public Double[] getLatLng(JSONObject jsonObject) {
+
+                Double[] a = new Double[2];
+
+                Double lon = new Double(0);
+                Double lat = new Double(1);
+
+                try {
+
+                    lon = ((JSONArray) jsonObject.get("results")).getJSONObject(0)
+                            .getJSONObject("geometry").getJSONObject("location")
+                            .getDouble("lng");
+
+                    lat = ((JSONArray) jsonObject.get("results")).getJSONObject(0)
+                            .getJSONObject("geometry").getJSONObject("location")
+                            .getDouble("lat");
+
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+                a[0] = lat;
+                a[1] = lon;
+
+                return a;
+
+            }
+
+            @Override
+            protected Void doInBackground(String... params) {
+
+                final int LAT = 0;
+                final int LNG = 1;
+                JSONObject jsonObject = getLocationFormGoogle(params[0]);
+                Double[] latlng = getLatLng(jsonObject);
+
+                update(latlng[LAT].toString(), latlng[LNG].toString());
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+
+                super.onPostExecute(aVoid);
+            }
+        }
+
     }
-
-
-
-}

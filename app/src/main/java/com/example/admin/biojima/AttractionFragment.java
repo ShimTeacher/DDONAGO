@@ -4,13 +4,13 @@ package com.example.admin.biojima;
  * Created by adslbna2 on 15. 8. 28..
  */
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -45,6 +46,8 @@ import java.util.List;
  */
 public class AttractionFragment extends Fragment {
 
+    static ProgressDialog progressDialog;
+    String[] settings= new String [10];
     private static final String PREFERENCE_KEY = "seekBarPreference";
     EditText editText;
     Geocoder coder;
@@ -56,7 +59,7 @@ public class AttractionFragment extends Fragment {
     //TestCode
     static Double X = 127.0409111; //경도
     static Double Y = 37.65508056; //위도
-    String[] settings= new String [10];
+
     //TestCode
 
     private ArrayAdapter<String> mForecastAdapter;
@@ -133,22 +136,24 @@ public class AttractionFragment extends Fragment {
             }
         });
 
+
+
         editText = (EditText) rootView.findViewById(R.id.editText);
         //textView = (TextView) rootView.findViewById(R.id.textView);
         button = (ImageButton)rootView.findViewById(R.id.findButton);
+
 
         //coder = new Geocoder(getActivity(), Locale.KOREAN); //주소를이용해서찾아준다
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String address = editText.getText().toString(); //주소받아옴
 
-                FindLocationTask findLocationTask = new FindLocationTask();
-                findLocationTask.execute(address);
-
-                Intent intent = new Intent(getActivity(), ResultActivity.class);
+                Intent intent = new Intent(getActivity(), ResultActivity.class)
+                        .putExtra(Intent.EXTRA_TEXT, editText.getText().toString());;
                 startActivity(intent);
+
+
 
 //                //Toast toastView = Toast.makeText(getApplicationContext(), "Hello world", Toast.LENGTH_LONG);
 //                try {
@@ -183,6 +188,18 @@ public class AttractionFragment extends Fragment {
 
             }
         });
+
+        final ImageView Image = (ImageView)rootView.findViewById(R.id.walkerImage);
+        Image.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                Image.setImageResource(R.drawable.mywalker2);
+
+                return true;
+            }
+        });
+
         return rootView;
     }
 
@@ -275,87 +292,6 @@ public class AttractionFragment extends Fragment {
         array[1] = longitude.toString();
 
         return array;
-    }
-
-    public class FindLocationTask extends AsyncTask<String, Void, Void>
-    {
-        public JSONObject getLocationFormGoogle(String placesName) {
-            StringBuilder stringBuilder=null;
-            try {
-                    if(placesName.contains(" "))
-                         placesName = placesName.replace(" ","%20");
-
-            HttpGet httpGet = new HttpGet("http://maps.google.com/maps/api/geocode/json?address=" +placesName+"&ka&sensor=false");
-            HttpClient client = new DefaultHttpClient();
-            HttpResponse response;
-            stringBuilder = new StringBuilder();
-
-
-                response = client.execute(httpGet);
-                HttpEntity entity = response.getEntity();
-                InputStream stream = entity.getContent();
-                int b;
-                while ((b = stream.read()) != -1) {
-                    stringBuilder.append((char) b);
-                }
-            } catch (ClientProtocolException e) {
-            } catch (IOException e) {
-            }
-
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject = new JSONObject(stringBuilder.toString());
-            } catch (JSONException e) {
-
-                e.printStackTrace();
-            }
-
-            return jsonObject;
-        }
-
-        public Double[] getLatLng(JSONObject jsonObject) {
-
-            Double[] a = new Double[2];
-
-            Double lon = new Double(0);
-            Double lat = new Double(1);
-
-            try {
-
-                lon = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
-                        .getJSONObject("geometry").getJSONObject("location")
-                        .getDouble("lng");
-
-                lat = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
-                        .getJSONObject("geometry").getJSONObject("location")
-                        .getDouble("lat");
-
-            } catch (JSONException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
-            a[0] = lat;
-            a[1] = lon;
-
-            return a;
-
-        }
-
-
-        @Override
-        protected Void doInBackground(String... params) {
-
-            final int LAT = 0;
-            final int LNG = 1;
-            JSONObject jsonObject = getLocationFormGoogle(params[0]);
-            Double[] latlng = getLatLng(jsonObject);
-
-            update(latlng[LAT].toString(),latlng[LNG].toString());
-
-            return null;
-        }
-
     }
 
 

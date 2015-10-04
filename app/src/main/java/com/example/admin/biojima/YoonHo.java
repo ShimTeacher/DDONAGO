@@ -782,8 +782,11 @@ public class YoonHo {
 
         @Override
         protected void onPostExecute(String[] WeatherDataList){
+
             double[] PopDataArr = new double[WeatherDataList.length];
             double[] TempDataArr = new double[WeatherDataList.length];
+
+
 
             try{
                 for(int i=0;i<WeatherDataList.length;i++) {
@@ -835,6 +838,9 @@ public class YoonHo {
             }catch(ParseException e){
                 Log.d("ffff","ParseExecption");
             }
+
+            ResultActivity.progressDialog.dismiss();
+
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.example.admin.biojima;
 
+
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -30,9 +32,18 @@ public class Hyunbo {
     {
         FetchAttractionTask fetchAttractionTask = new FetchAttractionTask();
         fetchAttractionTask.execute(str);
-    }
+     }
+
 
        public class FetchAttractionTask extends AsyncTask<String[], Void, String[]> {
+
+           @Override
+           protected void onPreExecute() {
+
+               super.onPreExecute();
+           }
+
+           ProgressDialog asyncDialog;
 
            private final String LOG_TAG = FetchAttractionTask.class.getSimpleName();
 
@@ -206,6 +217,7 @@ public class Hyunbo {
             @Override
             protected void onPostExecute(String[] strings) {
 
+
                 if(Integer.parseInt(totalCount)==0)
                 {
                     Log.v("checkValue"," total count = 0 정보가 없음");
@@ -265,10 +277,13 @@ public class Hyunbo {
                         for(String a : sigunguList) {
                             ResultActivity.mlistAdapter.add(a);
                         }
+
                         // New data is back from the server.  Hooray!
                     }
 
                 }
+
+
             }
         }
 }

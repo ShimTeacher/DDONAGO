@@ -33,7 +33,8 @@
             android:layout_width="125dp"
             android:layout_height="match_parent"
             android:background="@drawable/mywalker"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/walkerImage" />
 
 
 
