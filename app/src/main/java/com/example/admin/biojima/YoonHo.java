@@ -34,11 +34,16 @@ public class YoonHo {
     static final int NIGHT= 2 ;
     static final int MID_NIGHT = 3;
 
+    //사용자가 지정한 시간과 날짜
     static int ChooseTime;
+    static String ChooseDate;
+
     String[] args;
 
+    //시간과 날짜 디폴트값
     static{
         ChooseTime = 2;
+        ChooseDate = "today";
     }
 
     public YoonHo(String[] args1){
@@ -53,6 +58,116 @@ public class YoonHo {
         FetchWeatherTask weatherTask = new FetchWeatherTask();
         weatherTask.execute(args);
     }
+
+    //강수확률이 낮은 순으로 Sorting해주는 함수
+    //강수확률 정렬 함수
+    public int[] YoonHoPopSort(double[] arr){
+        int[] rank = new int[arr.length];
+        int[] sortData = new int[arr.length];
+        int[] RealRankData = new int[arr.length];
+        for (int i=0;i<arr.length;i++){
+            rank[i] = i;
+            sortData[i] = 1;
+        }
+
+
+
+        for(int i=0; i<arr.length - 1; i++){
+
+            for(int k = arr.length - 1;k>i;k--){
+                if(arr[k] < arr[k-1]){
+                    double swap = arr[k-1];
+                    arr[k-1] = arr[k];
+                    arr[k] = swap;
+
+                    int rankSwap = rank[k-1];
+                    rank[k-1] = rank[k];
+                    rank[k] = rankSwap;
+                }
+            }
+        }
+
+        for(int i = 0;i<arr.length - 1;i++){
+            if(arr[i] < arr[i+1]){
+                sortData[i+1] = sortData[i] + 1;
+            }
+            else{
+                sortData[i+1] = sortData[i];
+            }
+        }
+
+        for(int i=0;i<arr.length;i++){
+            RealRankData[rank[i]] = sortData[i];
+        }
+
+
+
+        return RealRankData;
+    }
+
+    //체감기온 정렬 함수
+    public int[] YoonHoTempSort(double[] arr){
+
+        double[] newTempArr = new double[arr.length];
+
+        for(int i=0;i<arr.length;i++){
+            newTempArr[i] = Math.abs(22-arr[i]);
+        }
+
+        return YoonHoPopSort(newTempArr);
+
+    }
+
+    //강수확률과 체감기온을 통합하여 정렬하는 함수
+    public int[] FinalSort(int[] PopRank,int[] TempRank){
+
+        int[] SortArr = new int[PopRank.length];
+
+        //실제 순위를 담기 위한 데이터
+        int[] rank = new int[PopRank.length];
+
+
+        for(int i=0;i<PopRank.length;i++){
+            SortArr[i] = PopRank[i] * 2 + TempRank[i];
+        }
+
+        //rank데이터 초기화
+        for (int i=0;i<SortArr.length;i++){
+            rank[i] = i;
+        }
+
+
+        //상위 데이터 5개를 뽑아낸다
+        for(int i=0; i<5; i++){
+
+            for(int k = SortArr.length - 1;k>i;k--){
+                if(SortArr[k] < SortArr[k-1]){
+                    int swap = SortArr[k-1];
+                    SortArr[k-1] = SortArr[k];
+                    SortArr[k] = swap;
+
+                    int rankSwap = rank[k-1];
+                    rank[k-1] = rank[k];
+                    rank[k] = rankSwap;
+                }
+            }
+        }
+
+        return rank;
+    }
+
+    //체감온도를 계산하는 함수
+    public double CalSenTemp(double Temp,double wind){
+
+        double newWind = wind * 3.6;
+
+        double SenTemp;
+
+        SenTemp = 13.12 + 0.6215 * Temp - 11.37 * Math.pow(newWind,0.15) + 0.3965 * Math.pow(newWind, 0.15) * Temp;
+
+        return SenTemp;
+    }
+
 
     private boolean isMorning(String time){
         if(time.equals("0600") || time.equals("0900")){
@@ -164,10 +279,14 @@ public class YoonHo {
         String afterTomorrow = formatter.format(calendar.getTime());
 
         //Data's name
-        double todayData = 0,tomorrowData = 0,afterTomorrowData = 0;
+        double todayPopData = 0,tomorrowPopData = 0,afterTomorrowPopData = 0;
+        double todayT3hData = 0,tomorrowT3hData = 0,afterTomorrowT3hData = 0;
+        double todayWsdData = 0,tomorrowWsdData = 0,afterTomorrowWsdData = 0;
 
         //Data's cnt
-        double todayCnt = 0,tomorrowCnt = 0,afterTomorrowCnt = 0;
+        double todayPopCnt = 0,tomorrowPopCnt = 0,afterTomorrowPopCnt = 0;
+        double todayT3hCnt = 0,tomorrowT3hCnt = 0,afterTomorrowT3hCnt = 0;
+        double todayWsdCnt = 0,tomorrowWsdCnt = 0,afterTomorrowWsdCnt = 0;
 
 
         for(int i = 0;i < itemListData.length(); i++){
@@ -182,6 +301,7 @@ public class YoonHo {
             fcstDate = itemData.getString(WD_FCSTDATE);
             fcstValue = itemData.getDouble(WD_FCSTDATA);
 
+            //강수확률 계산하는 부분
             if(fcstType.equals("POP")){
 
                 //each case of time and each Code
@@ -189,16 +309,16 @@ public class YoonHo {
                     case MORNING:
                         if(isMorning(fcstTime)){
                             if(fcstDate.equals(today)){
-                                todayData += fcstValue;
-                                todayCnt ++;
+                                todayPopData += fcstValue;
+                                todayPopCnt ++;
                             }
                             else if(fcstDate.equals(tomorrow)){
-                                tomorrowData += fcstValue;
-                                tomorrowCnt++;
+                                tomorrowPopData += fcstValue;
+                                tomorrowPopCnt++;
                             }
                             else if(fcstDate.equals(afterTomorrow)){
-                                afterTomorrowData += fcstValue;
-                                afterTomorrowCnt++;
+                                afterTomorrowPopData += fcstValue;
+                                afterTomorrowPopCnt++;
                             }
                             else{
 
@@ -208,16 +328,16 @@ public class YoonHo {
                     case AFTERNOON:
                         if(isAfternoon(fcstTime)){
                             if(fcstDate.equals(today)){
-                                todayData += fcstValue;
-                                todayCnt ++;
+                                todayPopData += fcstValue;
+                                todayPopCnt ++;
                             }
                             else if(fcstDate.equals(tomorrow)){
-                                tomorrowData += fcstValue;
-                                tomorrowCnt++;
+                                tomorrowPopData += fcstValue;
+                                tomorrowPopCnt++;
                             }
                             else if(fcstDate.equals(afterTomorrow)){
-                                afterTomorrowData += fcstValue;
-                                afterTomorrowCnt++;
+                                afterTomorrowPopData += fcstValue;
+                                afterTomorrowPopCnt++;
                             }
                             else{
 
@@ -227,16 +347,16 @@ public class YoonHo {
                     case NIGHT:
                         if(isNight(fcstTime)){
                             if(fcstDate.equals(today)){
-                                todayData += fcstValue;
-                                todayCnt ++;
+                                todayPopData += fcstValue;
+                                todayPopCnt ++;
                             }
                             else if(fcstDate.equals(tomorrow)){
-                                tomorrowData += fcstValue;
-                                tomorrowCnt++;
+                                tomorrowPopData += fcstValue;
+                                tomorrowPopCnt++;
                             }
                             else if(fcstDate.equals(afterTomorrow)){
-                                afterTomorrowData += fcstValue;
-                                afterTomorrowCnt++;
+                                afterTomorrowPopData += fcstValue;
+                                afterTomorrowPopCnt++;
                             }
                             else{
 
@@ -246,16 +366,16 @@ public class YoonHo {
                     case MID_NIGHT:
                         if(isMidnight(fcstTime)){
                             if(fcstDate.equals(today)){
-                                todayData += fcstValue;
-                                todayCnt ++;
+                                todayPopData += fcstValue;
+                                todayPopCnt ++;
                             }
                             else if(fcstDate.equals(tomorrow)){
-                                tomorrowData += fcstValue;
-                                tomorrowCnt++;
+                                tomorrowPopData += fcstValue;
+                                tomorrowPopCnt++;
                             }
                             else if(fcstDate.equals(afterTomorrow)){
-                                afterTomorrowData += fcstValue;
-                                afterTomorrowCnt++;
+                                afterTomorrowPopData += fcstValue;
+                                afterTomorrowPopCnt++;
                             }
                             else{
 
@@ -265,39 +385,279 @@ public class YoonHo {
                 }
 
             }
+
+            //체감온도를 위한 온도 계산하는 부분
+            if(fcstType.equals("T3H")) {
+                //each case of time and each Code
+                switch(CHOOSE_TIME) {
+                    case MORNING:
+                        if(isMorning(fcstTime)){
+                            if(fcstDate.equals(today)){
+                                todayT3hData += fcstValue;
+                                todayT3hCnt ++;
+                            }
+                            else if(fcstDate.equals(tomorrow)){
+                                tomorrowT3hData += fcstValue;
+                                tomorrowT3hCnt++;
+                            }
+                            else if(fcstDate.equals(afterTomorrow)){
+                                afterTomorrowT3hData += fcstValue;
+                                afterTomorrowT3hCnt++;
+                            }
+                            else{
+
+                            }
+                        }
+                        break;
+                    case AFTERNOON:
+                        if(isAfternoon(fcstTime)){
+                            if(fcstDate.equals(today)){
+                                todayT3hData += fcstValue;
+                                todayT3hCnt ++;
+                            }
+                            else if(fcstDate.equals(tomorrow)){
+                                tomorrowT3hData += fcstValue;
+                                tomorrowT3hCnt++;
+                            }
+                            else if(fcstDate.equals(afterTomorrow)){
+                                afterTomorrowT3hData += fcstValue;
+                                afterTomorrowT3hCnt++;
+                            }
+                            else{
+
+                            }
+                        }
+                        break;
+                    case NIGHT:
+                        if(isNight(fcstTime)){
+                            if(fcstDate.equals(today)){
+                                todayT3hData += fcstValue;
+                                todayT3hCnt ++;
+                            }
+                            else if(fcstDate.equals(tomorrow)){
+                                tomorrowT3hData += fcstValue;
+                                tomorrowT3hCnt++;
+                            }
+                            else if(fcstDate.equals(afterTomorrow)){
+                                afterTomorrowT3hData += fcstValue;
+                                afterTomorrowT3hCnt++;
+                            }
+                            else{
+
+                            }
+                        }
+                        break;
+                    case MID_NIGHT:
+                        if(isMidnight(fcstTime)){
+                            if(fcstDate.equals(today)){
+                                todayT3hData += fcstValue;
+                                todayT3hCnt ++;
+                            }
+                            else if(fcstDate.equals(tomorrow)){
+                                tomorrowT3hData += fcstValue;
+                                tomorrowT3hCnt++;
+                            }
+                            else if(fcstDate.equals(afterTomorrow)){
+                                afterTomorrowT3hData += fcstValue;
+                                afterTomorrowT3hCnt++;
+                            }
+                            else{
+
+                            }
+                        }
+                        break;
+                }
+            }
+
+
+            //체감온도를 위한 풍속 계산하는 부분
+            if(fcstType.equals("WSD")){
+                //each case of time and each Code
+                switch(CHOOSE_TIME) {
+                    case MORNING:
+                        if(isMorning(fcstTime)){
+                            if(fcstDate.equals(today)){
+                                todayWsdData += fcstValue;
+                                todayWsdCnt ++;
+                            }
+                            else if(fcstDate.equals(tomorrow)){
+                                tomorrowWsdData += fcstValue;
+                                tomorrowWsdCnt++;
+                            }
+                            else if(fcstDate.equals(afterTomorrow)){
+                                afterTomorrowWsdData += fcstValue;
+                                afterTomorrowWsdCnt++;
+                            }
+                            else{
+
+                            }
+                        }
+                        break;
+                    case AFTERNOON:
+                        if(isAfternoon(fcstTime)){
+                            if(fcstDate.equals(today)){
+                                todayWsdData += fcstValue;
+                                todayWsdCnt ++;
+                            }
+                            else if(fcstDate.equals(tomorrow)){
+                                tomorrowWsdData += fcstValue;
+                                tomorrowWsdCnt++;
+                            }
+                            else if(fcstDate.equals(afterTomorrow)){
+                                afterTomorrowWsdData += fcstValue;
+                                afterTomorrowWsdCnt++;
+                            }
+                            else{
+
+                            }
+                        }
+                        break;
+                    case NIGHT:
+                        if(isNight(fcstTime)){
+                            if(fcstDate.equals(today)){
+                                todayWsdData += fcstValue;
+                                todayWsdCnt ++;
+                            }
+                            else if(fcstDate.equals(tomorrow)){
+                                tomorrowWsdData += fcstValue;
+                                tomorrowWsdCnt++;
+                            }
+                            else if(fcstDate.equals(afterTomorrow)){
+                                afterTomorrowWsdData += fcstValue;
+                                afterTomorrowWsdCnt++;
+                            }
+                            else{
+
+                            }
+                        }
+                        break;
+                    case MID_NIGHT:
+                        if(isMidnight(fcstTime)){
+                            if(fcstDate.equals(today)){
+                                todayWsdData += fcstValue;
+                                todayWsdCnt ++;
+                            }
+                            else if(fcstDate.equals(tomorrow)){
+                                tomorrowWsdData += fcstValue;
+                                tomorrowWsdCnt++;
+                            }
+                            else if(fcstDate.equals(afterTomorrow)){
+                                afterTomorrowWsdData += fcstValue;
+                                afterTomorrowWsdCnt++;
+                            }
+                            else{
+
+                            }
+                        }
+                        break;
+                }
+
+            }
+
+
         }
 
-        String afterTomorrowDataString;
-        String todayDataString;
-        String tomorrowDataString;
+        String afterTomorrowPopDataString;
+        String todayPopDataString;
+        String tomorrowPopDataString;
 
-        if(todayCnt !=0){
-            todayData = todayData/todayCnt;
-            todayDataString = new Double(todayData).toString();
+        String afterTomorrowT3hDataString;
+        String todayT3hDataString;
+        String tomorrowT3hDataString;
+
+        String afterTomorrowWsdDataString;
+        String todayWsdDataString;
+        String tomorrowWsdDataString;
+
+        //강수확률 평균 구하는 부분
+        if(todayPopCnt !=0){
+            todayPopData = todayPopData/todayPopCnt;
+            todayPopDataString = new Double(todayPopData).toString();
         }else{
-            todayDataString ="no data";
+            todayPopDataString ="no data";
         }
 
-        if(tomorrowCnt != 0){
-            tomorrowData = tomorrowData/tomorrowCnt;
-            tomorrowDataString = new Double(tomorrowData).toString();
+        if(tomorrowPopCnt != 0){
+            tomorrowPopData = tomorrowPopData/tomorrowPopCnt;
+            tomorrowPopDataString = new Double(tomorrowPopData).toString();
         }else{
-            tomorrowDataString = "no data";
+            tomorrowPopDataString = "no data";
         }
 
-        if(afterTomorrowCnt!=0){
-            afterTomorrowData = afterTomorrowData/afterTomorrowCnt;
-            afterTomorrowDataString = new Double(afterTomorrowData).toString();
+        if(afterTomorrowPopCnt!=0){
+            afterTomorrowPopData = afterTomorrowPopData/afterTomorrowPopCnt;
+            afterTomorrowPopDataString = new Double(afterTomorrowPopData).toString();
         }else{
-            afterTomorrowDataString = "no data";
+            afterTomorrowPopDataString = "no data";
         }
 
+        //기온 평균 구하는 부분
+        if(todayT3hCnt !=0){
+            todayT3hData = todayT3hData/todayT3hCnt;
+            todayT3hDataString = new Double(todayT3hData).toString();
+        }else{
+            todayT3hDataString ="no data";
+        }
 
+        if(tomorrowT3hCnt != 0){
+            tomorrowT3hData = tomorrowT3hData/tomorrowT3hCnt;
+            tomorrowT3hDataString = new Double(tomorrowT3hData).toString();
+        }else{
+            tomorrowT3hDataString = "no data";
+        }
 
-        String[] resultDataSet = new String[3];
-        resultDataSet[0] = todayDataString;
-        resultDataSet[1] = tomorrowDataString;
-        resultDataSet[2] = afterTomorrowDataString;
+        if(afterTomorrowT3hCnt!=0){
+            afterTomorrowT3hData = afterTomorrowT3hData/afterTomorrowT3hCnt;
+            afterTomorrowT3hDataString = new Double(afterTomorrowT3hData).toString();
+        }else{
+            afterTomorrowT3hDataString = "no data";
+        }
+
+        //풍속 평균 구하는 부분
+        if(todayWsdCnt !=0){
+            todayWsdData = todayWsdData/todayWsdCnt;
+            todayWsdDataString = new Double(todayWsdData).toString();
+        }else{
+            todayWsdDataString ="no data";
+        }
+
+        if(tomorrowWsdCnt != 0){
+            tomorrowWsdData = tomorrowWsdData/tomorrowWsdCnt;
+            tomorrowWsdDataString = new Double(tomorrowWsdData).toString();
+        }else{
+            tomorrowWsdDataString = "no data";
+        }
+
+        if(afterTomorrowWsdCnt!=0){
+            afterTomorrowWsdData = afterTomorrowWsdData/afterTomorrowWsdCnt;
+            afterTomorrowWsdDataString = new Double(afterTomorrowWsdData).toString();
+        }else{
+            afterTomorrowWsdDataString = "no data";
+        }
+
+        //체감기온 계산하는 부분
+        if(!todayT3hDataString.equals("no data")){
+            todayT3hDataString = new Double(CalSenTemp(todayT3hData,todayWsdData)).toString();
+        }
+
+        if(!tomorrowT3hDataString.equals("no data")){
+            tomorrowT3hDataString = new Double(CalSenTemp(tomorrowT3hData, tomorrowWsdData)).toString();
+        }
+
+        if(!afterTomorrowT3hDataString.equals("no data")){
+            afterTomorrowT3hDataString = new Double(CalSenTemp(afterTomorrowT3hData,afterTomorrowWsdData)).toString();
+        }
+
+        //게산된 강수확률을 배열에 담아 반환한다.
+        String[] resultDataSet = new String[6];
+        resultDataSet[0] = todayPopDataString;
+        resultDataSet[1] = tomorrowPopDataString;
+        resultDataSet[2] = afterTomorrowPopDataString;
+
+        //계산된 체감기온을 배열에 담아 반환한다.
+        resultDataSet[3] = todayT3hDataString;
+        resultDataSet[4] = tomorrowT3hDataString;
+        resultDataSet[5] = afterTomorrowT3hDataString;
 
         return resultDataSet;
     }
@@ -422,15 +782,54 @@ public class YoonHo {
 
         @Override
         protected void onPostExecute(String[] WeatherDataList){
+            double[] PopDataArr = new double[WeatherDataList.length];
+            double[] TempDataArr = new double[WeatherDataList.length];
+
             try{
                 for(int i=0;i<WeatherDataList.length;i++) {
                     String[] a = getRainproDataFromJson(WeatherDataList[i]);
-                    Log.d("ffff",new Integer(ChooseTime).toString());
                     Log.d("ffff", a[0]);
                     Log.d("ffff", a[1]);
                     Log.d("ffff", a[2]);
                     Log.d("ffff","-----------");
+
+                    Log.d("ffff", a[3]);
+                    Log.d("ffff", a[4]);
+                    Log.d("ffff", a[5]);
+                    Log.d("ffff","===========");
+
+
+
+                    if(ChooseDate.equals("today")){
+                        PopDataArr[i] = new Double(a[0]);
+                        TempDataArr[i] = new Double(a[3]);
+                    }else if(ChooseDate.equals("tomorrow")){
+                        PopDataArr[i] = new Double(a[1]);
+                        TempDataArr[i] = new Double(a[4]);
+                    }else{
+                        PopDataArr[i] = new Double(a[2]);
+                        TempDataArr[i] = new Double(a[5]);
+                    }
                 }
+
+//                for(int i=0;i<WeatherDataList.length;i++){
+//                    Log.d("testData",new Double(DataArr[i]).toString());
+//                }
+
+                int[] rank = FinalSort(YoonHoPopSort(PopDataArr), YoonHoTempSort(TempDataArr));
+
+                for(int i=0;i<5;i++){
+                    Log.d("rank",new Integer(rank[i]).toString());
+                }
+
+                for(int i=0;i<5;i++){
+                    Log.d("Pop",new Double(PopDataArr[i]).toString());
+                }
+
+                for(int i=0;i<5;i++){
+                    Log.d("Temp",new Double(TempDataArr[i]).toString());
+                }
+
             }catch(JSONException e){
                 Log.d("ffff","JSONEception");
             }catch(ParseException e){

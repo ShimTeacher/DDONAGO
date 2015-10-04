@@ -90,7 +90,9 @@ public class AttractionFragment extends Fragment {
         settings[2] = new Integer(value).toString();
         settings[3] = site;
 
+        //사용자가 지정한 시간과 날짜를 셋팅해준다.
         YoonHo.ChooseTime = new Integer(ChooseTime);
+        YoonHo.ChooseDate = ChooseDate;
 
         new Hyunbo(settings);
     }

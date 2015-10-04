@@ -1,6 +1,5 @@
 package com.example.admin.biojima;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -14,7 +13,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -247,7 +245,7 @@ public class Hyunbo {
                         /* 윤호 코드 생성자 삽입 부분 */
                         /* 윤호 코드 생성자 삽입 부분 */
 
-                        //YoonHo a = new YoonHo(AttrStr);
+                        YoonHo a = new YoonHo(AttrStr);
 
                         /* 윤호 코드 생성자 삽입 부분 */
                         /* 윤호 코드 생성자 삽입 부분 */
