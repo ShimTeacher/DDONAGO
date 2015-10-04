@@ -45,8 +45,9 @@ import java.util.Set;
 
 public class DetailActivity extends FragmentActivity {
     static ProgressDialog progressDialog;
-    static ArrayAdapter listAdapter;
-    String[] settings = new String[10];
+    static ArrayAdapter mDetailAdapter;
+
+
     private static final String PREFERENCE_KEY = "seekBarPreference";
 
     @Override
@@ -61,11 +62,13 @@ public class DetailActivity extends FragmentActivity {
         }
         Intent intent = this.getIntent();
         String editText=null;
+
         if (intent != null && intent.hasExtra(Intent.EXTRA_SHORTCUT_NAME)) {
             editText= intent.getStringExtra(Intent.EXTRA_SHORTCUT_NAME);
             Toast.makeText(getApplicationContext(), editText, Toast.LENGTH_SHORT).show();
         }
-//        findLocationTask.execute(editText);
+        FindLocationfFromResult findLocationfFromResult = new FindLocationfFromResult();
+        findLocationfFromResult.execute(editText);
     }
 
 
@@ -100,25 +103,21 @@ public class DetailActivity extends FragmentActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-//
-//            listAdapter =
-//                    new ArrayAdapter<String>(
-//                            getActivity(), // The current context (this activity)
-//                            R.layout.list_item_forecast, // The name of the layout ID.
-//                            R.id.list_item_forecast_textview, // The ID of the textview to populate.
-//                            new ArrayList<String>());
-            View rootView = inflater.inflate(R.layout.fragment_result, container, false);
-//
-//            ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
-//            listView.setAdapter(listAdapter);
-
-
+            mDetailAdapter =
+            new ArrayAdapter<String>(
+                    getActivity(), // The current context (this activity)
+                    R.layout.list_item_forecast2, // The name of the layout ID.
+                    R.id.list_item_forecast_textview2, // The ID of the textview to populate.
+                    new ArrayList<String>());
+            View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+            ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast2);
+            listView.setAdapter(mDetailAdapter);
             return rootView;
         }
     }
 
 
-    public class FindLocationfFromResult extends AsyncTask<String[], Void, String[]> {
+    public class FindLocationfFromResult extends AsyncTask<String, Void, ArrayList<String>> {
 
         @Override
         protected void onPreExecute() {
@@ -142,14 +141,12 @@ public class DetailActivity extends FragmentActivity {
         static final String MAPY = "mapy";
         static final String TITLE = "title";
 
-        String radious =null;
         String totalCount = null;
 
         HashMap<String , String[]> map = new HashMap<String , String[]>();
-        HashMap<String , String[]> map2 = new HashMap<String , String[]>();
 
 
-        private String[] getAttractionDataFromJson(String forecastJsonStr)
+        private ArrayList<String> getAttractionDataFromJson(String forecastJsonStr)
                 throws JSONException {
 
             String[] List = null; // 최종적으로 윤호에게 넘기게 될 데이터가 들어갈 String배열
@@ -159,22 +156,21 @@ public class DetailActivity extends FragmentActivity {
             String addr;
             String areacode;
             String sigungucode;
+            String title;
 
-            JSONObject attractionJson = new JSONObject(forecastJsonStr);
-            JSONObject responseObject = attractionJson.getJSONObject(RESPONSE);
-            JSONObject bodyObject = responseObject.getJSONObject(BODY);
-            totalCount = bodyObject.getString(TOTAL_COUNT);
+            ArrayList<String> arrayList = new ArrayList<String>();
 
-            if (Integer.parseInt(totalCount) == 0) {
-                Log.v(LOG_TAG,"관광지 정보가 0개 입니다. JSON 쿼리를 다시 확인.");
-                return null;
-            } else
-            {
+
+                    JSONObject attractionJson = new JSONObject(forecastJsonStr);
+                    JSONObject responseObject = attractionJson.getJSONObject(RESPONSE);
+                    JSONObject bodyObject = responseObject.getJSONObject(BODY);
                 JSONObject itemsObject = bodyObject.getJSONObject(ITEMS);
                 JSONArray itemArray = itemsObject.getJSONArray(ITEM);
-                int val = Integer.parseInt(totalCount);
+            totalCount = bodyObject.getString(TOTAL_COUNT);
+
+            int val = Integer.parseInt(totalCount);
                 String[] test;
-                String title;
+
                 for (int i = 0; i < val; i++) {
                     JSONObject AttracionObject = itemArray.getJSONObject(i);
                     try{
@@ -182,8 +178,7 @@ public class DetailActivity extends FragmentActivity {
                         mapy = AttracionObject.getString(MAPY);
                         addr = AttracionObject.getString(ADDR);
                         title = AttracionObject.getString(TITLE);
-                        areacode = AttracionObject.getString(AREACODE);
-                        sigungucode = AttracionObject.getString(SIGUNGUCODE);
+
                     }
                     catch (JSONException e)
                     {
@@ -191,34 +186,18 @@ public class DetailActivity extends FragmentActivity {
                         break;
                     }
 
-                    String[] locationSet = {mapx, mapy};// mapx = 127~~~~~~~~~ , mapy = 37~~~~~~~~~~~~~~
-                    String[] sigunCode = {areacode, sigungucode, title};
-                    test = addr.split(" ");
 
-                    if (test.length > 1) {
-                        map.put(test[1], locationSet);
-                        map2.put(test[1], sigunCode);
-                    }
+                    arrayList.add(title);
+
                 }
 
-                Set<Map.Entry<String, String[]>> set = map.entrySet();
 
-                Iterator<Map.Entry<String, String[]>> it = set.iterator();
+                return arrayList;
 
-                List = new String[set.size()];
-
-                int i = 0;
-                while (it.hasNext()) {
-                    Map.Entry<String, String[]> k = (Map.Entry<String, String[]>)it.next();
-                    List[i] = k.getValue()[0]+","+k.getValue()[1];
-                    i++;
-                }
-                return List;
-            }
         }
 
         @Override
-        protected String[] doInBackground(String[]... params) {
+        protected ArrayList<String> doInBackground(String... params) {
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
@@ -226,23 +205,23 @@ public class DetailActivity extends FragmentActivity {
             final String myKey = "Si1LZhStHnfooZIH3OW%2BV5kMa9%2BoJy6u7wuOlqfeIXbSAAcBD%2FXOrOvJsKIRNlprnQVfK8%2B2Je%2BgMUXhcEznwg%3D%3D";
             // Will contain the raw JSON response as a string.
             String AttracionJsonStr = null;
-
+            String input= params[0];
             try {
 
-                String x= null;;
-                String y= null;;
-                String id = null;
 
-                x = params[0][1];
-                y = params[0][0];
-                radious = params[0][2];
-                id = params[0][3];
+                String areaCode = input.split(",")[0];
+                String sigunguCode = input.split(",")[1];
 
-                URL url = new URL("http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?ServiceKey="
-                        +myKey+"&contentTypeId="+ id +"&mapX="
-                        +x+"&mapY="
-                        +y+"&radius="
-                        +radious+"&listYN=Y&MobileOS=ETC&MobileApp=TourAPI3.0_Guide&arrange=B&numOfRows=1000&pageNo=1&_type=json");
+
+
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                String site = prefs.getString(getString(R.string.search_criteria_key),
+                        getString(R.string.search_criteria_attraction));
+
+                URL url = new URL("http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?ServiceKey="
+                        +myKey+"&contentTypeId="+ site +
+                        "&areaCode="+areaCode+"&sigunguCode="+sigunguCode+"&listYN=Y&MobileOS=ETC&MobileApp=TourAPI2.0_Guide&arrange=B&numOfRows=100&pageNo=1&_type=json");
+
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
@@ -296,23 +275,33 @@ public class DetailActivity extends FragmentActivity {
             return null;}
 
         @Override
-        protected void onPostExecute(String[] strings) {
-
+        protected void onPostExecute(ArrayList<String> strings) {
             if(Integer.parseInt(totalCount)==0)
             {
-                Log.v("checkValue"," total count = 0 정보가 없음");
+                Log.v("qkadp"," total count = 0 정보가 없음");
             }
             else
             {
                 try {
 
+                    for(String a : strings)
+                    {
+                        Log.v("zxcv",a);
+                    }
                 }catch (Exception e)
                 {
 
                 }
 
             }
+            mDetailAdapter.clear();
+            for(String str : strings)
+            {
+                mDetailAdapter.add(str);
+            }
+            super.onPostExecute(strings);
         }
+
     }
 
 }

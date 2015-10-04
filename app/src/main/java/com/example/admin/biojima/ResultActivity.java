@@ -125,10 +125,8 @@ public class ResultActivity extends FragmentActivity {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String forecast = (String)parent.getAdapter().getItem(position);
-                    //Toast.makeText(getActivity(),forecast,Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getActivity(), DetailActivity.class)
-                            .putExtra(Intent.EXTRA_SHORTCUT_NAME, forecast);
+                            .putExtra(Intent.EXTRA_SHORTCUT_NAME, YoonHo.sigunguCodeArrList.get(position));
                     startActivity(intent);
                 }
             });

@@ -12,10 +12,6 @@
     android:foreground="#ff000000"
     android:transitionGroup="false">
 
-    <ListView
-        android:id="@+id/listview_forecast"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#ff000000" />
+
 
 </FrameLayout>
