@@ -809,16 +809,16 @@ public class YoonHo {
 
 
 
-//                    if(ChooseDate.equals("today")){
-//                        PopDataArr[i] = new Double(a[0]);
-//                        TempDataArr[i] = new Double(a[3]);
-//                    }else if(ChooseDate.equals("tomorrow")){
-//                        PopDataArr[i] = new Double(a[1]);
-//                        TempDataArr[i] = new Double(a[4]);
-//                    }else{
-//                        PopDataArr[i] = new Double(a[2]);
-//                        TempDataArr[i] = new Double(a[5]);
-//                    }
+                    if(ChooseDate.equals("today")){
+                        PopDataArr[i] = new Double(a[0]);
+                        TempDataArr[i] = new Double(a[3]);
+                    }else if(ChooseDate.equals("tomorrow")){
+                        PopDataArr[i] = new Double(a[1]);
+                        TempDataArr[i] = new Double(a[4]);
+                    }else{
+                        PopDataArr[i] = new Double(a[2]);
+                        TempDataArr[i] = new Double(a[5]);
+                    }
                 }
 
                 for(int i=0;i<WeatherDataList.length;i++){

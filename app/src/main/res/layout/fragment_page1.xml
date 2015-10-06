@@ -8,11 +8,12 @@
 
 
     <ImageView
-        android:layout_width="175dp"
-        android:layout_height="179dp"
+        android:layout_width="match_parent"
+        android:layout_height="222dp"
         android:id="@+id/detailimageView"
-        android:background="#5a000000"
-        android:layout_gravity="center_horizontal" />
+        android:background="#fff6fdff"
+        android:layout_gravity="center_horizontal"
+        android:adjustViewBounds="false" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -23,7 +24,7 @@
 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="New Text"
+            android:text=""
             android:id="@+id/detailtextView"
             android:textColor="#ff000000"/>
     </ScrollView>
