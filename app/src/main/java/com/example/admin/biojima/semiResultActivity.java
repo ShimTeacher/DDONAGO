@@ -34,11 +34,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class semiResultActivity extends FragmentActivity {
-    static ProgressDialog progressDialog;
+
     static ArrayAdapter mDetailAdapter;
-
-
-    private static final String PREFERENCE_KEY = "seekBarPreference";
+    ArrayList<String> arrayList = new ArrayList<String>();
+   static ArrayList<String> contentarrayList = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,12 +105,10 @@ public class semiResultActivity extends FragmentActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                    Intent intent = new Intent(getActivity(),DetailActivity.class);
+                    Intent intent = new Intent(getActivity(),DetailActivity.class).putExtra("DETAILDESC",contentarrayList.get(position));
 
-                    //startActivity(intent);
+                    startActivity(intent);
 
-
-                    Toast.makeText(getActivity(),position +"개",Toast.LENGTH_SHORT).show();
                 }
             });
             return rootView;
@@ -121,11 +118,7 @@ public class semiResultActivity extends FragmentActivity {
 
     public class FindLocationfFromResult extends AsyncTask<String, Void, ArrayList<String>> {
 
-        @Override
-        protected void onPreExecute() {
 
-            super.onPreExecute();
-        }
 
         private final String LOG_TAG = FindLocationfFromResult.class.getSimpleName();
 
@@ -134,29 +127,16 @@ public class semiResultActivity extends FragmentActivity {
         static final String TOTAL_COUNT = "totalCount";
         static final String ITEMS = "items";
         static final String ITEM = "item";
-        static final String ADDR = "addr1";
-        static final String AREACODE = "areacode";
-        static final String SIGUNGUCODE = "sigungucode";
-        static final String MAPX = "mapx";
-        static final String MAPY = "mapy";
         static final String TITLE = "title";
+        static final String CONTENTID = "contentid";
 
         String totalCount = null;
-
-        HashMap<String , String[]> map = new HashMap<String , String[]>();
 
         private ArrayList<String> getAttractionDataFromJson(String forecastJsonStr)
                 throws JSONException {
 
-            String mapx;
-            String mapy;
-            String addr;
-            String areacode;
-            String sigungucode;
             String title;
-
-            ArrayList<String> arrayList = new ArrayList<String>();
-
+            String contentid;
 
             JSONObject attractionJson = new JSONObject(forecastJsonStr);
             JSONObject responseObject = attractionJson.getJSONObject(RESPONSE);
@@ -164,24 +144,24 @@ public class semiResultActivity extends FragmentActivity {
             JSONObject itemsObject = bodyObject.getJSONObject(ITEMS);
             JSONArray itemArray = itemsObject.getJSONArray(ITEM);
             totalCount = bodyObject.getString(TOTAL_COUNT);
-
             int val = Integer.parseInt(totalCount);
-                String[] test;
-
+            arrayList.clear();
+            contentarrayList.clear();
                 for (int i = 0; i < val; i++) {
                     JSONObject AttracionObject = itemArray.getJSONObject(i);
                     try{
-                        mapx = AttracionObject.getString(MAPX);
-                        mapy = AttracionObject.getString(MAPY);
-                        addr = AttracionObject.getString(ADDR);
                         title = AttracionObject.getString(TITLE);
+                        contentid = AttracionObject.getString(CONTENTID);
                     }
                     catch (JSONException e)
                     {
-                        Log.v(LOG_TAG,"json exception");
-                        break;
+                        title = "타이틀 정보가 없음";
+                        contentid = "컨텐츠 정보가 없음";
                     }
+
                     arrayList.add(title);
+
+                    contentarrayList.add(contentid);
                 }
                 return arrayList;
         }
@@ -201,8 +181,6 @@ public class semiResultActivity extends FragmentActivity {
 
                 String areaCode = input.split(",")[0];
                 String sigunguCode = input.split(",")[1];
-
-
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 String site = prefs.getString(getString(R.string.search_criteria_key),
@@ -285,10 +263,6 @@ public class semiResultActivity extends FragmentActivity {
                 }
 
             }
-
-
-
-
 
             super.onPostExecute(strings);
         }
