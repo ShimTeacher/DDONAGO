@@ -711,6 +711,9 @@ public class YoonHo {
 
                 try {
                     //Construct the URL
+//                    final String FORECAST_BASE_URL =
+//                            "http://newsky2.kma.go.kr/service/SecndSrtpdFrcstInfoService/ForecastSpaceData?ServiceKey=JAqSoGioZENbhApPM6hgbP5nxxdEg%2FKgtSy%2BK%2BcyFR7Ckk%2Fav13Hoh4tzckekFe60m82sHoUMCwJ1Hzp1GPWGA%3D%3D";
+
                     final String FORECAST_BASE_URL =
                             "http://newsky2.kma.go.kr/service/SecndSrtpdFrcstInfoService/ForecastSpaceData?ServiceKey=Si1LZhStHnfooZIH3OW%2BV5kMa9%2BoJy6u7wuOlqfeIXbSAAcBD%2FXOrOvJsKIRNlprnQVfK8%2B2Je%2BgMUXhcEznwg%3D%3D";
                     final String BASE_DATE_PARM = "base_date";
@@ -793,7 +796,6 @@ public class YoonHo {
             double[] TempDataCopyArr = new double[WeatherDataList.length];
 
 
-
             try{
                 for(int i=0;i<WeatherDataList.length;i++) {
                     String[] a = getRainproDataFromJson(WeatherDataList[i]);
@@ -858,13 +860,19 @@ public class YoonHo {
                 sigunguCodeArrList = new ArrayList<String>();
                 for(int i = 0; i<5; i++)
                 {
+//
+//                    /************************ 진짜 코드**********************/
+//                    arrayList.add(Hyunbo.sigunguName[Finalrank[i]]);
+//                    sigunguCodeArrList.add(Hyunbo.sigunguList[Finalrank[i]]);
+//                    /**************************        ********************/
 
-                    arrayList.add(Hyunbo.sigunguName[Finalrank[i]]);
-                    sigunguCodeArrList.add(Hyunbo.sigunguList[Finalrank[i]]);
 
 
+                    /************************ Test code **********************/
+                    arrayList.add(Hyunbo.sigunguName[i]);
+                    sigunguCodeArrList.add(Hyunbo.sigunguList[i]);
+                    /**************************        ********************/
 
-                    PopDataArr = new double[WeatherDataList.length];
 
                 }
 

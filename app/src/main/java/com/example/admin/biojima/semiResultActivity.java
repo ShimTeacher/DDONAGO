@@ -37,7 +37,8 @@ public class semiResultActivity extends FragmentActivity {
 
     static ArrayAdapter mDetailAdapter;
     ArrayList<String> arrayList = new ArrayList<String>();
-   static ArrayList<String> contentarrayList = new ArrayList<String>();
+
+    static ArrayList<String> contentarrayList = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +93,8 @@ public class semiResultActivity extends FragmentActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+
+
             mDetailAdapter =
             new ArrayAdapter<String>(
                     getActivity(), // The current context (this activity)
@@ -108,6 +111,7 @@ public class semiResultActivity extends FragmentActivity {
                     Intent intent = new Intent(getActivity(),DetailActivity.class).putExtra("DETAILDESC",contentarrayList.get(position));
 
                     startActivity(intent);
+                    getActivity().overridePendingTransition(R.xml.fade, R.xml.hold);
 
                 }
             });

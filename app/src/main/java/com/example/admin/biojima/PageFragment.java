@@ -258,7 +258,9 @@ public class PageFragment extends Fragment {
             else
             {
                 String str= strings.get(1);
-                str = str.replaceAll("<(/)?[bB][rR](\\s)*(/)?>", "\n");
+
+                str = str.replaceAll("<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>", "").replaceAll("\r|\n|&nbsp|&gt;","");
+//                str = str.replaceAll("<(/)?[bB][rR](\\s)*(/)?>", "\n");
 //
                 textView.setText(str);
             }
