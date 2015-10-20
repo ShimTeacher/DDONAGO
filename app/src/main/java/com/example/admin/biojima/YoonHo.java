@@ -854,14 +854,10 @@ public class YoonHo {
             if (WeatherDataList != null) {
                 ResultActivity.mlistAdapter.clear();
 
-
                 ArrayList<String> arrayList = new ArrayList<String>();
                 sigunguCodeArrList = new ArrayList<String>();
                 for(int i = 0; i<5; i++)
                 {
-
-
-
                     /************************** 진찌 코드***********************/
 //                    arrayList.add(Hyunbo.sigunguName[Finalrank[i]] +" "+ PopDataCopyArr[i] + " " + TempDataArr[Finalrank[i]]);
 //                    sigunguCodeArrList.add(Hyunbo.sigunguList[Finalrank[i]]);
