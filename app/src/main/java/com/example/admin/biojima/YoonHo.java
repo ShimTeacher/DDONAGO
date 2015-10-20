@@ -830,7 +830,7 @@ public class YoonHo {
                 }
 
                 for(int i=0;i<5;i++){
-                    Log.d("Pop",new Double(PopDataArr[i]).toString());
+                    Log.d("Pop",new Double(PopDataArr[Finalrank[i]]).toString());
                 }
 
                 for(int i=0;i<5;i++){
@@ -852,26 +852,11 @@ public class YoonHo {
                 sigunguCodeArrList = new ArrayList<String>();
                 for(int i = 0; i<5; i++)
                 {
-<<<<<<< HEAD
-//                    arrayList.add(Hyunbo.sigunguName[Finalrank[i]] +" "+ PopDataArr[i] + " " + TempDataArr[i]);
+
                     arrayList.add(Hyunbo.sigunguName[Finalrank[i]] +" "+ PopDataArr[i] + " " + TempDataArr[Finalrank[i]]);
-=======
-                    /************************** 진찌 코드***********************/
-//                    arrayList.add(Hyunbo.sigunguName[Finalrank[i]] +" "+ PopDataCopyArr[i] + " " + TempDataArr[Finalrank[i]]);
-//                    sigunguCodeArrList.add(Hyunbo.sigunguList[Finalrank[i]]);
+                    sigunguCodeArrList.add(Hyunbo.sigunguList[Finalrank[i]]);
 
 
-
-                    /**************************TEST CODE ***********************/
-
-                    arrayList.add(Hyunbo.sigunguName[i]);
-                    sigunguCodeArrList.add(Hyunbo.sigunguList[i]);
-
-                    /**************************TEST CODE ***********************/
-
-
-
->>>>>>> 73b9dcb6b32ef09cf4b99f6a41fcbf4b44d71601
                     PopDataArr = new double[WeatherDataList.length];
 
                 }
