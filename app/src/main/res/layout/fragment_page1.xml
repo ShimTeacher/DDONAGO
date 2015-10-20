@@ -4,8 +4,17 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:id="@+id/AboutLayout1"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    android:weightSum="1"
+    xmlns:custom="http://schemas.android.com/apk/res-auto">
 
+    <com.daimajia.slider.library.SliderLayout
+        android:id="@+id/slider"
+        android:layout_width="match_parent"
+        custom:pager_animation="Accordion"
+        custom:auto_cycle="true"
+        custom:indicator_visibility="visible"
+        custom:pager_animation_span="1100"
+        android:layout_height="200dp"/>
 
     <ImageView
         android:layout_width="match_parent"
