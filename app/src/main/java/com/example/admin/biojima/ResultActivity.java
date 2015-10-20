@@ -5,10 +5,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
+<<<<<<< HEAD
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+=======
+import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.os.Bundle;
+>>>>>>> 73b9dcb6b32ef09cf4b99f6a41fcbf4b44d71601
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,7 +38,10 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 73b9dcb6b32ef09cf4b99f6a41fcbf4b44d71601
 
 
 public class ResultActivity extends FragmentActivity {
@@ -106,7 +116,7 @@ public class ResultActivity extends FragmentActivity {
             mlistAdapter =
                     new ArrayAdapter<String>(
                             getActivity(), // The current context (this activity)
-                            R.layout.list_item_forecast, // The name of the layout ID.
+                            R.layout.list_item_in_result, // The name of the layout ID.
                             R.id.list_item_forecast_textview, // The ID of the textview to populate.
                             new ArrayList<String>());
             View rootView = inflater.inflate(R.layout.fragment_result, container, false);
@@ -116,10 +126,8 @@ public class ResultActivity extends FragmentActivity {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String forecast = (String)parent.getAdapter().getItem(position);
-                    //Toast.makeText(getActivity(),forecast,Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(getActivity(), DetailActivity.class)
-                            .putExtra(Intent.EXTRA_SHORTCUT_NAME, forecast);
+                    Intent intent = new Intent(getActivity(), semiResultActivity.class)
+                            .putExtra(Intent.EXTRA_SHORTCUT_NAME, YoonHo.sigunguCodeArrList.get(position));
                     startActivity(intent);
                 }
             });
