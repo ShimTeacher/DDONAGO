@@ -60,6 +60,7 @@ public class DetailActivity extends FragmentActivity {
 
         // Give the PagerSlidingTabStrip the ViewPager
         PagerSlidingTabStrip tabsStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+
         // Attach the view pager to the tab strip
         tabsStrip.setViewPager(viewPager);
 
@@ -114,8 +115,8 @@ public class DetailActivity extends FragmentActivity {
     }
 
     public class SampleFragmentPagerAdapter extends FragmentPagerAdapter {
-        final int PAGE_COUNT = 3;
-        private String tabTitles[] = new String[] { "About", "Map", "Related" };
+        final int PAGE_COUNT = 2;
+        private String tabTitles[] = new String[] { "About", "Map" };
 
         public SampleFragmentPagerAdapter(FragmentManager fm) {
             super(fm);

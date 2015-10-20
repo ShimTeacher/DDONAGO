@@ -858,18 +858,9 @@ public class YoonHo {
                 sigunguCodeArrList = new ArrayList<String>();
                 for(int i = 0; i<5; i++)
                 {
-                    /************************** 진찌 코드***********************/
-//                    arrayList.add(Hyunbo.sigunguName[Finalrank[i]] +" "+ PopDataCopyArr[i] + " " + TempDataArr[Finalrank[i]]);
-//                    sigunguCodeArrList.add(Hyunbo.sigunguList[Finalrank[i]]);
 
-
-
-                    /**************************TEST CODE ***********************/
-
-                    arrayList.add(Hyunbo.sigunguName[i]);
-                    sigunguCodeArrList.add(Hyunbo.sigunguList[i]);
-
-                    /**************************TEST CODE ***********************/
+                    arrayList.add(Hyunbo.sigunguName[Finalrank[i]]);
+                    sigunguCodeArrList.add(Hyunbo.sigunguList[Finalrank[i]]);
 
 
 
