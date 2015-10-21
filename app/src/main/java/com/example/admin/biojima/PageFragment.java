@@ -46,6 +46,7 @@ public class PageFragment extends Fragment  {
     ImageView imageView;
     private int mPage;
     private SliderLayout mDemoSlider;
+    HashMap<String,String> url_maps = new HashMap<String, String>();
 
     public static PageFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -150,6 +151,8 @@ public class PageFragment extends Fragment  {
         static final String FIRSTIMAGE = "firstimage";
         static final String TEL = "tel";
         static final String OVERVIEW = "overview";
+        static final String ADDR1 = "addr1";
+        static final String ADDR2 = "addr2";
 
         String totalCount = null;
 
@@ -157,12 +160,12 @@ public class PageFragment extends Fragment  {
                 throws JSONException {
 
             String title=null;
-            String contentid=null;
             String mapx=null;
             String mapy=null;
             String firstimage=null;
             String overview=null;
-            String tel=null;
+            String addr1=null;
+            String addr2=null;
 
             JSONObject attractionJson = new JSONObject(forecastJsonStr);
             JSONObject responseObject = attractionJson.getJSONObject(RESPONSE);
@@ -177,33 +180,52 @@ public class PageFragment extends Fragment  {
             catch (JSONException e)
             {
                 e.printStackTrace();
+                Log.v(LOG_TAG, " 좌표 없음 ");
             }
 
             try {
                 firstimage = itemObject.getString(FIRSTIMAGE);
+                url_maps.put("0", firstimage);
+
             }
             catch (JSONException e)
             {
                 e.printStackTrace();
+                Log.v(LOG_TAG, " 대표 이미지 없음");
             }
 
             try {
                 overview = itemObject.getString(OVERVIEW);
                 title = itemObject.getString(TITLE);
+
             }
             catch (JSONException e)
             {
                 e.printStackTrace();
+                Log.v(LOG_TAG, " 설명 또는 타이틀 없음 ");
             }
+
+            try {
+                addr1 =  itemObject.getString(ADDR1);
+                addr2 =  itemObject.getString(ADDR2);
+
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+                Log.v(LOG_TAG," 주소 없음 ");
+            }
+
+
 
             ArrayList<String> arrayList = new ArrayList<String>();
 
-            arrayList.add(title);
-            arrayList.add(overview);
-            arrayList.add(mapx);
-            arrayList.add(mapy);
-            arrayList.add(firstimage);
-
+            arrayList.add(title);//0
+            arrayList.add(overview);//1
+            arrayList.add(mapx);//2
+            arrayList.add(mapy);//3
+            arrayList.add(addr1);//4
+            arrayList.add(addr2);//5
             return arrayList;
         }
 
@@ -276,30 +298,39 @@ public class PageFragment extends Fragment  {
         @Override
         protected void onPostExecute(ArrayList<String> strings) {
             TextView textView = (TextView)getActivity().findViewById(R.id.detailtextView);
-            ImageView imageView = (ImageView)getActivity().findViewById(R.id.detailimageView);
 
-            if(strings.get(1)==null)
+
+            /************************** mapx=string.get(2), mapy=string.get(3); ***************/
+            /************************** mapx=string.get(2), mapy=string.get(3); ***************/
+            /************************** mapx=string.get(2), mapy=string.get(3); ***************/
+            /************************** mapx=string.get(2), mapy=string.get(3); ***************/
+            /************************** mapx=string.get(2), mapy=string.get(3); ***************/
+            /************************** mapx=string.get(2), mapy=string.get(3); ***************/
+            String str = null;
+
+            if(strings.get(0)!=null)
             {
-                textView.setText("관련 정보가 없습니다.");
+                str = " 장소 : "+ strings.get(0)+" \r\n ";
             }
-            else
+
+
+            if(strings.get(4)!=null)
             {
-                String str= strings.get(1);
+                if(strings.get(5)!=null)
+                {
 
-                str = str.replaceAll("<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>", "").replaceAll("\r|\n|&nbsp|&gt;","");
-//                str = str.replaceAll("<(/)?[bB][rR](\\s)*(/)?>", "\n");
-//
-                textView.setText(str);
+                    str +=" 주소 : "+ strings.get(4)+" "+ strings.get(5) +" \r\n ";
+
+                }
+                else
+                    str += " 주소 : " + strings.get(4) +" \r\n ";
             }
 
 
-            if(strings.get(4)==null) {
-                Toast.makeText(getActivity(),"사진 정보가 없습니다",Toast.LENGTH_LONG).show();
-            }
-            else
-            {
-                new LoadImagefromUrl().execute(imageView, strings.get(4));
-            }
+            String editStr = strings.get(1).replaceAll("<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>", "").replaceAll("\r|\n|&nbsp|&gt;","");
+            str += editStr;
+            textView.setText(str);
+
             super.onPostExecute(strings);
         }
 
@@ -313,6 +344,8 @@ public class PageFragment extends Fragment  {
         private final String LOG_TAG = GetDetailFromResult.class.getSimpleName();
 
         static final String ORIGINALURL = "originimgurl";
+        static final String smallimageurl = "smallimageurl";
+
         static final String RESPONSE = "response";
         static final String BODY = "body";
         static final String TOTAL_COUNT = "totalCount";
@@ -367,21 +400,6 @@ public class PageFragment extends Fragment  {
                     Log.v("6666",url);
                 }
             }
-
-
-//
-//            JSONObject itemsObject = bodyObject.getJSONObject(ITEMS);
-//            JSONArray itemArray = itemsObject.getJSONArray(ITEM);
-//            int val = Integer.parseInt(totalCount);
-//            String[] test;
-//            String title;
-//            for (int i = 0; i < val; i++) {
-//                JSONObject AttracionObject = itemArray.getJSONObject(i);
-
-
-
-
-
 
             return arrayList;
         }
@@ -460,16 +478,16 @@ public class PageFragment extends Fragment  {
             try
             {
 
-                HashMap<String,String> url_maps = new HashMap<String, String>();
+
 
                 int val = Integer.parseInt(totalCount);
-                if( val >9)
+                if( val >5)
                 {
-                    val = 9;
+                    val = 5;
                 }
                 for(int i = 0 ;i<val;i++)
                 {
-                    url_maps.put(new Integer(i).toString(), strings.get(i));
+                    url_maps.put(new Integer(i+1).toString(), strings.get(i));
                     Log.v("??",strings.get(i));
                 }
 
@@ -488,19 +506,15 @@ public class PageFragment extends Fragment  {
 
                     mDemoSlider.addSlider(textSliderView);
                 }
-                mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Accordion);
+                mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Stack);
                 mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
                 //mDemoSlider.setCustomAnimation(new DescriptionAnimation());
                 mDemoSlider.setDuration(4000);
                 mDemoSlider.addOnPageChangeListener(this);
 
-
-
-
-
             }catch (Exception e)
             {
-                Log.v("에러", "널널");
+
             }
 
 
@@ -510,45 +524,4 @@ public class PageFragment extends Fragment  {
 
     }
 
-
-
-
-
-
-
-
-
-
-    private class LoadImagefromUrl extends AsyncTask< Object, Void, Bitmap > {
-        ImageView ivPreview = null;
-
-        @Override
-        protected Bitmap doInBackground( Object... params ) {
-            this.ivPreview = (ImageView) params[0];
-            String url = (String) params[1];
-            return loadBitmap( url );
-        }
-
-
-        @Override
-        protected void onPostExecute( Bitmap result ) {
-            super.onPostExecute( result );
-            ivPreview.setImageBitmap( result );
-        }
-    }
-
-    public Bitmap loadBitmap( String url ) {
-        URL newurl = null;
-        Bitmap bitmap = null;
-        try {
-            newurl = new URL( url );
-            bitmap = BitmapFactory.decodeStream( newurl.openConnection( ).getInputStream( ) );
-        } catch ( MalformedURLException e ) {
-            e.printStackTrace( );
-        } catch ( IOException e ) {
-
-            e.printStackTrace( );
-        }
-        return bitmap;
-    }
 }
