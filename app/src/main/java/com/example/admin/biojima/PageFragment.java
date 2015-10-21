@@ -48,6 +48,13 @@ public class PageFragment extends Fragment  {
     private SliderLayout mDemoSlider;
     HashMap<String,String> url_maps = new HashMap<String, String>();
 
+    String infocenter= null;
+    String usetime= null;
+    String parking= null;
+    String restdate= null;
+
+
+
     public static PageFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -62,10 +69,13 @@ public class PageFragment extends Fragment  {
         if (intent != null && intent.hasExtra("DETAILDESC")) {
             editText= intent.getStringExtra("DETAILDESC");
         }
+        GetDetailIntroFromResult getDetailIntroFromResult = new GetDetailIntroFromResult();
+        getDetailIntroFromResult.execute(editText);
         GetDetailFromResult getDetailFromResult = new GetDetailFromResult();
         getDetailFromResult.execute(editText);
         GetDetailImageFromResult getDetailImageFromResult = new GetDetailImageFromResult();
         getDetailImageFromResult.execute(editText);
+
         super.onStart();
     }
 
@@ -138,10 +148,8 @@ public class PageFragment extends Fragment  {
         private final String LOG_TAG = GetDetailFromResult.class.getSimpleName();
 
 
-        static final String CONTENTID = "contentid";
         static final String RESPONSE = "response";
         static final String BODY = "body";
-        static final String TOTAL_COUNT = "totalCount";
         static final String ITEMS = "items";
         static final String ITEM = "item";
 
@@ -149,12 +157,9 @@ public class PageFragment extends Fragment  {
         static final String MAPY = "mapy";
         static final String TITLE = "title";
         static final String FIRSTIMAGE = "firstimage";
-        static final String TEL = "tel";
         static final String OVERVIEW = "overview";
         static final String ADDR1 = "addr1";
         static final String ADDR2 = "addr2";
-
-        String totalCount = null;
 
         private ArrayList<String> getAttractionDataFromJson(String forecastJsonStr)
                 throws JSONException {
@@ -310,7 +315,7 @@ public class PageFragment extends Fragment  {
 
             if(strings.get(0)!=null)
             {
-                str = " 장소 : "+ strings.get(0)+" \r\n ";
+                str = "\r\n  장소 : "+ strings.get(0)+" \r\n ";
             }
 
 
@@ -318,14 +323,34 @@ public class PageFragment extends Fragment  {
             {
                 if(strings.get(5)!=null)
                 {
-
                     str +=" 주소 : "+ strings.get(4)+" "+ strings.get(5) +" \r\n ";
-
                 }
                 else
                     str += " 주소 : " + strings.get(4) +" \r\n ";
             }
 
+            if(infocenter!=null)
+            {
+                str += " 문의 및 안내 : "+ infocenter +" \r\n ";
+            }
+
+            if(usetime!=null)
+            {
+                usetime = usetime.replaceAll("<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>", "").replaceAll("\r|\n|br|&nbsp|&gt;","");
+                str += " 이용시간 : "+ usetime+" \r\n ";
+            }
+
+            if(parking!=null)
+            {
+                str += " 주차시설 유무 : "+ parking+" \r\n ";
+            }
+
+            if(restdate!=null)
+            {
+                str += " 쉬는 날 : "+ restdate +" \r\n ";
+            }
+
+            str+="\r\n";
 
             String editStr = strings.get(1).replaceAll("<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>", "").replaceAll("\r|\n|&nbsp|&gt;","");
             str += editStr;
@@ -338,6 +363,153 @@ public class PageFragment extends Fragment  {
 
     }
 
+
+
+
+    public class GetDetailIntroFromResult extends AsyncTask<String, Void, ArrayList<String>>{
+        private final String LOG_TAG = GetDetailIntroFromResult.class.getSimpleName();
+        static final String INFOCENTER = "infocenter";
+        static final String USETIME = "usetime";
+        static final String PARKING = "parking";
+        static final String RESTDATE = "restdate";
+
+        static final String RESPONSE = "response";
+        static final String BODY = "body";
+        static final String TOTAL_COUNT = "totalCount";
+        static final String ITEMS = "items";
+        static final String ITEM = "item";
+
+        String totalCount = null;
+
+
+        private ArrayList<String> getAttractionDataFromJson(String forecastJsonStr)
+                throws JSONException {
+            ArrayList<String> arrayList = new ArrayList<String>();
+
+
+
+            JSONObject attractionJson = new JSONObject(forecastJsonStr);
+
+            JSONObject responseObject = attractionJson.getJSONObject(RESPONSE);
+            JSONObject bodyObject = responseObject.getJSONObject(BODY);
+            JSONObject itemsObject = bodyObject.getJSONObject(ITEMS);
+            JSONObject itemObject = itemsObject.getJSONObject(ITEM);
+
+
+
+            try
+            {
+                infocenter =  itemObject.getString(INFOCENTER);
+            }catch (JSONException e)
+            {
+                e.printStackTrace();
+                Log.v(LOG_TAG,"문의 및 정보 없음");
+            }
+            try
+            {
+                usetime =  itemObject.getString(USETIME);
+            }catch (JSONException e)
+            {
+                e.printStackTrace();
+                Log.v(LOG_TAG,"이용시간 정보 없음");
+            }
+            try
+            {
+                parking =  itemObject.getString(PARKING);
+            }catch (JSONException e)
+            {
+                e.printStackTrace();
+                Log.v(LOG_TAG,"주차시설 정보 없음");
+            }
+            try
+            {
+                restdate =  itemObject.getString(RESTDATE);
+            }catch (JSONException e)
+            {
+                e.printStackTrace();
+                Log.v(LOG_TAG,"쉬는 날 정보 없음");
+            }
+
+
+
+            return arrayList;
+        }
+
+        @Override
+        protected ArrayList<String> doInBackground(String... params) {
+            // These two need to be declared outside the try/catch
+            // so that they can be closed in the finally block.
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+            final String myKey = "Si1LZhStHnfooZIH3OW%2BV5kMa9%2BoJy6u7wuOlqfeIXbSAAcBD%2FXOrOvJsKIRNlprnQVfK8%2B2Je%2BgMUXhcEznwg%3D%3D";
+            // Will contain the raw JSON response as a string.
+            String AttracionJsonStr = null;
+            String contentid= params[0];
+            try {
+
+                URL url = new URL("http://api.visitkorea.or.kr/openapi/service/rest/KorService/detailIntro?ServiceKey="+myKey+ "&contentId="+ contentid +"&contentTypeId=12&imageYN=Y&MobileOS=ETC&MobileApp=TourAPI2.0_Guide&_type=json");
+
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    // Nothing to do.
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                    // But it does make debugging a *lot* easier if you print out the completed
+                    // buffer for debugging.
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0) {
+                    // Stream was empty.  No point in parsing.
+                    return null;
+                }
+                AttracionJsonStr = buffer.toString();
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "Error ", e);
+
+                return null;
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e(LOG_TAG, "Error closing stream", e);
+                    }
+                }
+            } try {
+                return getAttractionDataFromJson(AttracionJsonStr);
+            } catch (JSONException e) {
+
+                Log.e(LOG_TAG, e.getMessage(), e);
+
+                e.printStackTrace();
+
+            }
+
+            return null;}
+
+        @Override
+        protected void onPostExecute(ArrayList<String> strings) {
+
+
+        }
+
+
+
+    }
 
     public class GetDetailImageFromResult extends AsyncTask<String, Void, ArrayList<String>>implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
 
@@ -477,9 +649,6 @@ public class PageFragment extends Fragment  {
 
             try
             {
-
-
-
                 int val = Integer.parseInt(totalCount);
                 if( val >5)
                 {
