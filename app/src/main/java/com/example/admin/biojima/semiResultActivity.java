@@ -120,6 +120,13 @@ public class semiResultActivity extends FragmentActivity {
     }
 
 
+
+
+
+
+
+
+
     public class FindLocationfFromResult extends AsyncTask<String, Void, ArrayList<String>> {
 
 
@@ -272,5 +279,6 @@ public class semiResultActivity extends FragmentActivity {
         }
 
     }
+
 
 }

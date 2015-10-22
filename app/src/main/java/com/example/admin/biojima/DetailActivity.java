@@ -16,11 +16,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.daimajia.slider.library.Animations.DescriptionAnimation;
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
+import com.daimajia.slider.library.Tricks.ViewPagerEx;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,13 +39,15 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
-public class DetailActivity extends FragmentActivity {
+public class DetailActivity extends FragmentActivity  {
 
     private TabHost mTabHost;
     static TextView textView;
     String editText;
+
     @Override
     protected void onStart() {
 
@@ -51,6 +59,7 @@ public class DetailActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_detail);
+
 
 
 
@@ -99,6 +108,7 @@ public class DetailActivity extends FragmentActivity {
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -138,8 +148,6 @@ public class DetailActivity extends FragmentActivity {
             return tabTitles[position];
         }
     }
-
-
 
 
 
