@@ -31,13 +31,11 @@
         <item>@string/search_criteria_label_attraction</item>
         <item>@string/search_criteria_label_cultural_facilities</item>
         <item>@string/search_criteria_label_festival</item>
-        <item>@string/search_criteria_label_leisure_sports</item>
     </string-array>
     <string-array name="search_criteria_values">
         <item>@string/search_criteria_attraction</item>
         <item>@string/search_criteria_cultural_facilities</item>
         <item>@string/search_criteria_festival</item>
-        <item>@string/search_criteria_leisure_sports</item>
     </string-array>
 
 
