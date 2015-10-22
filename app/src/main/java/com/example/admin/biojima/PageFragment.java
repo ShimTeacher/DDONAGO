@@ -331,6 +331,7 @@ public class PageFragment extends Fragment  {
 
             if(infocenter!=null)
             {
+                infocenter = infocenter.replaceAll("<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>", "").replaceAll("\r|\n|br|&nbsp|&gt;","");
                 str += " 문의 및 안내 : "+ infocenter +" \r\n ";
             }
 
@@ -342,11 +343,13 @@ public class PageFragment extends Fragment  {
 
             if(parking!=null)
             {
+                parking = parking.replaceAll("<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>", "").replaceAll("\r|\n|br|&nbsp|&gt;","");
                 str += " 주차시설 유무 : "+ parking+" \r\n ";
             }
 
             if(restdate!=null)
             {
+                restdate = restdate.replaceAll("<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>", "").replaceAll("\r|\n|br|&nbsp|&gt;","");
                 str += " 쉬는 날 : "+ restdate +" \r\n ";
             }
 
