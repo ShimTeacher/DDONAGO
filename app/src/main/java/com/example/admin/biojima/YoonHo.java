@@ -65,22 +65,24 @@ public class YoonHo {
     //강수확률 정렬 함수
     public int[] YoonHoPopSort(double[] arr){
         int[] rank = new int[arr.length];
+        double[] copyarr = new double[arr.length];
         int[] sortData = new int[arr.length];
         int[] RealRankData = new int[arr.length];
         for (int i=0;i<arr.length;i++){
             rank[i] = i;
             sortData[i] = 1;
+            copyarr[i] = arr[i];
         }
 
 
 
-        for(int i=0; i<arr.length - 1; i++){
+        for(int i=0; i<copyarr.length - 1; i++){
 
-            for(int k = arr.length - 1;k>i;k--){
-                if(arr[k] < arr[k-1]){
-                    double swap = arr[k-1];
-                    arr[k-1] = arr[k];
-                    arr[k] = swap;
+            for(int k = copyarr.length - 1;k>i;k--){
+                if(copyarr[k] < copyarr[k-1]){
+                    double swap = copyarr[k-1];
+                    copyarr[k-1] = copyarr[k];
+                    copyarr[k] = swap;
 
                     int rankSwap = rank[k-1];
                     rank[k-1] = rank[k];
@@ -89,8 +91,8 @@ public class YoonHo {
             }
         }
 
-        for(int i = 0;i<arr.length - 1;i++){
-            if(arr[i] < arr[i+1]){
+        for(int i = 0;i<copyarr.length - 1;i++){
+            if(copyarr[i] < copyarr[i+1]){
                 sortData[i+1] = sortData[i] + 1;
             }
             else{
@@ -98,7 +100,7 @@ public class YoonHo {
             }
         }
 
-        for(int i=0;i<arr.length;i++){
+        for(int i=0;i<copyarr.length;i++){
             RealRankData[rank[i]] = sortData[i];
         }
 
@@ -792,10 +794,6 @@ public class YoonHo {
             double[] PopDataArr = new double[WeatherDataList.length];
             double[] TempDataArr = new double[WeatherDataList.length];
 
-            double[] PopDataCopyArr = new double[WeatherDataList.length];
-            double[] TempDataCopyArr = new double[WeatherDataList.length];
-
-
             try{
                 for(int i=0;i<WeatherDataList.length;i++) {
                     String[] a = getRainproDataFromJson(WeatherDataList[i]);
@@ -823,27 +821,23 @@ public class YoonHo {
 //                    }
                 }
 
-                for(int i=0;i<WeatherDataList.length;i++){
-                    PopDataCopyArr[i] = PopDataArr[i];
-                    TempDataCopyArr[i] = TempDataArr[i];
-                }
-
 //                for(int i=0;i<WeatherDataList.length;i++){
 //                    Log.d("testData",new Double(DataArr[i]).toString());
 //                }
 
-                Finalrank = FinalSort(YoonHoPopSort(PopDataCopyArr), YoonHoTempSort(TempDataCopyArr));
+                Finalrank = FinalSort(YoonHoPopSort(PopDataArr), YoonHoTempSort(TempDataArr));
 
                 for(int i=0;i<5;i++){
                     Log.d("rank",new Integer(Finalrank[i]).toString());
                 }
 
                 for(int i=0;i<5;i++){
-                    Log.d("Pop",new Double(PopDataCopyArr[i]).toString());
+                    Log.d("Pop",new Double(PopDataArr[Finalrank[i]]).toString());
                 }
 
                 for(int i=0;i<5;i++){
-                    Log.d("Temp",new Double(TempDataCopyArr[Finalrank[i]]).toString());
+
+                    Log.d("Temp",new Double(TempDataArr[Finalrank[i]]).toString());
                 }
 
             }catch(JSONException e){
@@ -865,8 +859,6 @@ public class YoonHo {
 //                    arrayList.add(Hyunbo.sigunguName[Finalrank[i]]);
 //                    sigunguCodeArrList.add(Hyunbo.sigunguList[Finalrank[i]]);
 //                    /**************************        ********************/
-
-
 
                     /************************ Test code **********************/
                     arrayList.add(Hyunbo.sigunguName[i]);

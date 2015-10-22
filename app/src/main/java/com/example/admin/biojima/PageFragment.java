@@ -118,16 +118,6 @@ public class PageFragment extends Fragment  {
         mDemoSlider = (SliderLayout)view.findViewById(R.id.slider);
 
 
-
-
-
-
-
-
-
-
-
-
         return view;
     }
 
