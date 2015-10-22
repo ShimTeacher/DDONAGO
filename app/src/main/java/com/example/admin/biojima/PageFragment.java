@@ -83,9 +83,9 @@ public class PageFragment extends Fragment {
             case 2:
                 view = inflater.inflate(R.layout.fragment_page2, container, false);
                 break;
-            case 3:
-                view = inflater.inflate(R.layout.fragment_page3, container, false);
-                break;
+//            case 3:
+//                view = inflater.inflate(R.layout.fragment_page3, container, false);
+//                break;
 
 
 
@@ -257,7 +257,10 @@ public class PageFragment extends Fragment {
             }
             else
             {
-                textView.setText(strings.get(1));
+                String str= strings.get(1);
+                str = str.replaceAll("<(/)?[bB][rR](\\s)*(/)?>", "\n");
+//
+                textView.setText(str);
             }
 
 

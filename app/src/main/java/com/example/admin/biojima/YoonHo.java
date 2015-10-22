@@ -853,6 +853,19 @@ public class YoonHo {
                 for(int i = 0; i<5; i++)
                 {
 
+
+                    //Head  겹친 부분
+                    ///////////////////////////////////////////////////////////////////
+                    ///////////////////////////////////////////////////////////////////
+                    ///////////////////////////////////////////////////////////////////
+                    arrayList.add(Hyunbo.sigunguName[Finalrank[i]]);
+                    sigunguCodeArrList.add(Hyunbo.sigunguList[Finalrank[i]]);
+                    ///////////////////////////////////////////////////////////////////
+                    ///////////////////////////////////////////////////////////////////
+                    ///////////////////////////////////////////////////////////////////
+
+
+
                     arrayList.add(Hyunbo.sigunguName[Finalrank[i]] +" "+ PopDataArr[i] + " " + TempDataArr[Finalrank[i]]);
                     sigunguCodeArrList.add(Hyunbo.sigunguList[Finalrank[i]]);
 
