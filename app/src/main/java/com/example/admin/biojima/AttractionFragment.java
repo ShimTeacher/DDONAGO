@@ -5,15 +5,8 @@ package com.example.admin.biojima;
  */
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,21 +19,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
 
 /**
  * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
@@ -52,6 +30,7 @@ public class AttractionFragment extends Fragment {
     private static final String PREFERENCE_KEY = "seekBarPreference";
     EditText editText;
     ImageButton button;
+    ImageButton MapButton;
     ImageButton settingButton;
 
     //TestCode
@@ -111,12 +90,21 @@ public class AttractionFragment extends Fragment {
 
         editText = (EditText) rootView.findViewById(R.id.editText);
         button = (ImageButton)rootView.findViewById(R.id.findButton);
+        MapButton = (ImageButton)rootView.findViewById(R.id.mapButton);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ResultActivity.class)
                         .putExtra(Intent.EXTRA_TEXT, editText.getText().toString()); //ResultActivity로 EditText값을 넘겨줌.
+                startActivity(intent);
+            }
+        });
+
+        MapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MapActivity.class);
                 startActivity(intent);
             }
         });

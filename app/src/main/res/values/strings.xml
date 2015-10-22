@@ -69,4 +69,12 @@
     <color name="light_green">#3c2ae668</color>
     <string name="title_activity_detail">DetailActivity</string>
 
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_map">MapActivity</string>
+
+    <string name="hello">Hello World, NMapViewer!</string>
+    <string name="str_done">완료</string>
+
+
 </resources>
