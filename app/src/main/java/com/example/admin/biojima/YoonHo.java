@@ -716,6 +716,8 @@ public class YoonHo {
             if(CurrentTime.equals("-1")){
                 cal.add(Calendar.DATE,-1);
                 Today = fm.format(cal.getTime());
+                CurrentTime = "2300";
+
             }
 
             //Return Type is json
@@ -875,16 +877,16 @@ public class YoonHo {
                 sigunguCodeArrList = new ArrayList<String>();
                 for(int i = 0; i<Finalrank.length; i++)
                 {
-//
-//                    /************************ 진짜 코드**********************/
-//                    arrayList.add(Hyunbo.sigunguName[Finalrank[i]]);
-//                    sigunguCodeArrList.add(Hyunbo.sigunguList[Finalrank[i]]);
-//                    /**************************        ********************/
 
-                    /************************ Test code **********************/
-                    arrayList.add(Hyunbo.sigunguName[i]);
-                    sigunguCodeArrList.add(Hyunbo.sigunguList[i]);
+                    /************************ 진짜 코드**********************/
+                    arrayList.add(Hyunbo.sigunguName[Finalrank[i]]);
+                    sigunguCodeArrList.add(Hyunbo.sigunguList[Finalrank[i]]);
                     /**************************        ********************/
+//
+//                    /************************ Test code **********************/
+//                    arrayList.add(Hyunbo.sigunguName[i]);
+//                    sigunguCodeArrList.add(Hyunbo.sigunguList[i]);
+//                    /**************************        ********************/
 
 
                 }

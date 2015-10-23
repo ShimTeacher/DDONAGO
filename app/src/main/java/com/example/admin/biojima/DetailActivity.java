@@ -61,8 +61,6 @@ public class DetailActivity extends FragmentActivity  {
         setContentView(R.layout.activity_detail);
 
 
-
-
 // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new SampleFragmentPagerAdapter(getSupportFragmentManager()));
@@ -138,8 +136,9 @@ public class DetailActivity extends FragmentActivity  {
         }
 
         @Override
-        public Fragment getItem(int position) {
-            return PageFragment.newInstance(position + 1);
+        public Fragment getItem(int position)
+        {
+         return (position == 0)? new fragment1() : new fragment2() ;
         }
 
         @Override

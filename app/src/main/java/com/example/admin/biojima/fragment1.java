@@ -1,6 +1,4 @@
 package com.example.admin.biojima;
-
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -20,10 +18,6 @@ import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.nhn.android.maps.NMapView;
-import com.nhn.android.maps.overlay.NMapPOIdata;
-import com.nhn.android.maps.overlay.NMapPOIitem;
-import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
-import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,10 +33,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by adslbna2 on 15. 10. 6..
+ * Created by adslbna2 on 15. 10. 24..
  */
-// In this case, the fragment displays simple text based on the page
-public class PageFragment extends Fragment  {
+public class fragment1 extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
     String editText;
     static TextView textView;
@@ -51,10 +44,6 @@ public class PageFragment extends Fragment  {
     private SliderLayout mDemoSlider;
     HashMap<String,String> url_maps = new HashMap<String, String>();
 
-
-
-    NMapView mMapView;
-    private NMapViewerResourceProvider mMapViewerResourceProvider;
 
 
     int Is12=0;
@@ -74,24 +63,14 @@ public class PageFragment extends Fragment  {
     String restdateculture= null;
     String spendtimeculture = null;
 
-     String eventstartdate = null;
-     String eventenddate = null;
-     String eventplace = null;
-     String usetimefestival= null;
-     String spendtimefestival= null;
-     String bookingplace = null;
+    String eventstartdate = null;
+    String eventenddate = null;
+    String eventplace = null;
+    String usetimefestival= null;
+    String spendtimefestival= null;
+    String bookingplace = null;
     String agelimit = null;
     String placeinfo = null;
-
-
-    public static PageFragment newInstance(int page) {
-        Bundle args = new Bundle();
-        args.putInt(ARG_PAGE, page);
-        PageFragment fragment = new PageFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onStart() {
         Intent intent = getActivity().getIntent();
@@ -133,53 +112,22 @@ public class PageFragment extends Fragment  {
 
         GetDetailFromResult getDetailFromResult = new GetDetailFromResult();
         getDetailFromResult.execute(editText);
-//        GetDetailImageFromResult getDetailImageFromResult = new GetDetailImageFromResult();
-//        getDetailImageFromResult.execute(editText);
+        GetDetailImageFromResult getDetailImageFromResult = new GetDetailImageFromResult();
+        getDetailImageFromResult.execute(editText);
 
         super.onStart();
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mPage = getArguments().getInt(ARG_PAGE);
 
-
-
-
-    }
-
-
-    // Inflate the fragment layout we defined above for this fragment
-    // Set the associated text for the title
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = null;
-        View view2 = null;
 
-
-        switch (mPage)
-        {
-            case 1:
-                view = inflater.inflate(R.layout.fragment_page1, container, false);
+        View view = inflater.inflate(R.layout.fragment_page1,container,false);
 
 
 
-                return view;
-            case 2:
-                view2 = inflater.inflate(R.layout.fragment_page2, container, false);
-                Toast.makeText(getContext(), "????????????", Toast.LENGTH_SHORT).show();
-
-
-                return view2;
-            default:
-                view = inflater.inflate(R.layout.fragment_page1, container, false);
-
-        }//
-//
-
-
+        mDemoSlider = (SliderLayout)view.findViewById(R.id.slider);
         return view;
     }
 
@@ -1146,5 +1094,4 @@ public class PageFragment extends Fragment  {
 
 
     }
-
 }

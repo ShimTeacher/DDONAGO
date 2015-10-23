@@ -168,7 +168,7 @@ public class ResultActivity extends FragmentActivity {
                     if (placesName.contains(" "))
                         placesName = placesName.replace(" ", "%20");
 
-                    HttpGet httpGet = new HttpGet("http://maps.google.com/maps/api/geocode/json?address=" + placesName + "&ka&sensor=false");
+                    HttpGet httpGet = new HttpGet("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyC-JarPhSJxvThZ8Vx3FrhuyIHJ4k_mftU&address="+placesName+"&sensor=false");
                     HttpClient client = new DefaultHttpClient();
                     HttpResponse response;
                     stringBuilder = new StringBuilder();
@@ -202,13 +202,14 @@ public class ResultActivity extends FragmentActivity {
                 Double lat = new Double(1);
 
                 try {
-                    lon = ((JSONArray) jsonObject.get("results")).getJSONObject(0)
-                            .getJSONObject("geometry").getJSONObject("location")
-                            .getDouble("lng");
+                    JSONArray results= jsonObject.getJSONArray("results");
+                         JSONObject jsonObject1 = results.getJSONObject(0);
+                    JSONObject geometry = jsonObject1.getJSONObject("geometry");
+                    JSONObject location = geometry.getJSONObject("location");
+                    lon = location.getDouble("lng");
+                    lat = location.getDouble("lat");
 
-                    lat = ((JSONArray) jsonObject.get("results")).getJSONObject(0)
-                            .getJSONObject("geometry").getJSONObject("location")
-                            .getDouble("lat");
+
 
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
