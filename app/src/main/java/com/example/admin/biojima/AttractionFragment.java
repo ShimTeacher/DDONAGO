@@ -106,7 +106,7 @@ public class AttractionFragment extends Fragment {
         MapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MapActivity.class);
+                Intent intent = new Intent(getActivity(), FindMapActivity.class);
                 startActivity(intent);
             }
         });

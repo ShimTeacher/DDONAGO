@@ -18,7 +18,7 @@ import com.nhn.android.maps.overlay.NMapPOIitem;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
 
-public class MapActivity extends NMapActivity {
+public class ResultMapActivity extends NMapActivity {
 
     NMapView mMapView;
     private NMapViewerResourceProvider mMapViewerResourceProvider;
@@ -60,11 +60,11 @@ public class MapActivity extends NMapActivity {
             }
 
             // [[TEMP]] handle a click event of the callout
-            Toast.makeText(MapActivity.this, "onCalloutClick: " + item.getTitle(), Toast.LENGTH_LONG).show();
+            Toast.makeText(ResultMapActivity.this, "onCalloutClick: " + item.getTitle(), Toast.LENGTH_LONG).show();
 
             NGeoPoint point = item.getPoint();
 
-            Intent intent = new Intent(MapActivity.this, ResultActivity.class)
+            Intent intent = new Intent(ResultMapActivity.this, ResultActivity.class)
                     .putExtra(Intent.EXTRA_TEXT, new Double(point.latitude).toString() + "," + new Double(point.longitude).toString()); //ResultActivity로 EditText값을 넘겨줌.
             startActivity(intent);
 
@@ -98,7 +98,7 @@ public class MapActivity extends NMapActivity {
             if (errInfo != null) {
                 Log.e(LOG_TAG, "Failed to findPlacemarkAtLocation: error=" + errInfo.toString());
 
-                Toast.makeText(MapActivity.this, errInfo.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(ResultMapActivity.this, errInfo.toString(), Toast.LENGTH_LONG).show();
                 return;
             }
 

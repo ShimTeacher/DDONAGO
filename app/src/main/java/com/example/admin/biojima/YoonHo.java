@@ -143,6 +143,7 @@ public class YoonHo {
 
         //데이터가 6개 이상일 경우 상위 데이터 5개를 뽑아낸다
         if(rank.length > 5) {
+            int[] returnrank = new int[5];
             for (int i = 0; i < 5; i++) {
 
                 for (int k = SortArr.length - 1; k > i; k--) {
@@ -156,7 +157,9 @@ public class YoonHo {
                         rank[k] = rankSwap;
                     }
                 }
+                returnrank[i] = rank[i];
             }
+            return returnrank;
         }
         else{
             for (int i = 0; i < SortArr.length; i++) {
