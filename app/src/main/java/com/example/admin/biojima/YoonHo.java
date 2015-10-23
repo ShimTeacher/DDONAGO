@@ -141,18 +141,39 @@ public class YoonHo {
         }
 
 
-        //상위 데이터 5개를 뽑아낸다
-        for(int i=0; i<5; i++){
+        //데이터가 6개 이상일 경우 상위 데이터 5개를 뽑아낸다
+        if(rank.length > 5) {
+            int[] returnrank = new int[5];
+            for (int i = 0; i < 5; i++) {
 
-            for(int k = SortArr.length - 1;k>i;k--){
-                if(SortArr[k] < SortArr[k-1]){
-                    int swap = SortArr[k-1];
-                    SortArr[k-1] = SortArr[k];
-                    SortArr[k] = swap;
+                for (int k = SortArr.length - 1; k > i; k--) {
+                    if (SortArr[k] < SortArr[k - 1]) {
+                        int swap = SortArr[k - 1];
+                        SortArr[k - 1] = SortArr[k];
+                        SortArr[k] = swap;
 
-                    int rankSwap = rank[k-1];
-                    rank[k-1] = rank[k];
-                    rank[k] = rankSwap;
+                        int rankSwap = rank[k - 1];
+                        rank[k - 1] = rank[k];
+                        rank[k] = rankSwap;
+                    }
+                }
+                returnrank[i] = rank[i];
+            }
+            return returnrank;
+        }
+        else{
+            for (int i = 0; i < SortArr.length; i++) {
+
+                for (int k = SortArr.length - 1; k > i; k--) {
+                    if (SortArr[k] < SortArr[k - 1]) {
+                        int swap = SortArr[k - 1];
+                        SortArr[k - 1] = SortArr[k];
+                        SortArr[k] = swap;
+
+                        int rankSwap = rank[k - 1];
+                        rank[k - 1] = rank[k];
+                        rank[k] = rankSwap;
+                    }
                 }
             }
         }
@@ -827,15 +848,15 @@ public class YoonHo {
 
                 Finalrank = FinalSort(YoonHoPopSort(PopDataArr), YoonHoTempSort(TempDataArr));
 
-                for(int i=0;i<5;i++){
+                for(int i=0;i<Finalrank.length;i++){
                     Log.d("rank",new Integer(Finalrank[i]).toString());
                 }
 
-                for(int i=0;i<5;i++){
+                for(int i=0;i<Finalrank.length;i++){
                     Log.d("Pop",new Double(PopDataArr[Finalrank[i]]).toString());
                 }
 
-                for(int i=0;i<5;i++){
+                for(int i=0;i<Finalrank.length;i++){
 
                     Log.d("Temp",new Double(TempDataArr[Finalrank[i]]).toString());
                 }
@@ -852,7 +873,7 @@ public class YoonHo {
 
                 ArrayList<String> arrayList = new ArrayList<String>();
                 sigunguCodeArrList = new ArrayList<String>();
-                for(int i = 0; i<5; i++)
+                for(int i = 0; i<Finalrank.length; i++)
                 {
 //
 //                    /************************ 진짜 코드**********************/

@@ -227,12 +227,26 @@ public class ResultActivity extends FragmentActivity {
 
                 final int LAT = 0;
                 final int LNG = 1;
-                JSONObject jsonObject = getLocationFormGoogle(params[0]);
-                Double[] latlng = getLatLng(jsonObject);
 
-                update(latlng[LAT].toString(), latlng[LNG].toString());
+                //주소로 검색을 했을 경우
+                if('0' == params[0].charAt(0)) {
 
-                return null;
+                    //주어진 주소로부터 위도경도를 구하는 부분
+                    JSONObject jsonObject = getLocationFormGoogle(params[0].substring(1));
+                    Double[] latlng = getLatLng(jsonObject);
+
+                    update(latlng[LAT].toString(), latlng[LNG].toString());
+
+                    return null;
+                }
+                //지도로 검색했을 경우
+                else{
+                    String[] LatLon;
+                    LatLon = params[0].split(",");
+
+                    update(LatLon[0], LatLon[1]);
+                    return null;
+                }
             }
 
             @Override

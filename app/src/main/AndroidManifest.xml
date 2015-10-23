@@ -47,7 +47,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".MapActivity"
+            android:name=".FindMapActivity"
             android:label="@string/title_activity_map" >
         </activity>
     </application>
