@@ -4,26 +4,29 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:id="@+id/AboutLayout1"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    android:weightSum="1"
+    xmlns:custom="http://schemas.android.com/apk/res-auto">
 
-
-    <ImageView
+    <com.daimajia.slider.library.SliderLayout
+        android:id="@+id/slider"
         android:layout_width="match_parent"
-        android:layout_height="222dp"
-        android:id="@+id/detailimageView"
-        android:background="#fff6fdff"
-        android:layout_gravity="center_horizontal"
-        android:adjustViewBounds="false" />
+        custom:pager_animation="Accordion"
+        custom:auto_cycle="true"
+        custom:indicator_visibility="visible"
+        custom:pager_animation_span="1100"
+        android:layout_height="200dp"/>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/scrollView" >
 
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text=""
+            android:textSize="15dp"
             android:id="@+id/detailtextView"
             android:textColor="#ff000000"/>
 

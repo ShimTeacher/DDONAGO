@@ -234,6 +234,7 @@ Log.v("CHECK", addr);
                             Double lon = new Double(str.split(",")[0]);
                             Double lat = new Double(str.split(",")[1]);
                             AttrStr[i] = Change.changeLonLat(lon, lat);
+                            Log.v("왜에러가나",AttrStr[i]);
                             i++;
                         }
 

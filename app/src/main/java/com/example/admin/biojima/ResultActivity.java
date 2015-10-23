@@ -46,6 +46,7 @@ public class ResultActivity extends FragmentActivity {
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
@@ -70,6 +71,7 @@ public class ResultActivity extends FragmentActivity {
 
         super.onStart();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -119,6 +121,7 @@ public class ResultActivity extends FragmentActivity {
                     Intent intent = new Intent(getActivity(), semiResultActivity.class)
                             .putExtra(Intent.EXTRA_SHORTCUT_NAME, YoonHo.sigunguCodeArrList.get(position));
                     startActivity(intent);
+                    
                 }
             });
 
@@ -131,7 +134,7 @@ public class ResultActivity extends FragmentActivity {
             @Override
             protected void onPreExecute() {
                 progressDialog = new ProgressDialog(ResultActivity.this);
-                progressDialog.setMessage("쪼매만 기다려 주쇼잉?");
+                progressDialog.setMessage("잠시만 기다려 주세요.");
                 progressDialog.show();
                 super.onPreExecute();
             }

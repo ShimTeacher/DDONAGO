@@ -98,6 +98,7 @@ public class AttractionFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), ResultActivity.class)
                         .putExtra(Intent.EXTRA_TEXT, editText.getText().toString()); //ResultActivity로 EditText값을 넘겨줌.
                 startActivity(intent);
+
             }
         });
 
