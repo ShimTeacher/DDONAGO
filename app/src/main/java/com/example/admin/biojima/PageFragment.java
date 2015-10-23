@@ -22,6 +22,11 @@ import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
+import com.nhn.android.maps.NMapView;
+import com.nhn.android.maps.overlay.NMapPOIdata;
+import com.nhn.android.maps.overlay.NMapPOIitem;
+import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
+import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,6 +54,12 @@ public class PageFragment extends Fragment  {
     private int mPage;
     private SliderLayout mDemoSlider;
     HashMap<String,String> url_maps = new HashMap<String, String>();
+
+
+
+    NMapView mMapView;
+    private NMapViewerResourceProvider mMapViewerResourceProvider;
+
 
     int Is12=0;
     int Is14=0;
@@ -148,6 +159,8 @@ public class PageFragment extends Fragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = null;
+        View view2 = null;
+
 
         switch (mPage)
         {
@@ -155,20 +168,30 @@ public class PageFragment extends Fragment  {
                 view = inflater.inflate(R.layout.fragment_page1, container, false);
                 break;
             case 2:
-                view = inflater.inflate(R.layout.fragment_page2, container, false);
+                view2 = inflater.inflate(R.layout.fragment_page2, container, false);
+                Toast.makeText(getContext(), "????????????", Toast.LENGTH_SHORT).show();
+
+
                 break;
-//            case 3:
-//                view = inflater.inflate(R.layout.fragment_page3, container, false);
-//                break;
 
             default:
                 view = inflater.inflate(R.layout.fragment_page1, container, false);
 
-
-
         }
 
+//
+//
+//        mMapView = new NMapView(view.getContext());
+//
+//        // set a registered API key for Open MapViewer Library
+//        mMapView.setApiKey("04edde0f95d089e814106c10960aca70");
+//
+//        // set the activity content to the map view
+//       setContentView(mMapView);
+//
+
         mDemoSlider = (SliderLayout)view.findViewById(R.id.slider);
+
 
 
         return view;
@@ -1087,7 +1110,7 @@ public class PageFragment extends Fragment  {
 
         @Override
         protected void onPostExecute(ArrayList<String> strings) {
-            Log.v("66666",totalCount);
+            Log.v("66666", totalCount);
 
 
             try
@@ -1128,6 +1151,8 @@ public class PageFragment extends Fragment  {
             {
 
             }
+
+
 
 
         }
