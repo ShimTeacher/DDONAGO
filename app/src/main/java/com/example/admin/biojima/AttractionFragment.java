@@ -92,11 +92,12 @@ public class AttractionFragment extends Fragment {
         button = (ImageButton)rootView.findViewById(R.id.findButton);
         MapButton = (ImageButton)rootView.findViewById(R.id.mapButton);
 
+        //이 부분은 검색을 하는 부분으로 지도로검색부분과 구별하기 위하여 "0"을 앞에 붙였다.
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ResultActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, editText.getText().toString()); //ResultActivity로 EditText값을 넘겨줌.
+                        .putExtra(Intent.EXTRA_TEXT,"0" +  editText.getText().toString()); //ResultActivity로 EditText값을 넘겨줌.
                 startActivity(intent);
 
             }

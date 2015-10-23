@@ -1,5 +1,6 @@
 package com.example.admin.biojima;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -62,6 +63,12 @@ public class MapActivity extends NMapActivity {
             Toast.makeText(MapActivity.this, "onCalloutClick: " + item.getTitle(), Toast.LENGTH_LONG).show();
 
             NGeoPoint point = item.getPoint();
+
+            Intent intent = new Intent(MapActivity.this, ResultActivity.class)
+                    .putExtra(Intent.EXTRA_TEXT, new Double(point.latitude).toString() + "," + new Double(point.longitude).toString()); //ResultActivity로 EditText값을 넘겨줌.
+            startActivity(intent);
+
+
             Log.d("point", new Double(point.longitude).toString() + "," + new Double(point.latitude).toString());
         }
 
