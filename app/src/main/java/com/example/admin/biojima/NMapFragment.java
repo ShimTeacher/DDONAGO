@@ -1,29 +1,20 @@
 package com.example.admin.biojima;
 
-/**
- * Created by adslbna2 on 15. 10. 24..
- */
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
+import android.app.Fragment;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nhn.android.maps.NMapContext;
 import com.nhn.android.maps.NMapView;
 
 /**
- * Created by adslbna2 on 15. 10. 24..
+ * NMapFragment 클래스는 NMapActivity를 상속하지 않고 NMapView만 사용하고자 하는 경우에 NMapContext를 이용한 예제임.
+ * NMapView 사용시 필요한 초기화 및 리스너 등록은 NMapActivity 사용시와 동일함.
  */
-public class fragment2 extends Fragment {
+public class NMapFragment extends Fragment {
+
     private NMapContext mMapContext;
 
     /**
