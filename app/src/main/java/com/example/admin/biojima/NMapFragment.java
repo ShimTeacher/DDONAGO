@@ -63,7 +63,14 @@ public class NMapFragment extends Fragment {
 		//throw new IllegalArgumentException("onCreateView should be implemented in the subclass of NMapFragment.");
 		View view = inflater.inflate(R.layout.fragment_page2,container,false);
 
+        NMapView mMapView = (NMapView)view.findViewById(R.id.mapView);
 
+        mMapView.setApiKey("04edde0f95d089e814106c10960aca70");
+        mMapView.setClickable(true);
+        mMapView.setEnabled(true);
+        mMapView.setFocusable(true);
+        mMapView.setFocusableInTouchMode(true);
+        mMapView.requestFocus();
 		return view;
 
 	}
