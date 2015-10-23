@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.astuetz.PagerSlidingTabStrip;
 
 
-
 public class DetailActivity extends FragmentActivity  {
 
     private TabHost mTabHost;
@@ -115,7 +114,7 @@ public class DetailActivity extends FragmentActivity  {
         @Override
         public Fragment getItem(int position)
         {
-         return (position == 0)? new fragment1() : new fragment2() ;
+         return (position == 0)? new fragment1() : new NMapFragment() ;
         }
 
         @Override
