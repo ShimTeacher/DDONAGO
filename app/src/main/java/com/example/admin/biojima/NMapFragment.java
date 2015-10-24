@@ -82,7 +82,7 @@ public class NMapFragment extends Fragment {
 	    // Fragment에 포함된 NMapView 객체 찾기
 	    NMapView mapView = findMapView(super.getView());
 	    if (mapView == null) {
-	    	throw new IllegalArgumentException("NMapFragment dose not have an instance of NMapView.");
+	    	throw new IllegalArgumentException("NMapFragmen dose not have an instance of NMapView.");
 	    }
 
 	    // NMapActivity를 상속하지 않는 경우에는 NMapView 객체 생성후 반드시 setupMapView()를 호출해야함.
