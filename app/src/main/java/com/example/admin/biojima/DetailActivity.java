@@ -118,7 +118,7 @@ public class DetailActivity extends FragmentActivity  {
         @Override
         public Fragment getItem(int position)
         {
-         return (position == 0)? new fragment1() : new NMapFragment() ;
+         return (position == 0)? new fragment1() : new mapFragment() ;
         }
 
         @Override

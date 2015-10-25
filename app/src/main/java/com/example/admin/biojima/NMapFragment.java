@@ -4,12 +4,20 @@ package com.example.admin.biojima;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapContext;
+import com.nhn.android.maps.NMapController;
 import com.nhn.android.maps.NMapView;
+import com.nhn.android.maps.mapcore.NMapTileData;
+import com.nhn.android.maps.maplib.NGeoPoint;
+import com.nhn.android.maps.nmapmodel.NMapError;
 import com.nhn.android.maps.overlay.NMapPOIdata;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
@@ -20,9 +28,9 @@ import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
  */
 public class NMapFragment extends Fragment {
 	NMapViewerResourceProvider mMapViewerResourceProvider;
-
+	NMapOverlayManager mOverlayManager;
 	private NMapContext mMapContext;
-
+	private NMapController mMapController;
 	/**
 	 * Fragment에 포함된 NMapView 객체를 반환함
 	 */
@@ -71,19 +79,17 @@ public class NMapFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_page2,container,false);
 
         NMapView mMapView = (NMapView)view.findViewById(R.id.mapView);
-
         mMapView.setApiKey("04edde0f95d089e814106c10960aca70");
-        mMapView.setClickable(true);
+		mMapView.setClickable(true);
         mMapView.setEnabled(true);
-        mMapView.setFocusable(true);
-        mMapView.setFocusableInTouchMode(true);
+		mMapView.setFocusable(true);
+		mMapView.setFocusableInTouchMode(true);
         mMapView.requestFocus();
 
-//
-//		mMapViewerResourceProvider = new NMapViewerResourceProvider(mMapContext);
-//
-//// create overlay manager
-//		NMapOverlayManager mOverlayManager = new NMapOverlayManager(this.getContext(), mMapView, mMapViewerResourceProvider);
+////
+//		mMapViewerResourceProvider = new NMapViewerResourceProvider(getContext());
+////// create overlay manager
+//		NMapOverlayManager mOverlayManager = new NMapOverlayManager(getContext(), mMapView, mMapViewerResourceProvider);
 //		int markerId = NMapPOIflagType.PIN;
 //
 //// set POI data
@@ -100,6 +106,14 @@ public class NMapFragment extends Fragment {
 
 		return view;
 
+	}
+
+	public void onMapInitHandler(NMapView mapView, NMapError errorInfo) {
+		if (errorInfo == null) { // success
+			mMapController.setMapCenter(new NGeoPoint(126.978371, 37.5666091), 11);
+		} else { // fail
+
+		}
 	}
 
 	@Override

@@ -17,6 +17,11 @@ import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.nhn.android.maps.NMapView;
 
 import org.json.JSONArray;
@@ -304,7 +309,8 @@ public class fragment1 extends Fragment {
         protected void onPostExecute(ArrayList<String> strings) {
             TextView textView = (TextView)getActivity().findViewById(R.id.detailtextView);
 
-
+            Double latitude=mapFragment.latitude=new Double(strings.get(3));
+            Double longitude = mapFragment.longitude = new Double(strings.get(2));
             /************************** mapx=string.get(2), mapy=string.get(3); ***************/
             /************************** mapx=string.get(2), mapy=string.get(3); ***************/
             /************************** mapx=string.get(2), mapy=string.get(3); ***************/
@@ -312,11 +318,27 @@ public class fragment1 extends Fragment {
             /************************** mapx=string.get(2), mapy=string.get(3); ***************/
             /************************** mapx=string.get(2), mapy=string.get(3); ***************/
             String str = null;
-
+            String titledata = null;
             if(strings.get(0)!=null)
             {
                 str = "\r\n  장소 : "+ strings.get(0)+" \r\n ";
+                titledata = strings.get(0);
             }
+            MarkerOptions marker = new MarkerOptions().position(
+                    new LatLng(latitude, longitude)).title(titledata);
+
+            // Changing marker icon
+            marker.icon(BitmapDescriptorFactory
+                    .defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
+
+            // adding marker
+            mapFragment.googleMap.addMarker(marker);
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(latitude, longitude)).zoom(15).build();
+            mapFragment.googleMap.animateCamera(CameraUpdateFactory
+                    .newCameraPosition(cameraPosition));
+
+
 
 
             if(strings.get(4)!=null)
