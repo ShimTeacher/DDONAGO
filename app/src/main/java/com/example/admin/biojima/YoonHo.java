@@ -917,17 +917,18 @@ ResultActivity.m_adapter.clear();
                     }
                     ResultActivity.m_orders.clear();
 
-                    for(int j =0; i<arrayList.size() ;j++) {
+                    for(int k=0; k<Hyunbo.sigunguName.length; k++)
+                    {
 
                         String str = "온도 정보 없음.";
                         String pop = "강수량 정보 없음";
-                        ResultData resultData = new ResultData(arrayList.get(i),pop,str);
+                        ResultData resultData = new ResultData(arrayList.get(k),pop,str);
                         ResultActivity.m_orders.add(resultData);
 
 //                    ResultActivity.mlistAdapter.add(a);
                     }
-                        Log.v("jssssssssson","결과 가짜정보 출력");
 
+                    Log.v("jssssssssson", "결과 가짜정보 출력2");
 
 
                 }

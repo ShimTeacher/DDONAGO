@@ -1,6 +1,7 @@
 package com.example.admin.biojima;
 
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,12 +10,16 @@ import android.view.ViewGroup;
 
 import com.nhn.android.maps.NMapContext;
 import com.nhn.android.maps.NMapView;
+import com.nhn.android.maps.overlay.NMapPOIdata;
+import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
+import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
 
 /**
  * NMapFragment 클래스는 NMapActivity를 상속하지 않고 NMapView만 사용하고자 하는 경우에 NMapContext를 이용한 예제임.
  * NMapView 사용시 필요한 초기화 및 리스너 등록은 NMapActivity 사용시와 동일함.
  */
 public class NMapFragment extends Fragment {
+	NMapViewerResourceProvider mMapViewerResourceProvider;
 
 	private NMapContext mMapContext;
 
@@ -61,6 +66,7 @@ public class NMapFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+
 		//throw new IllegalArgumentException("onCreateView should be implemented in the subclass of NMapFragment.");
 		View view = inflater.inflate(R.layout.fragment_page2,container,false);
 
@@ -72,6 +78,26 @@ public class NMapFragment extends Fragment {
         mMapView.setFocusable(true);
         mMapView.setFocusableInTouchMode(true);
         mMapView.requestFocus();
+
+//
+//		mMapViewerResourceProvider = new NMapViewerResourceProvider(mMapContext);
+//
+//// create overlay manager
+//		NMapOverlayManager mOverlayManager = new NMapOverlayManager(this.getContext(), mMapView, mMapViewerResourceProvider);
+//		int markerId = NMapPOIflagType.PIN;
+//
+//// set POI data
+//		NMapPOIdata poiData = new NMapPOIdata(2, mMapViewerResourceProvider);
+//		poiData.beginPOIdata(2);
+//
+//		poiData.addPOIitem(127.0630205, 37.5091300, "Pizza 777-111", markerId, 0);
+//		poiData.addPOIitem(127.061, 37.51, "Pizza 123-456", markerId, 0);
+//		poiData.endPOIdata();
+//
+//// create POI data overlay
+//		NMapPOIdataOverlay poiDataOverlay = mOverlayManager.createPOIdataOverlay(poiData, null);
+//		poiDataOverlay.showAllPOIdata(0);
+
 		return view;
 
 	}

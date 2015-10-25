@@ -1,5 +1,6 @@
 package com.example.admin.biojima;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ public class DetailActivity extends FragmentActivity  {
     private TabHost mTabHost;
     static TextView textView;
     String editText;
+    public static Context mContext;
 
     @Override
     protected void onStart() {
@@ -31,7 +33,7 @@ public class DetailActivity extends FragmentActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mContext = getApplicationContext();
         setContentView(R.layout.activity_detail);
 
 
