@@ -1,7 +1,12 @@
 package com.example.admin.biojima;
 
+import android.app.AlertDialog;
+import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +22,8 @@ import com.nhn.android.maps.overlay.NMapPOIdata;
 import com.nhn.android.maps.overlay.NMapPOIitem;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
+
+import static android.provider.Settings.Secure.isLocationProviderEnabled;
 
 public class FindMapActivity extends NMapActivity {
 
@@ -119,6 +126,7 @@ public class FindMapActivity extends NMapActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        enableGPSSetting();
         // create map view
         mMapView = new NMapView(this);
 
@@ -182,6 +190,28 @@ public class FindMapActivity extends NMapActivity {
         }
 
 
+    }
+
+    private void enableGPSSetting(){
+        ContentResolver res = getContentResolver();
+
+        boolean gpsEnabled = isLocationProviderEnabled(res, LocationManager.GPS_PROVIDER);
+        if(!gpsEnabled)
+        {
+            new AlertDialog.Builder(this)
+                    .setTitle("GPS 설정")
+                    .setMessage("GPS가 꺼져 있습니다. \nGPS를 켜시겠습니까?")
+                    .setPositiveButton("GPS 켜기", new DialogInterface.OnClickListener(){
+                        public void onClick(DialogInterface dialog, int which){
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton("닫기", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    }).show();
+        }
     }
 
     @Override
