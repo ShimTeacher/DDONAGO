@@ -1,8 +1,13 @@
 package com.example.admin.biojima;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,6 +42,7 @@ public class YoonHo {
 
     //사용자가 지정한 시간과 날짜
     static int ChooseTime;
+    static int value;
     static String ChooseDate;
     int[] Finalrank ;
     static ArrayList<String> sigunguCodeArrList;
@@ -886,8 +892,22 @@ ResultActivity.m_adapter.clear();
                         sigunguCodeArrList.add(Hyunbo.sigunguList[Finalrank[i]]);
                         /**************************        ********************/
                     }
+
+                    ResultActivity.m_orders.clear();
+
+                    for(int i =0; i<arrayList.size() ;i++) {
+
+                        String str = new Double(Math.round(new Double(TempDataArr[Finalrank[i]]))).toString();
+                        String pop = new Double(new Double(PopDataArr[Finalrank[i]])).toString();
+                        ResultData resultData = new ResultData(arrayList.get(i),pop,str);
+                        ResultActivity.m_orders.add(resultData);
+
+//                    ResultActivity.mlistAdapter.add(a);
+                    }
+
                 }catch (Exception e)
                 {
+
                     int i=0;
                     while(i<Hyunbo.sigunguName.length)
                     {
@@ -895,33 +915,38 @@ ResultActivity.m_adapter.clear();
                         sigunguCodeArrList.add(Hyunbo.sigunguList[i]);
                         i++;
                     }
-                        Log.v("jssssssssson","결과 가짜정보 출력");
-                }
+                    ResultActivity.m_orders.clear();
 
+                    for(int j =0; i<arrayList.size() ;j++) {
 
-//                for(int i = 0; i<5; i++)
-//                {
-//                    /************************ Test code **********************/
-//                    arrayList.add(Hyunbo.sigunguName[Finalrank[i]]);
-//                    sigunguCodeArrList.add(Hyunbo.sigunguList[Finalrank[i]]);
-//                    /**************************        ********************/
-//                }
-
-                ResultActivity.m_orders.clear();
-
-                for(int i =0; i<arrayList.size() ;i++) {
-
-                    String str = new Double(Math.round(new Double(TempDataArr[Finalrank[i]]))).toString();
-                    String pop = new Double(new Double(PopDataArr[Finalrank[i]])).toString();
-                  ResultData resultData = new ResultData(arrayList.get(i),pop,str);
-                    ResultActivity.m_orders.add(resultData);
+                        String str = "온도 정보 없음.";
+                        String pop = "강수량 정보 없음";
+                        ResultData resultData = new ResultData(arrayList.get(i),pop,str);
+                        ResultActivity.m_orders.add(resultData);
 
 //                    ResultActivity.mlistAdapter.add(a);
+                    }
+                        Log.v("jssssssssson","결과 가짜정보 출력");
+
+
+
                 }
 
+
             }
+
+
+
             ResultActivity.progressDialog.dismiss();
 
+            String str = ResultActivity.editTexts.replace("0","");
+
+            if(ResultActivity.siteTexts.compareTo("nodata")==0)
+                Toast.makeText(ResultActivity.context, ResultActivity.ChooseDate + ", " + ResultActivity.ChooseTime + ", " + str + " 주변\r\n " + ResultActivity.value + "m 이내의 날씨 좋은 지역입니다.", Toast.LENGTH_LONG).show();
+            else
+            {
+                Toast.makeText(ResultActivity.context,ResultActivity.ChooseDate+", "+ResultActivity.ChooseTime+", "+ResultActivity.siteTexts+" 주변\r\n "+ResultActivity.value+"m 이내의 날씨 날씨 좋은 지역입니다.",Toast.LENGTH_LONG).show();
+            }
         }
     }
 }

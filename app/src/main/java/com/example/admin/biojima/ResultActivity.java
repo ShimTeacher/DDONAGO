@@ -49,7 +49,9 @@ public class ResultActivity extends FragmentActivity {
     FindLocationTaskFromGoogle findLocationTask = new FindLocationTaskFromGoogle();
     static String editTexts = null;
     static String siteTexts = null;
-
+    static int value;
+    static String ChooseTime;
+    static String ChooseDate;
     static ArrayList<ResultData> m_orders= new ArrayList<ResultData>();
     static ResultDataAdapter m_adapter;
 
@@ -184,10 +186,10 @@ public class ResultActivity extends FragmentActivity {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 String site = prefs.getString(getString(R.string.search_criteria_key),
                         getString(R.string.search_criteria_attraction));
-                int value = prefs.getInt(PREFERENCE_KEY, 10000);
-                String ChooseTime = prefs.getString(getString(R.string.time_Selection_key),
+                value = prefs.getInt(PREFERENCE_KEY, 10000);
+                ChooseTime = prefs.getString(getString(R.string.time_Selection_key),
                         getString(R.string.time_Selection_12_18));
-                String ChooseDate = prefs.getString(getString(R.string.date_Selection_key),
+                ChooseDate = prefs.getString(getString(R.string.date_Selection_key),
                         getString(R.string.date_Selection_today));
 
                 progressDialog = new ProgressDialog(ResultActivity.this);
@@ -233,12 +235,7 @@ public class ResultActivity extends FragmentActivity {
                 String str = editTexts.replace("0","");
                 progressDialog.setMessage("잠시만 기다려주세요...................");
                 progressDialog.show();
-                if(siteTexts.compareTo("nodata")==0)
-                    Toast.makeText(getApplicationContext(),ChooseDate+", "+ChooseTime+", "+str+" 주변\r\n "+value+"m 이내의 날씨 좋은 지역을 검색합니다.",Toast.LENGTH_LONG).show();
-                else
-                {
-                    Toast.makeText(getApplicationContext(),ChooseDate+", "+ChooseTime+", "+siteTexts+" 주변\r\n "+value+"m 이내의 날씨 좋은 지역을 검색합니다.",Toast.LENGTH_LONG).show();
-                }
+ context = getApplicationContext();
                 super.onPreExecute();
             }
 
