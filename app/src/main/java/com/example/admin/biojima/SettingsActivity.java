@@ -25,6 +25,8 @@ implements Preference.OnPreferenceChangeListener, SharedPreferences.OnSharedPref
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ListPreference listPreference =(ListPreference)findPreference("ChooseTime");
         // Add 'general' preferences, defined in the XML file
         addPreferencesFromResource(R.xml.pref_general);
         addPreferencesFromResource(R.xml.preferences);

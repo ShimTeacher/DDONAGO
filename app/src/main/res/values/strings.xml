@@ -36,12 +36,13 @@
     <string name = "time_Selection_label_12_18"> 12시 - 18시 </string>
     <string name = "time_Selection_label_18_24"> 18시 - 24시 </string>
     <string name = "time_Selection_key" translatable="false" > ChooseTime </string>
-    <string name = "time_Selection_00_06" translatable="false"> 0 </string>
-    <string name = "time_Selection_06_12" translatable="false"> 1 </string>
-    <string name = "time_Selection_12_18" translatable="false"> 2 </string>
-    <string name = "time_Selection_18_24" translatable="false"> 3 </string>
+    <string name = "time_Selection_00_06" translatable="false"> 3 </string>
+    <string name = "time_Selection_06_12" translatable="false"> 0 </string>
+    <string name = "time_Selection_12_18" translatable="false"> 1 </string>
+    <string name = "time_Selection_18_24" translatable="false"> 2 </string>
 
-    <string name = "search_method_label"> 검색 방법 </string>
+    <string name = "search_method_label"> 검색
+        r방법 </string>
     <string name = "search_method_labe_myLocation"> 내 위치 </string>
     <string name = "search_method_label_region"> 지역 기반 </string>
 

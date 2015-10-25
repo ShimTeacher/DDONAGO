@@ -65,6 +65,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="0dp"
                 android:textSize="15dp"
+                android:text=""
                 android:hint="가고싶은 지역(지명)을 입력하세요." />
 
             <ImageButton

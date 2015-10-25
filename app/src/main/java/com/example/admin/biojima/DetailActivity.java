@@ -34,9 +34,8 @@ public class DetailActivity extends FragmentActivity  {
 
 
 // Get the ViewPager and set it's PagerAdapter so that it can display items
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        CustomViewPager viewPager = (CustomViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new SampleFragmentPagerAdapter(getSupportFragmentManager()));
-
         // Give the PagerSlidingTabStrip the ViewPager
         PagerSlidingTabStrip tabsStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 
@@ -45,6 +44,9 @@ public class DetailActivity extends FragmentActivity  {
 
 
         tabsStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+
+
 
             // This method will be invoked when a new page becomes selected.
             @Override

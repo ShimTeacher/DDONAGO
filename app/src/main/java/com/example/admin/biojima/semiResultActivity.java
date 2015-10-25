@@ -159,8 +159,9 @@ public class semiResultActivity extends FragmentActivity {
             arrayList.clear();
             contentarrayList.clear();
                 for (int i = 0; i < val; i++) {
-                    JSONObject AttracionObject = itemArray.getJSONObject(i);
                     try{
+                    JSONObject AttracionObject = itemArray.getJSONObject(i);
+
                         title = AttracionObject.getString(TITLE);
                         contentid = AttracionObject.getString(CONTENTID);
                     }
@@ -199,7 +200,7 @@ public class semiResultActivity extends FragmentActivity {
 
                 URL url = new URL("http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?ServiceKey="
                         +myKey+"&contentTypeId="+ site +
-                        "&areaCode="+areaCode+"&sigunguCode="+sigunguCode+"&listYN=Y&MobileOS=ETC&MobileApp=TourAPI2.0_Guide&arrange=B&numOfRows=100&pageNo=1&_type=json");
+                        "&areaCode="+areaCode+"&sigunguCode="+sigunguCode+"&listYN=Y&MobileOS=ETC&MobileApp=TourAPI2.0_Guide&arrange=B&numOfRows=1000&pageNo=1&_type=json");
 
 
                 urlConnection = (HttpURLConnection) url.openConnection();

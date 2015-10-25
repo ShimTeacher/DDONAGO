@@ -1,6 +1,7 @@
 package com.example.admin.biojima;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -35,15 +41,18 @@ import java.util.ArrayList;
 
 
 public class ResultActivity extends FragmentActivity {
+    static Context context;
     static ProgressDialog progressDialog;
     static ArrayAdapter mlistAdapter;
     String[] settings = new String[10];
     private static final String PREFERENCE_KEY = "seekBarPreference";
     FindLocationTaskFromGoogle findLocationTask = new FindLocationTaskFromGoogle();
     static String editTexts = null;
-    {
+    static String siteTexts = null;
 
-    }
+    static ArrayList<ResultData> m_orders= new ArrayList<ResultData>();
+    static ResultDataAdapter m_adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -58,9 +67,12 @@ public class ResultActivity extends FragmentActivity {
 
         Intent intent = this.getIntent();
 
+        m_adapter = new ResultDataAdapter(context = getBaseContext(), R.layout.row, m_orders);
         if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-            editTexts= intent.getStringExtra(Intent.EXTRA_TEXT);
-//            Log.v("Test",editText);
+            editTexts = intent.getStringExtra(Intent.EXTRA_TEXT);
+            siteTexts = intent.getStringExtra("gettitle");
+            Log.v("090909",siteTexts);
+
         }
         findLocationTask.execute(editTexts);
     }
@@ -95,35 +107,71 @@ public class ResultActivity extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
+   public class ResultDataAdapter extends ArrayAdapter<ResultData> {
 
-    public static class ResultFragment extends Fragment {
+        private ArrayList<ResultData> items;
 
-        public ResultFragment() {
+        public ResultDataAdapter(Context context, int textViewResourceId, ArrayList<ResultData> items) {
+            super(context, textViewResourceId, items);
+            this.items = items;
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-
-            mlistAdapter =
-                    new ArrayAdapter<String>(
-                            getActivity(), // The current context (this activity)
-                            R.layout.list_item_in_result, // The name of the layout ID.
-                            R.id.list_item_forecast_textview, // The ID of the textview to populate.
-                            new ArrayList<String>());
-            View rootView = inflater.inflate(R.layout.fragment_result, container, false);
-
-            ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
-            listView.setAdapter(mlistAdapter);
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(getActivity(), semiResultActivity.class)
-                            .putExtra(Intent.EXTRA_SHORTCUT_NAME, YoonHo.sigunguCodeArrList.get(position));
-                    startActivity(intent);
-                    
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View v = convertView;
+            if (v == null) {
+                LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                v = vi.inflate(R.layout.row, null);
+            }
+            ResultData p = items.get(position);
+            if (p != null) {
+                TextView tt = (TextView) v.findViewById(R.id.toptext);
+                TextView bt = (TextView) v.findViewById(R.id.bottomtext);
+                if (tt != null) {
+                    tt.setText(p.getName());
                 }
-            });
+                if (bt != null) {
+                    bt.setText("체감온도 : " + p.getDetailInfo() + "℃    강수확률 : "+ p.getPopInfo()+"%");
+                }
+            }
+            return v;
+        }
+
+
+        public void clear() {
+            super.clear();
+            items.clear();
+        }
+    }
+        public static class ResultFragment extends Fragment {
+
+            public ResultFragment() {
+            }
+
+            @Override
+            public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                     Bundle savedInstanceState) {
+
+//
+//                mlistAdapter =
+//                        new ArrayAdapter<String>(
+//                                getActivity(), // The current context (this activity)
+//                                R.layout.list_item_in_result, // The name of the layout ID.
+//                                R.id.list_item_forecast_textview, // The ID of the textview to populate.
+//                                new ArrayList<String>());
+                View rootView = inflater.inflate(R.layout.fragment_result, container, false);
+
+                ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
+                listView.setAdapter(m_adapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent intent = new Intent(getActivity(), semiResultActivity.class)
+                                .putExtra(Intent.EXTRA_SHORTCUT_NAME, YoonHo.sigunguCodeArrList.get(position));
+                        startActivity(intent);
+
+                    }
+                });
 
                 return rootView;
             }
@@ -133,34 +181,89 @@ public class ResultActivity extends FragmentActivity {
 
             @Override
             protected void onPreExecute() {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                String site = prefs.getString(getString(R.string.search_criteria_key),
+                        getString(R.string.search_criteria_attraction));
+                int value = prefs.getInt(PREFERENCE_KEY, 10000);
+                String ChooseTime = prefs.getString(getString(R.string.time_Selection_key),
+                        getString(R.string.time_Selection_12_18));
+                String ChooseDate = prefs.getString(getString(R.string.date_Selection_key),
+                        getString(R.string.date_Selection_today));
+
                 progressDialog = new ProgressDialog(ResultActivity.this);
-                progressDialog.setMessage("잠시만 기다려 주세요.");
+                switch (site)
+                {
+                    case "12":
+                        site = "관광지";
+                        break;
+                    case "14":
+                        site = "문화시설";
+                        break;
+                    case "15":
+                        site = "축제 및 공연";
+                        break;
+                }
+                switch (ChooseDate)
+                {
+                    case "today":
+                        ChooseDate = "오늘";
+                        break;
+                    case "tomorrow":
+                        ChooseDate = "내일";
+                        break;
+                    case "afterTomorrow":
+                        ChooseDate = "모레";
+                        break;
+                }
+                switch (ChooseTime)
+                {
+                    case "3":
+                        ChooseTime = "0-6 시";
+                        break;
+                    case "0":
+                        ChooseTime = "6-12 시";
+                        break;
+                    case "1":
+                        ChooseTime = "12-18 시";
+                        break;
+                    case "2":
+                        ChooseTime = "18-24 시";
+                        break;
+                }
+                String str = editTexts.replace("0","");
+                progressDialog.setMessage("잠시만 기다려주세요...................");
                 progressDialog.show();
+                if(siteTexts.compareTo("nodata")==0)
+                    Toast.makeText(getApplicationContext(),ChooseDate+", "+ChooseTime+", "+str+" 주변\r\n "+value+"m 이내의 날씨 좋은 지역을 검색합니다.",Toast.LENGTH_LONG).show();
+                else
+                {
+                    Toast.makeText(getApplicationContext(),ChooseDate+", "+ChooseTime+", "+siteTexts+" 주변\r\n "+value+"m 이내의 날씨 좋은 지역을 검색합니다.",Toast.LENGTH_LONG).show();
+                }
                 super.onPreExecute();
             }
 
 
-        private void update(String lat,String lon) {
+            private void update(String lat, String lon) {
 
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            String site = prefs.getString(getString(R.string.search_criteria_key),
-                    getString(R.string.search_criteria_attraction));
-            int value = prefs.getInt(PREFERENCE_KEY, 10000);
-            String ChooseTime = prefs.getString(getString(R.string.time_Selection_key),
-                    getString(R.string.time_Selection_12_18));
-            String ChooseDate = prefs.getString(getString(R.string.date_Selection_key),
-                    getString(R.string.date_Selection_today));
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                String site = prefs.getString(getString(R.string.search_criteria_key),
+                        getString(R.string.search_criteria_attraction));
+                int value = prefs.getInt(PREFERENCE_KEY, 10000);
+                String ChooseTime = prefs.getString(getString(R.string.time_Selection_key),
+                        getString(R.string.time_Selection_12_18));
+                String ChooseDate = prefs.getString(getString(R.string.date_Selection_key),
+                        getString(R.string.date_Selection_today));
 
-            settings[0] = lat;
-            settings[1] = lon;
-            settings[2] = new Integer(value).toString();
-            settings[3] = site;
+                settings[0] = lat;
+                settings[1] = lon;
+                settings[2] = new Integer(value).toString();
+                settings[3] = site;
 
-            YoonHo.ChooseTime = new Integer(ChooseTime);
-            YoonHo.ChooseDate = ChooseDate;
+                YoonHo.ChooseTime = new Integer(ChooseTime);
+                YoonHo.ChooseDate = ChooseDate;
 
-            new Hyunbo(settings);
-        }
+                new Hyunbo(settings);
+            }
 
             public JSONObject getLocationFormGoogle(String placesName) {
                 StringBuilder stringBuilder = null;
@@ -168,7 +271,7 @@ public class ResultActivity extends FragmentActivity {
                     if (placesName.contains(" "))
                         placesName = placesName.replace(" ", "%20");
 
-                    HttpGet httpGet = new HttpGet("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyC-JarPhSJxvThZ8Vx3FrhuyIHJ4k_mftU&address="+placesName+"&sensor=false");
+                    HttpGet httpGet = new HttpGet("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyC-JarPhSJxvThZ8Vx3FrhuyIHJ4k_mftU&address=" + placesName + "&sensor=false");
                     HttpClient client = new DefaultHttpClient();
                     HttpResponse response;
                     stringBuilder = new StringBuilder();
@@ -202,13 +305,12 @@ public class ResultActivity extends FragmentActivity {
                 Double lat = new Double(1);
 
                 try {
-                    JSONArray results= jsonObject.getJSONArray("results");
-                         JSONObject jsonObject1 = results.getJSONObject(0);
+                    JSONArray results = jsonObject.getJSONArray("results");
+                    JSONObject jsonObject1 = results.getJSONObject(0);
                     JSONObject geometry = jsonObject1.getJSONObject("geometry");
                     JSONObject location = geometry.getJSONObject("location");
                     lon = location.getDouble("lng");
                     lat = location.getDouble("lat");
-
 
 
                 } catch (JSONException e) {
@@ -230,7 +332,7 @@ public class ResultActivity extends FragmentActivity {
                 final int LNG = 1;
 
                 //주소로 검색을 했을 경우
-                if('0' == params[0].charAt(0)) {
+                if ('0' == params[0].charAt(0)) {
 
                     //주어진 주소로부터 위도경도를 구하는 부분
                     JSONObject jsonObject = getLocationFormGoogle(params[0].substring(1));
@@ -241,7 +343,7 @@ public class ResultActivity extends FragmentActivity {
                     return null;
                 }
                 //지도로 검색했을 경우
-                else{
+                else {
                     String[] LatLon;
                     LatLon = params[0].split(",");
 

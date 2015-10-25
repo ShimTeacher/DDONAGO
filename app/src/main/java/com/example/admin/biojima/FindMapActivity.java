@@ -60,12 +60,13 @@ public class FindMapActivity extends NMapActivity {
             }
 
             // [[TEMP]] handle a click event of the callout
-            Toast.makeText(FindMapActivity.this, "onCalloutClick: " + item.getTitle(), Toast.LENGTH_LONG).show();
+         //   Toast.makeText(FindMapActivity.this, "onCalloutClick: " + item.getTitle(), Toast.LENGTH_LONG).show();
 
             NGeoPoint point = item.getPoint();
 
             Intent intent = new Intent(FindMapActivity.this, ResultActivity.class)
-                    .putExtra(Intent.EXTRA_TEXT, new Double(point.latitude).toString() + "," + new Double(point.longitude).toString()); //ResultActivity로 EditText값을 넘겨줌.
+                    .putExtra(Intent.EXTRA_TEXT, new Double(point.latitude).toString() + "," + new Double(point.longitude).toString())
+                    .putExtra("gettitle", item.getTitle()); //ResultActivity로 EditText값을 넘겨줌.
             startActivity(intent);
 
 

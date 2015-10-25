@@ -97,7 +97,8 @@ public class AttractionFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ResultActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT,"0" +  editText.getText().toString()); //ResultActivity로 EditText값을 넘겨줌.
+                        .putExtra(Intent.EXTRA_TEXT,"0" +  editText.getText().toString()) //ResultActivity로 EditText값을 넘겨줌.
+                        .putExtra("gettitle","nodata"); //ResultActivity로 EditText값을 넘겨줌.
                 startActivity(intent);
 
             }

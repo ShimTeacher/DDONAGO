@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/biojima.iml" filepath="$PROJECT_DIR$/biojima.iml" />
+      <module fileurl="file://$PROJECT_DIR$/biojimareal.iml" filepath="$PROJECT_DIR$/biojimareal.iml" />
       <module fileurl="file://$PROJECT_DIR$/naver-map-api-2.1.0/naver-map-api-2.1.0.iml" filepath="$PROJECT_DIR$/naver-map-api-2.1.0/naver-map-api-2.1.0.iml" />
     </modules>
   </component>

@@ -738,9 +738,9 @@ public class YoonHo {
                     //Construct the URL
 //                    final String FORECAST_BASE_URL =
 //                            "http://newsky2.kma.go.kr/service/SecndSrtpdFrcstInfoService/ForecastSpaceData?ServiceKey=JAqSoGioZENbhApPM6hgbP5nxxdEg%2FKgtSy%2BK%2BcyFR7Ckk%2Fav13Hoh4tzckekFe60m82sHoUMCwJ1Hzp1GPWGA%3D%3D";
-
+//http://newsky2.kma.go.kr/service/SecndSrtpdFrcstInfoService/ForecastSpaceData?ServiceKey=Si1LZhStHnfooZIH3OW%2BV5kMa9%2BoJy6u7wuOlqfeIXbSAAcBD%2FXOrOvJsKIRNlprnQVfK8%2B2Je%2BgMUXhcEznwg%3D%3D
                     final String FORECAST_BASE_URL =
-                            "http://newsky2.kma.go.kr/service/SecndSrtpdFrcstInfoService/ForecastSpaceData?ServiceKey=Si1LZhStHnfooZIH3OW%2BV5kMa9%2BoJy6u7wuOlqfeIXbSAAcBD%2FXOrOvJsKIRNlprnQVfK8%2B2Je%2BgMUXhcEznwg%3D%3D";
+                            "http://newsky2.kma.go.kr/service/SecndSrtpdFrcstInfoService/ForecastSpaceData?ServiceKey=JAqSoGioZENbhApPM6hgbP5nxxdEg%2FKgtSy%2BK%2BcyFR7Ckk%2Fav13Hoh4tzckekFe60m82sHoUMCwJ1Hzp1GPWGA%3D%3D";
                     final String BASE_DATE_PARM = "base_date";
                     final String BASE_TIME_PARM = "base_time";
                     final String NX_PARM = "nx";
@@ -831,17 +831,17 @@ public class YoonHo {
                     Log.d("ffff","===========");
 
 
-//
-//                    if(ChooseDate.equals("today")){
-//                        PopDataArr[i] = new Double(a[0]);
-//                        TempDataArr[i] = new Double(a[3]);
-//                    }else if(ChooseDate.equals("tomorrow")){
-//                        PopDataArr[i] = new Double(a[1]);
-//                        TempDataArr[i] = new Double(a[4]);
-//                    }else{
-//                        PopDataArr[i] = new Double(a[2]);
-//                        TempDataArr[i] = new Double(a[5]);
-//                    }
+
+                    if(ChooseDate.equals("today")){
+                        PopDataArr[i] = new Double(a[0]);
+                        TempDataArr[i] = new Double(a[3]);
+                    }else if(ChooseDate.equals("tomorrow")){
+                        PopDataArr[i] = new Double(a[1]);
+                        TempDataArr[i] = new Double(a[4]);
+                    }else{
+                        PopDataArr[i] = new Double(a[2]);
+                        TempDataArr[i] = new Double(a[5]);
+                    }
                 }
 
 //                for(int i=0;i<WeatherDataList.length;i++){
@@ -871,28 +871,52 @@ public class YoonHo {
 
 
             if (WeatherDataList != null) {
-                ResultActivity.mlistAdapter.clear();
+ResultActivity.m_adapter.clear();
+
 
                 ArrayList<String> arrayList = new ArrayList<String>();
                 sigunguCodeArrList = new ArrayList<String>();
-                for(int i = 0; i<Finalrank.length; i++)
+
+
+
+                try {
+                    for (int i = 0; i < Finalrank.length; i++) {
+                        /************************ 진짜 코드**********************/
+                        arrayList.add(Hyunbo.sigunguName[Finalrank[i]]);
+                        sigunguCodeArrList.add(Hyunbo.sigunguList[Finalrank[i]]);
+                        /**************************        ********************/
+                    }
+                }catch (Exception e)
                 {
-
-                    /************************ 진짜 코드**********************/
-                    arrayList.add(Hyunbo.sigunguName[Finalrank[i]]);
-                    sigunguCodeArrList.add(Hyunbo.sigunguList[Finalrank[i]]);
-                    /**************************        ********************/
-//
-//                    /************************ Test code **********************/
-//                    arrayList.add(Hyunbo.sigunguName[i]);
-//                    sigunguCodeArrList.add(Hyunbo.sigunguList[i]);
-//                    /**************************        ********************/
-
-
+                    int i=0;
+                    while(i<Hyunbo.sigunguName.length)
+                    {
+                        arrayList.add(Hyunbo.sigunguName[i]);
+                        sigunguCodeArrList.add(Hyunbo.sigunguList[i]);
+                        i++;
+                    }
+                        Log.v("jssssssssson","결과 가짜정보 출력");
                 }
 
-                for(String a : arrayList) {
-                    ResultActivity.mlistAdapter.add(a);
+
+//                for(int i = 0; i<5; i++)
+//                {
+//                    /************************ Test code **********************/
+//                    arrayList.add(Hyunbo.sigunguName[Finalrank[i]]);
+//                    sigunguCodeArrList.add(Hyunbo.sigunguList[Finalrank[i]]);
+//                    /**************************        ********************/
+//                }
+
+                ResultActivity.m_orders.clear();
+
+                for(int i =0; i<arrayList.size() ;i++) {
+
+                    String str = new Double(Math.round(new Double(TempDataArr[Finalrank[i]]))).toString();
+                    String pop = new Double(new Double(PopDataArr[Finalrank[i]])).toString();
+                  ResultData resultData = new ResultData(arrayList.get(i),pop,str);
+                    ResultActivity.m_orders.add(resultData);
+
+//                    ResultActivity.mlistAdapter.add(a);
                 }
 
             }
