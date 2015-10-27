@@ -190,7 +190,7 @@ public class ResultActivity extends FragmentActivity {
                 ChooseTime = prefs.getString(getString(R.string.time_Selection_key),
                         getString(R.string.time_Selection_12_18));
                 ChooseDate = prefs.getString(getString(R.string.date_Selection_key),
-                        getString(R.string.date_Selection_today));
+                        getString(R.string.date_Selection_tomorrow));
 
                 progressDialog = new ProgressDialog(ResultActivity.this);
                 switch (site)
@@ -247,9 +247,9 @@ public class ResultActivity extends FragmentActivity {
                         getString(R.string.search_criteria_attraction));
                 int value = prefs.getInt(PREFERENCE_KEY, 10000);
                 String ChooseTime = prefs.getString(getString(R.string.time_Selection_key),
-                        getString(R.string.time_Selection_06_12));
+                        getString(R.string.time_Selection_12_18));
                 String ChooseDate = prefs.getString(getString(R.string.date_Selection_key),
-                        getString(R.string.date_Selection_today));
+                        getString(R.string.date_Selection_tomorrow));
 
                 settings[0] = lat;
                 settings[1] = lon;
