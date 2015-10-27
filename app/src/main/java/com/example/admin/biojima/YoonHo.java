@@ -297,6 +297,7 @@ public class YoonHo {
         String baseDate = itemListData.getJSONObject(0).getString(WD_BASEDATE);
         String baseTime = itemListData.getJSONObject(0).getString(WD_BASETIME);
 
+
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
         Date todayDate = formatter.parse(baseDate);
 
@@ -837,16 +838,20 @@ public class YoonHo {
                     Log.d("ffff","===========");
 
 
+                    try {
+                        if (ChooseDate.equals("today")) {
+                            PopDataArr[i] = new Double(a[0]);
+                            TempDataArr[i] = new Double(a[3]);
+                        } else if (ChooseDate.equals("tomorrow")) {
+                            PopDataArr[i] = new Double(a[1]);
+                            TempDataArr[i] = new Double(a[4]);
+                        } else {
+                            PopDataArr[i] = new Double(a[2]);
+                            TempDataArr[i] = new Double(a[5]);
+                        }
+                    }catch (Exception e)
+                    {
 
-                    if(ChooseDate.equals("today")){
-                        PopDataArr[i] = new Double(a[0]);
-                        TempDataArr[i] = new Double(a[3]);
-                    }else if(ChooseDate.equals("tomorrow")){
-                        PopDataArr[i] = new Double(a[1]);
-                        TempDataArr[i] = new Double(a[4]);
-                    }else{
-                        PopDataArr[i] = new Double(a[2]);
-                        TempDataArr[i] = new Double(a[5]);
                     }
                 }
 
@@ -877,7 +882,7 @@ public class YoonHo {
 
 
             if (WeatherDataList != null) {
-ResultActivity.m_adapter.clear();
+                ResultActivity.m_adapter.clear();
 
 
                 ArrayList<String> arrayList = new ArrayList<String>();

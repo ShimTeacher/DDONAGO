@@ -247,7 +247,7 @@ public class ResultActivity extends FragmentActivity {
                         getString(R.string.search_criteria_attraction));
                 int value = prefs.getInt(PREFERENCE_KEY, 10000);
                 String ChooseTime = prefs.getString(getString(R.string.time_Selection_key),
-                        getString(R.string.time_Selection_12_18));
+                        getString(R.string.time_Selection_06_12));
                 String ChooseDate = prefs.getString(getString(R.string.date_Selection_key),
                         getString(R.string.date_Selection_today));
 

@@ -57,7 +57,7 @@
     <string name = "search_criteria_festival" translatable="false" > 15 </string>
     <string name = "search_criteria_leisure_sports" translatable="false" > 28 </string>
 
-    <string name="summary">Current answer is: %1$d</string>
+    <string name="summary">Current value : %1$d</string>
     <color name="white_color">#000</color>
     <color name="gray_color">#000</color>
     <string name="title_activity_result">ResultActivity</string>

@@ -1,5 +1,6 @@
 package com.example.admin.biojima;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
@@ -47,6 +48,7 @@ public final class SeekBarPreference extends DialogPreference implements SeekBar
         mMaxValue = attrs.getAttributeIntValue(PREFERENCE_NS, ATTR_MAX_VALUE, DEFAULT_MAX_VALUE);
         mDefaultValue = attrs.getAttributeIntValue(ANDROID_NS, ATTR_DEFAULT_VALUE, DEFAULT_CURRENT_VALUE);
     }
+
 
     @Override
     protected View onCreateDialogView() {
