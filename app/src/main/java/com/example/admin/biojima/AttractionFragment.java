@@ -4,9 +4,14 @@ package com.example.admin.biojima;
  * Created by adslbna2 on 15. 8. 28..
  */
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -47,8 +52,9 @@ public class AttractionFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-    }
 
+
+    }
     @Override
     public void onStart() {
         super.onStart();
@@ -71,6 +77,15 @@ public class AttractionFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+
+    public boolean isConn() {
+        ConnectivityManager connectivity = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity.getActiveNetworkInfo() != null) {
+            if (connectivity.getActiveNetworkInfo().isConnected())
+                return true;
+        }
+        return false;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,19 +111,59 @@ public class AttractionFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ResultActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT,"0" +  editText.getText().toString()) //ResultActivity로 EditText값을 넘겨줌.
-                        .putExtra("gettitle","nodata"); //ResultActivity로 EditText값을 넘겨줌.
-                startActivity(intent);
 
+                if(!isConn())
+                {
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("인터넷 설정")
+                            .setMessage("인터넷이 꺼져 있습니다. \nWIFI를 켜시겠습니까?")
+                            .setPositiveButton("WIFI 켜기", new DialogInterface.OnClickListener(){
+                                public void onClick(DialogInterface dialog, int which){
+                                    startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                                }
+                            })
+                            .setNegativeButton("닫기", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            }).show();
+                }
+                else {
+                    if(editText.getText().toString().isEmpty())
+                    {
+                        editText.setText("광운대학교");
+                    }
+
+                    Intent intent = new Intent(getActivity(), ResultActivity.class)
+                            .putExtra(Intent.EXTRA_TEXT, "0" + editText.getText().toString()) //ResultActivity로 EditText값을 넘겨줌.
+                            .putExtra("gettitle", "nodata"); //ResultActivity로 EditText값을 넘겨줌.
+                    startActivity(intent);
+                }
             }
         });
 
         MapButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), FindMapActivity.class);
-                startActivity(intent);
+                if(!isConn())
+                {
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("인터넷 설정")
+                            .setMessage("인터넷이 꺼져 있습니다. \nWIFI를 켜시겠습니까?")
+                            .setPositiveButton("WIFI 켜기", new DialogInterface.OnClickListener(){
+                                public void onClick(DialogInterface dialog, int which){
+                                    startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                                }
+                            })
+                            .setNegativeButton("닫기", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            }).show();
+                }
+                else {
+                    Intent intent = new Intent(getActivity(), FindMapActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
