@@ -233,7 +233,7 @@ public class ResultActivity extends FragmentActivity {
                         break;
                 }
                 String str = editTexts.replace("0","");
-                progressDialog.setMessage("잠시만 기다려주세요...................");
+                progressDialog.setMessage("잠시만 기다려주세요.");
                 progressDialog.show();
  context = getApplicationContext();
                 super.onPreExecute();

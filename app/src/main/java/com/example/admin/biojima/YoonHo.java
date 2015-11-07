@@ -948,10 +948,10 @@ public class YoonHo {
             String str = ResultActivity.editTexts.replace("0","");
 
             if(ResultActivity.siteTexts.compareTo("nodata")==0)
-                Toast.makeText(ResultActivity.context, ResultActivity.ChooseDate + ", " + ResultActivity.ChooseTime + ", " + str + " 주변\r\n " + ResultActivity.value + "m 이내의 날씨 좋은 지역입니다.", Toast.LENGTH_LONG).show();
+                Toast.makeText(ResultActivity.context, ResultActivity.ChooseDate + ", " + ResultActivity.ChooseTime + ", " + str + " 주변\r\n " + ResultActivity.value + "m 이내의 추천 지역입니다.", Toast.LENGTH_LONG).show();
             else
             {
-                Toast.makeText(ResultActivity.context,ResultActivity.ChooseDate+", "+ResultActivity.ChooseTime+", "+ResultActivity.siteTexts+" 주변\r\n "+ResultActivity.value+"m 이내의 날씨 날씨 좋은 지역입니다.",Toast.LENGTH_LONG).show();
+                Toast.makeText(ResultActivity.context,ResultActivity.ChooseDate+", "+ResultActivity.ChooseTime+", "+ResultActivity.siteTexts+" 주변\r\n "+ResultActivity.value+"m 이내의 추천 지역입니다.",Toast.LENGTH_LONG).show();
             }
         }
     }

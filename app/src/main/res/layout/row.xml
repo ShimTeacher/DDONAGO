@@ -8,7 +8,7 @@
         android:layout_width="fill_parent"
 
         android:layout_height="wrap_content"
-        android:textSize="30dp"
+        android:textSize="27dp"
         android:textColor="#ff000000"
         android:gravity="center"/>
     <TextView
@@ -17,7 +17,7 @@
         android:singleLine="true"
         android:ellipsize="marquee"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
+        android:textSize="18dp"
         android:textColor="#ff000000"
         android:gravity="center"/>
 

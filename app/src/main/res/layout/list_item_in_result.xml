@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:minHeight="?android:attr/listPreferredItemHeight"
-    android:textSize="30dp"
+    android:textSize="25dp"
     android:textColor="#ff000000"
     android:gravity="center"
     android:id="@+id/list_item_forecast_textview"
